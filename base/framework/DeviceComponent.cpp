@@ -135,8 +135,7 @@ void DeviceComponent::setExecparamProperties(std::map<std::string, char*>& execp
     }*/
 }
 
-void  DeviceComponent::setAdditionalParameters ( std::string &registrar_ior,
-                                             const std::string &nic )
+void  DeviceComponent::setAdditionalParameters ( std::string &registrar_ior)
 {
   _deviceManagerRegistry = CF::ComponentRegistry::_nil();
   CORBA::Object_var obj = sca::corba::Orb()->string_to_object(registrar_ior.c_str());
@@ -151,11 +150,10 @@ void  DeviceComponent::setAdditionalParameters ( std::string &registrar_ior,
   }
 }
 
-void  DeviceComponent::postConstruction (std::string &registrar_ior, 
-                                     const std::string &nic)
+void  DeviceComponent::postConstruction (std::string &registrar_ior)
 {
   // resolves Domain and Device Manger relationships
-  setAdditionalParameters(registrar_ior, nic);
+  setAdditionalParameters(registrar_ior);
 
   // establish IDM Channel connectivity
    CF::ComponentType this_dev;
@@ -208,9 +206,7 @@ void DeviceComponent::start_device(DeviceComponent::ctor_type ctor, struct sigac
     //const char* logging_config_uri = 0;
     //int debug_level = -1; // use log level from configuration file 
     std::string logcfg_uri("");
-    std::string log_dpath("");
     std::string log_id("");
-    bool skip_run = false;
         
     for (int index = 1; index < argc; ++index) {
         if (std::string(argv[index]) == std::string("-i")) {
@@ -231,15 +227,6 @@ void DeviceComponent::start_device(DeviceComponent::ctor_type ctor, struct sigac
             log_id = id;
         } else if (strcmp("COMPOSITE_DEVICE_IOR", argv[i]) == 0) {
             composite_device = argv[++i];
-        /*} else if (strcmp("LOGGING_CONFIG_URI", argv[i]) == 0) {
-            logging_config_uri = argv[++i];
-        } else if (strcmp("DEBUG_LEVEL", argv[i]) == 0) {
-            debug_level = atoi(argv[++i]);*/
-        } else if (strcmp("DOM_PATH", argv[i]) == 0) {
-            log_dpath = argv[++i];
-        } else if (strcmp("SKIP_RUN", argv[i]) == 0){
-            skip_run = true;
-            i++;             // skip flag has bogus argument need to skip over so execparams is processed correctly
         } else if (i > 0) {  // any other argument besides the first one is part of the execparams
             std::string paramName = argv[i];
             execparams[paramName] = argv[++i];
@@ -252,18 +239,6 @@ void DeviceComponent::start_device(DeviceComponent::ctor_type ctor, struct sigac
     // CORBA to get its configuration file. Devices do not need persistent IORs.
     sca::corba::CorbaInit(argc, argv);
     std::cout<<"(4)"<<std::endl;
-
-    // check if logging config URL was specified...
-    //if ( logging_config_uri ) logcfg_uri=logging_config_uri;
-
-    // setup logging context for this resource
-    //ossie::logging::ResourceCtxPtr ctx( new ossie::logging::DeviceCtx( log_label, log_id, log_dpath ) );
-
-    // configure logging
-    /*if (!skip_run){
-        // configure the logging library 
-        ossie::logging::Configure(logcfg_uri, debug_level, ctx);
-    }*/
 
     //if ((devMgr_ior == 0) || (id == 0) || (profile == 0) || (label == 0)) {
     if ((devMgr_ior == 0) || (id == 0)) {
@@ -293,11 +268,6 @@ void DeviceComponent::start_device(DeviceComponent::ctor_type ctor, struct sigac
 
     DeviceComponent* device = ctor(devMgr_ior, id, blank_string, composite_device);
     std::cout<<"(6)"<<std::endl;
-    
-    /*if ( !skip_run ) {
-        // assign logging context to the resource..to support logging interface
-        device->saveLoggingContext( logcfg_uri, debug_level, ctx );
-    }*/
 
     // setting all the execparams passed as argument, this method resides in the Resource_impl class
     device->setExecparamProperties(execparams);
@@ -305,10 +275,9 @@ void DeviceComponent::start_device(DeviceComponent::ctor_type ctor, struct sigac
 
     //perform post construction operations for the device
     std::string tmp_devMgr_ior = devMgr_ior;
-    std::string nic = "";
     try {
     std::cout<<"(8)"<<std::endl;
-      device->postConstruction( tmp_devMgr_ior, nic);
+      device->postConstruction( tmp_devMgr_ior);
     std::cout<<"(9)"<<std::endl;
     }
     catch( CF::InvalidObjectReference &ex ) {
@@ -348,9 +317,6 @@ void DeviceComponent::start_device(DeviceComponent::ctor_type ctor, struct sigac
         exit(EXIT_FAILURE);
     }
 
-    if (skip_run) {
-        return;
-    }    
     device->run();
     device->_remove_ref();
     //ossie::logging::Terminate();

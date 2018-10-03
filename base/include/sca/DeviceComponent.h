@@ -76,8 +76,7 @@ public:
     void adminState (CF::AdministratableInterface::AdminType _adminType);
 
     void setExecparamProperties(std::map<std::string, char*>&);
-    virtual void  postConstruction( std::string &registrar_ior,
-                                    const std::string &nic="");
+    virtual void  postConstruction( std::string &registrar_ior);
     
     template<class T>
     static void start_device(T** devPtr, struct sigaction sa, int argc, char* argv[]) {
@@ -85,7 +84,7 @@ public:
     }
     virtual void run ();
     virtual void halt ();
-    void setAdditionalParameters(std::string &registrar_ior, const std::string &nic);
+    void setAdditionalParameters(std::string &registrar_ior);
     std::string profile;
 
 protected:
