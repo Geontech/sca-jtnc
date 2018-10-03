@@ -46,6 +46,8 @@ from _unitTestHelpers import scatest, runtestHelpers
 import traceback
 
 from sca.bulkio import BULKIO
+from sca.cf import CF
+from omniORB import any as _any
 
 class SBTestTest(scatest.CorbaTestCase):
     def setUp(self):
@@ -63,6 +65,12 @@ class SBTestTest(scatest.CorbaTestCase):
 
     def test_runtime(self):
         comp = sb.launch('cpp_dev')
-        print 'cpp_dev', comp.query([])
-        print 'cpp_dev', comp._get_identifier()
+        #print 'cpp_dev', comp.query([])
+        teststring = CF.DataType(id='teststring', value=_any.to_any('foo'))
+        comp.configure([teststring])
+        teststring = CF.DataType(id='teststring', value=_any.to_any(None))
+        #print 'cpp_dev', comp.query([])
+        retval = comp.query([teststring])
+        self.assertEquals(retval[0].value._v, 'foo')
+        #print 'cpp_dev', comp._get_identifier()
 

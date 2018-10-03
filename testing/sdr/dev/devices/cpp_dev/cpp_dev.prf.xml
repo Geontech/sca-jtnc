@@ -32,6 +32,10 @@ with this program.  If not, see http://www.gnu.org/licenses/.
     <kind kindtype="allocation"/>
     <action type="eq"/>
   </simple>
+  <simple id="teststring" mode="readwrite" type="string">
+    <kind kindtype="configure"/>
+    <action type="external"/>
+  </simple>
   <simple id="devmgr_id" mode="readonly" type="string">
     <kind kindtype="configure"/>
     <action type="external"/>

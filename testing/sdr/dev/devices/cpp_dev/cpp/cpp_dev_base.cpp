@@ -115,6 +115,14 @@ void cpp_dev_base::loadProperties()
                 "eq",
                 "allocation,configure");
 
+    addProperty(teststring,
+                "teststring",
+                "",
+                "readwrite",
+                "",
+                "external",
+                "configure");
+
     addProperty(devmgr_id,
                 "devmgr_id",
                 "",

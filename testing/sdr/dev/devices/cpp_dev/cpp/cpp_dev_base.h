@@ -45,6 +45,7 @@ class cpp_dev_base : public DeviceComponent, protected ThreadedComponent
         // Member variables exposed as properties
         std::string device_kind;
         std::string device_model;
+        std::string teststring;
         std::string devmgr_id;
         std::string dom_id;
 
