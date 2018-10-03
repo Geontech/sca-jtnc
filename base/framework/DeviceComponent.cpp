@@ -203,11 +203,7 @@ void DeviceComponent::start_device(DeviceComponent::ctor_type ctor, struct sigac
     char* id = 0;
     char* blank_string = 0;
     char* composite_device = 0;
-    //const char* logging_config_uri = 0;
-    //int debug_level = -1; // use log level from configuration file 
-    std::string logcfg_uri("");
-    std::string log_id("");
-        
+
     for (int index = 1; index < argc; ++index) {
         if (std::string(argv[index]) == std::string("-i")) {
             std::cout<<"Interactive mode (-i) no longer supported. Please use the sandbox to run Components/Devices/Services outside the scope of a Domain"<<std::endl;
@@ -215,7 +211,6 @@ void DeviceComponent::start_device(DeviceComponent::ctor_type ctor, struct sigac
         }
     }
     
-    std::cout<<"(1)"<<std::endl;
     std::map<std::string, char*> execparams;
                 
     for (int i = 0; i < argc; i++) {
@@ -224,7 +219,6 @@ void DeviceComponent::start_device(DeviceComponent::ctor_type ctor, struct sigac
             devMgr_ior = argv[++i];
         } else if (strcmp("DEVICE_ID", argv[i]) == 0) {
             id = argv[++i];
-            log_id = id;
         } else if (strcmp("COMPOSITE_DEVICE_IOR", argv[i]) == 0) {
             composite_device = argv[++i];
         } else if (i > 0) {  // any other argument besides the first one is part of the execparams
@@ -233,14 +227,10 @@ void DeviceComponent::start_device(DeviceComponent::ctor_type ctor, struct sigac
         }
     }
 
-    std::cout<<"(2)"<<std::endl;
-
     // The ORB must be initialized before configuring logging, which may use
     // CORBA to get its configuration file. Devices do not need persistent IORs.
     sca::corba::CorbaInit(argc, argv);
-    std::cout<<"(4)"<<std::endl;
 
-    //if ((devMgr_ior == 0) || (id == 0) || (profile == 0) || (label == 0)) {
     if ((devMgr_ior == 0) || (id == 0)) {
         exit(-1);
     }
@@ -264,25 +254,19 @@ void DeviceComponent::start_device(DeviceComponent::ctor_type ctor, struct sigac
         booter we don't want the device to die, and it's the shells responsibility
         to send CTRL-C to all foreground processes (even children) */
     signal(SIGINT, SIG_IGN);
-    std::cout<<"(5)"<<std::endl;
 
     DeviceComponent* device = ctor(devMgr_ior, id, blank_string, composite_device);
-    std::cout<<"(6)"<<std::endl;
 
     // setting all the execparams passed as argument, this method resides in the Resource_impl class
     device->setExecparamProperties(execparams);
-    std::cout<<"(7)"<<std::endl;
 
     //perform post construction operations for the device
     std::string tmp_devMgr_ior = devMgr_ior;
     try {
-    std::cout<<"(8)"<<std::endl;
       device->postConstruction( tmp_devMgr_ior);
-    std::cout<<"(9)"<<std::endl;
     }
     catch( CF::InvalidObjectReference &ex ) {
       if ( device ) device->_remove_ref();
-      //ossie::logging::Terminate();
       sca::corba::OrbShutdown(true);
       exit(EXIT_FAILURE);
     } catch ( CORBA::SystemException &ex ) {
@@ -307,19 +291,16 @@ void DeviceComponent::start_device(DeviceComponent::ctor_type ctor, struct sigac
         }
         eout << ")";
         if ( device ) device->_remove_ref();
-        //ossie::logging::Terminate();
         sca::corba::OrbShutdown(true);
         exit(EXIT_FAILURE);
     } catch ( ... ) {
         if ( device ) device->_remove_ref();
-        //ossie::logging::Terminate();
         sca::corba::OrbShutdown(true);
         exit(EXIT_FAILURE);
     }
 
     device->run();
     device->_remove_ref();
-    //ossie::logging::Terminate();
     sca::corba::OrbShutdown(true);
 }
 
