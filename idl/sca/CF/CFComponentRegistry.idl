@@ -1,0 +1,50 @@
+/*
+** RELEASE STATEMENT(s):
+**                          UNLIMITED RIGHTS
+**  The Government has the right to use, modify, reproduce, release, perform,
+**  display, or disclose this application programmable interface in whole or in
+**  part, in any manner and for any purpose whatsoever, and to have or
+**  authorize others to do so.
+**
+** Distribution Statement A - Approved for public release; distribution is
+** unlimited (27 August 2015).
+*/
+
+/*
+** JTNC Standard:
+**  Software Communications Architecture
+**  Appendix C: Core Framework Interface Description Language (IDL)
+**  Version: 4.1, 20 August 2015
+*/
+
+//Source file: CFComponentRegistry.idl
+
+#ifndef __CFCOMPONENTREGISTRY_DEFINED
+#define __CFCOMPONENTREGISTRY_DEFINED
+
+#include "CFCommonTypes.idl"
+
+module CF {
+
+   /* This interface is used to manage the registration of 
+      logical devices and services. */
+   interface ComponentRegistry {
+
+      /* This exception indicates that an internal error has
+         occurred to prevent DomainManager registration operations from
+         successful completion. */ 
+      exception RegisterError {
+         CF::ErrorNumberType errorNumber;
+         string msg;
+      };
+
+      /* This operation registers the Component and its static provides 
+         ports. */
+      void registerComponent( 
+            in CF::ComponentType registeringComponent
+            )
+         raises( CF::InvalidObjectReference, RegisterError );
+   };
+
+};
+#endif

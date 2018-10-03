@@ -1,0 +1,53 @@
+/*
+** RELEASE STATEMENT(s):
+**                          UNLIMITED RIGHTS
+**  The Government has the right to use, modify, reproduce, release, perform,
+**  display, or disclose this application programmable interface in whole or in
+**  part, in any manner and for any purpose whatsoever, and to have or
+**  authorize others to do so.
+**
+** Distribution Statement A - Approved for public release; distribution is
+** unlimited (27 August 2015).
+*/
+
+/*
+** JTNC Standard:
+**  Software Communications Architecture
+**  Appendix C: Core Framework Interface Description Language (IDL)
+**  Version: 4.1, 20 August 2015
+*/
+
+//Source file: CFPlatformTypes.idl
+#ifndef __CFPLATFORMTYPES_DEFINED
+#define __CFPLATFORMTYPES_DEFINED
+
+#include "CFCommonTypes.idl"
+
+module CF {
+   /* This structure associates a component with the device
+      upon which the component is executing. */ 
+   struct DeviceAssignmentType { 
+      string componentId; 
+      string assignedDeviceId; 
+   };
+
+   /* The sequence provides an unbounded sequence of 0..n of 
+      DeviceAssignmentType. */ 
+   typedef sequence <DeviceAssignmentType> DeviceAssignmentSequence;
+
+   /* This exception indicates an invalid component profile error. */
+   exception InvalidProfile {
+   };
+
+   /* This sequence defines a sequence of ComponentType structures */
+   typedef sequence <CF::ComponentType> Components;
+
+   /* This exception indicates that the device is not capable of
+      the behavior being attempted due to the state the device is in.
+      An example of such behavior is allocateCapacity. */
+   exception InvalidState {
+      string msg;
+   };
+
+};
+#endif

@@ -1,0 +1,92 @@
+/*
+** RELEASE STATEMENT(s):
+**                          UNLIMITED RIGHTS
+**  The Government has the right to use, modify, reproduce, release, perform,
+**  display, or disclose this application programmable interface in whole or in
+**  part, in any manner and for any purpose whatsoever, and to have or
+**  authorize others to do so.
+**
+** Distribution Statement A - Approved for public release; distribution is
+** unlimited (27 August 2015).
+*/
+
+/*
+** JTNC Standard:
+**  Software Communications Architecture
+**  Appendix C: Core Framework Interface Description Language (IDL)
+**  Version: 4.1, 20 August 2015
+*/
+
+//Source file: CFApplicationFactory.idl
+
+#ifndef __CFAPPLICATIONFACTORY_DEFINED
+#define __CFAPPLICATIONFACTORY_DEFINED
+
+#include "CFPlatformTypes.idl"
+#include "CFSpecializedInfo.idl"
+
+module CF {
+
+   /* This interface class provides an interface to request
+      the creation of a specific type of application in the domain.
+      The Software Profile determines the type of application that is created
+      by the ApplicationFactory. */
+   interface ApplicationFactory { 
+
+      /* This exception is raised when the parameter
+         DeviceAssignmentSequence contains one or more invalid
+         application component-to-device assignment(s). */ 
+      exception CreateApplicationRequestError { 
+         CF::DeviceAssignmentSequence invalidAssignments; 
+      }; 
+
+      /* This exception is raised when a create request is valid but
+         the application is unsuccessfully instantiated due to internal
+         processing errors. The message provides additional information
+         describing the reason for the error. */ 
+      exception CreateApplicationError { 
+         CF::ErrorNumberType errorNumber; 
+         string msg; 
+      }; 
+
+      /* This exception is raised when the input initConfiguration
+         parameter is invalid. */ 
+      exception InvalidInitConfiguration { 
+         CF::Properties invalidProperties; 
+      }; 
+
+      /* This attribute contains the name of the type of application
+         that can be instantiated by the ApplicationFactory. */ 
+      readonly attribute string name; 
+   
+      /* This structure associates a component with a process collocation
+         and or processor core. */
+      struct ExecutionAffinityType
+      {
+         string componentId;
+         string processCollocation;
+	  CF::ULongSeq coreAffinities;
+      };
+
+      /* The sequence provides an unbounded sequence of ExecutionAffinityType
+         elements. */
+      typedef sequence <ExecutionAffinityType> ExecutionAffinitySequence;
+
+      /* This operation is used to create an application within
+         the system domain. */ 
+      CF::ComponentType create ( 
+            in string name, 
+            in CF::Properties initConfiguration, 
+            in CF::DeviceAssignmentSequence deviceAssignments,
+            in CF::Properties deploymentDependencies,
+            in CF::ApplicationFactory::ExecutionAffinitySequence
+               executionAffinityAssignments
+            ) 
+         raises (CF::ApplicationFactory::CreateApplicationError, 
+               CF::ApplicationFactory::CreateApplicationRequestError, 
+               CF::ApplicationFactory::InvalidInitConfiguration); 
+
+   };
+
+};
+#endif

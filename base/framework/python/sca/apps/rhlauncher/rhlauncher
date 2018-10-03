@@ -1,0 +1,4 @@
+#!/usr/bin/python
+
+from sca.apps.rhlauncher.main import main
+main()

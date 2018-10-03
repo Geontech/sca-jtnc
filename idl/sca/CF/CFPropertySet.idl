@@ -1,0 +1,67 @@
+/*
+** RELEASE STATEMENT(s):
+**                          UNLIMITED RIGHTS
+**  The Government has the right to use, modify, reproduce, release, perform,
+**  display, or disclose this application programmable interface in whole or in
+**  part, in any manner and for any purpose whatsoever, and to have or
+**  authorize others to do so.
+**
+** Distribution Statement A - Approved for public release; distribution is
+** unlimited (27 August 2015).
+*/
+
+/*
+** JTNC Standard:
+**  Software Communications Architecture
+**  Appendix C: Core Framework Interface Description Language (IDL)
+**  Version: 4.1, 20 August 2015
+*/
+
+//Source file: CFPropertySet.idl
+
+#ifndef __CFPROPERTYSET_DEFINED
+#define __CFPROPERTYSET_DEFINED
+
+#include "CFProperties.idl"
+
+module CF {
+
+   /* This interface defines configure and query operations
+      to access component properties/attributes. */ 
+   interface PropertySet { 
+
+      /* This exception indicates the configuration of a component
+         has failed (no configuration at all was done). The message
+         provides additional information describing the reason why
+         the error occurred. The invalid properties returned indicates
+         the properties that were invalid. */ 
+      exception InvalidConfiguration { 
+         string msg; 
+         CF::Properties invalidProperties; 
+      }; 
+
+      /* This exception indicates the configuration
+         of a Component was partially successful. The invalid properties
+         returned indicates the properties that were invalid. */ 
+      exception PartialConfiguration { 
+         CF::Properties invalidProperties; 
+      }; 
+
+      /* The purpose of this operation is to allow id/value pair
+         configuration properties to be assigned to components
+         implementing this interface. */ 
+      void configure ( 
+            in CF::Properties configProperties 
+            ) 
+         raises (CF::PropertySet::InvalidConfiguration,
+                 CF::PropertySet::PartialConfiguration); 
+
+      /* The purpose of this operation is to allow a component
+         to be queried to retrieve its properties. */ 
+      void query ( 
+            inout CF::Properties configProperties 
+            ) 
+         raises (CF::UnknownProperties); 
+   };
+};
+#endif

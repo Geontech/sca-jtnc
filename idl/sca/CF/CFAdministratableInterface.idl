@@ -1,0 +1,45 @@
+/*
+** RELEASE STATEMENT(s):
+**                          UNLIMITED RIGHTS
+**  The Government has the right to use, modify, reproduce, release, perform,
+**  display, or disclose this application programmable interface in whole or in
+**  part, in any manner and for any purpose whatsoever, and to have or
+**  authorize others to do so.
+**
+** Distribution Statement A - Approved for public release; distribution is
+** unlimited (27 August 2015).
+*/
+
+/*
+** JTNC Standard:
+**  Software Communications Architecture
+**  Appendix C: Core Framework Interface Description Language (IDL)
+**  Version: 4.1, 20 August 2015
+*/
+
+//Source file: CFAdministratableInterface.idl
+
+#ifndef __CFADMINISTRATABLEINTERFACE_DEFINED
+#define __CFADMINISTRATABLEINTERFACE_DEFINED
+
+module CF {
+
+   interface AdministratableInterface {
+   
+      /* This enumeration type defines a device's administrative states.
+         The administrative state indicates the permission to use
+         or prohibition against using the device. */ 
+      enum AdminType { 
+         LOCKED, 
+         SHUTTING_DOWN, 
+         UNLOCKED 
+      }; 
+   
+      /* This attribute indicates the permission to use
+         or prohibition against using the device. The adminState attribute
+         contains the device's admin state value. */ 
+      attribute CF::AdministratableInterface::AdminType adminState; 
+
+   };
+};
+#endif

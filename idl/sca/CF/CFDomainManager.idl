@@ -1,0 +1,62 @@
+/*
+** RELEASE STATEMENT(s):
+**                          UNLIMITED RIGHTS
+**  The Government has the right to use, modify, reproduce, release, perform,
+**  display, or disclose this application programmable interface in whole or in
+**  part, in any manner and for any purpose whatsoever, and to have or
+**  authorize others to do so.
+**
+** Distribution Statement A - Approved for public release; distribution is
+** unlimited (27 August 2015).
+*/
+
+/*
+** JTNC Standard:
+**  Software Communications Architecture
+**  Appendix C: Core Framework Interface Description Language (IDL)
+**  Version: 4.1, 20 August 2015
+*/
+
+//Source file: CFDomainManager.idl
+
+#ifndef __CFDOMAINMANAGER_DEFINED
+#define __CFDOMAINMANAGER_DEFINED
+
+#include "CFComponentIdentifier.idl"
+#include "CFFileManager.idl"
+#include "CFPlatformTypes.idl"
+
+module CF {
+   
+   /* This interface is for the control and
+      configuration of the radio domain. */
+   interface DomainManager : ComponentIdentifier
+   {
+
+      
+      /* This readonly attribute contains a profile
+         element with a file reference to the DomainManager Configuration
+         Descriptor (DMD) profile IDL. */ 
+      readonly attribute string domainManagerProfile; 
+   
+      /* This readonly attribute is containing a sequence
+         of registered managers in the domain. */ 
+      readonly attribute CF::Components managers; 
+   
+      /* This readonly attribute contains a list of ApplicationComponents that
+         have been instantiated in the domain. */ 
+      readonly attribute CF::Components
+         applications; 
+   
+      /* This readonly attribute contains a list with one
+         ApplicationFactoryComponent per application (SAD file and associated
+         files) successfully installed. */ 
+      readonly attribute CF::Components
+         applicationFactories; 
+   
+      /* This readonly attribute contains the DomainManager's
+         FileManager. */ 
+      readonly attribute CF::FileManager fileMgr; 
+   };
+};
+#endif

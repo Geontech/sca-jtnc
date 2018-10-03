@@ -1,0 +1,17 @@
+
+#ifndef __CF_UTCTIME_DEFINED
+#define __CF_UTCTIME_DEFINED
+
+module CF {
+
+    struct UTCTime {
+        short tcstatus;     // timecode status
+        double twsec;       // J1970 GMT
+        double tfsec;       // 0.0 to 1.0
+    };
+    typedef sequence <UTCTime> UTCTimeSequence;
+
+};
+
+#endif
+

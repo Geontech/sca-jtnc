@@ -1,0 +1,54 @@
+/*
+** RELEASE STATEMENT(s):
+**                          UNLIMITED RIGHTS
+**  The Government has the right to use, modify, reproduce, release, perform,
+**  display, or disclose this application programmable interface in whole or in
+**  part, in any manner and for any purpose whatsoever, and to have or
+**  authorize others to do so.
+**
+** Distribution Statement A - Approved for public release; distribution is
+** unlimited (27 August 2015).
+*/
+
+/*
+** JTNC Standard:
+**  Software Communications Architecture
+**  Appendix E: Model Driven Support Technologies
+**  Version: 4.1, 20 August 2015
+*/
+
+//Source file: CFPrimitiveTypes.idl
+#ifndef __CFPRIMITIVETYPES_DEFINED 
+#define __CFPRIMITIVETYPES_DEFINED
+
+module CF {
+   
+   /* These primitive types to avoid the usage of CORBA qualified types 
+      in user-defined interfaces and types in generated code. */
+      
+   typedef boolean BooleanType;
+ 
+   typedef char CharType;
+       
+   typedef long long LongLongType;
+      
+   typedef long LongType;
+      
+   typedef short ShortType;
+      
+   typedef unsigned long long ULongLongType;
+       
+   typedef unsigned long ULongType;
+       
+   typedef unsigned short UShortType;
+       
+   typedef float FloatType;
+      
+   typedef double DoubleType;
+      
+typedef string StringType;
+      
+   typedef octet OctetType;
+      
+}; 
+#endif

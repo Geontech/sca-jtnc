@@ -1,0 +1,59 @@
+/*
+** RELEASE STATEMENT(s):
+**                          UNLIMITED RIGHTS
+**  The Government has the right to use, modify, reproduce, release, perform,
+**  display, or disclose this application programmable interface in whole or in
+**  part, in any manner and for any purpose whatsoever, and to have or
+**  authorize others to do so.
+**
+** Distribution Statement A - Approved for public release; distribution is
+** unlimited (27 August 2015).
+*/
+
+/*
+** JTNC Standard:
+**  Software Communications Architecture
+**  Appendix C: Core Framework Interface Description Language (IDL)
+**  Version: 4.1, 20 August 2015
+*/
+
+//Source file: CFLifeCycle.idl
+
+#ifndef __CFLIFECYCLE_DEFINED
+#define __CFLIFECYCLE_DEFINED
+
+#include "CFCommonTypes.idl"
+
+module CF {
+
+   /* This interface defines the generic operations for initializing
+      or releasing instantiated component-specific data and/or processing
+      elements. */
+   interface LifeCycle { 
+
+      /* This exception indicates an error occurred during component
+         initialization. The messages provide additional information
+         describing the reason why the error occurred. */ 
+      exception InitializeError { 
+         CF::StringSequence errorMessages; 
+      }; 
+
+      /* This exception indicates an error occurred during component
+         releaseObject. The messages provide additional information
+         describing the reason why the error occurred. */ 
+      exception ReleaseError { 
+         CF::StringSequence errorMessages; 
+      }; 
+
+      /* The purpose of this operation is to provide a mechanism
+         to set an object to an known initial state. */ 
+      void initialize () 
+         raises (CF::LifeCycle::InitializeError); 
+
+      /* The purpose of this operation is to provide a means
+         by which an instantiated component may be torn down. */ 
+      void releaseObject () 
+         raises (CF::LifeCycle::ReleaseError); 
+   }; 
+};
+#endif

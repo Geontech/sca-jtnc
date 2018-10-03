@@ -1,0 +1,128 @@
+/*
+** RELEASE STATEMENT(s):
+**                          UNLIMITED RIGHTS
+**  The Government has the right to use, modify, reproduce, release, perform,
+**  display, or disclose this application programmable interface in whole or in
+**  part, in any manner and for any purpose whatsoever, and to have or
+**  authorize others to do so.
+**
+** Distribution Statement A - Approved for public release; distribution is
+** unlimited (27 August 2015).
+*/
+
+/*
+** JTNC Standard:
+**  Software Communications Architecture
+**  Appendix C: Core Framework Interface Description Language (IDL)
+**  Version: 4.1, 20 August 2015
+*/
+
+//Source file: CFSpecializedInfo.idl
+
+#ifndef __CFSPECIALIZEDINFO_DEFINED
+#define __CFSPECIALIZEDINFO_DEFINED
+
+#include "CFCommonTypes.idl"
+#include "CFFileSystem.idl"
+#include "CFPlatformTypes.idl"
+
+module CF {
+
+   /* This enumeration defines the basic actions that may be taken against an 
+      allocation property. */
+   enum PropertyActionType {
+      CF_EQ,
+      CF_NE,
+      CF_GT,
+      CF_GE,
+      CF_LT,
+      CF_LE,
+      CF_EXTERNAL
+   };
+
+   /* This enumeration defines the basic data types of an allocation property. */
+   enum PropertyType {
+      CF_BOOLEAN,
+      CF_CHAR,
+      CF_DOUBLE,
+      CF_FLOAT,
+      CF_SHORT,
+      CF_LONG,
+      CF_OBJREF,
+      CF_OCTET,
+      CF_STRING,
+      CF_USHORT,
+      CF_ULONG
+   };
+
+   /* This string constant is the identifier for the allocation property
+      specialized info entry. */ 
+   const string ALLOCATION_PROPS_ID = "ALLOCATION_PROPS"; 
+
+   /* This structure defines the specialized type for
+      the allocation properties associated with a component. The id attribute
+      indicates the kind of value and type. The id can
+      be an integer string or a unique alphanumeric identifier. 
+      The value attribute can be any static IDL type or basic type. */
+   struct AllocationPropertyType { 
+      string id;
+      CF::StringSequence values; 
+      CF::PropertyActionType action; 
+      CF::PropertyType type; 
+   };
+
+   /* This sequence defines a list of AllocationPropertyType structures. */
+   typedef sequence <AllocationPropertyType> AllocationProperties;
+
+   /* This string constant is the identifier for a DeviceManagerComponent string
+      identifier type value within a BasePlatformComponent ComponentType's
+      specializedInfo. */
+   const string DEVICE_MANAGER_ID = "DEVICE_MANAGER_ID";
+
+   /* This string constant is the identifier for a ManagerInfo type within a
+      ComponentType's specializedInfo. */ 
+   const string MANAGER_INFO_ID = "MANAGER_INFO"; 
+
+   /* This string constant is the identifier for ExecutableInterface::ExecutionID_Type
+      Value within a ComponentType's specializedInfo. */
+   const string EXECUTION_ID = "EXECUTION_ID";
+
+    /* This string constant is the identifier for SPD implementation id  string 
+       value within a ComponentType's specializedInfo, which is the implementation used
+       for the creation of the component. */
+    const string IMPLEMENTATION_ID = "IMPLEMENTATION_ID";
+
+    /* This string constant is the identifier for the device identifier string value
+       within a ComponentType' specializedInfo field, which is the device that deployed 
+       the component. */
+    const string TARGET_DEVICE_ID = "TARGET_DEVICE";
+
+    /* This string constant is the identifier for the CF::UsesDeviceAssignmentSequence 
+       value within a ComponentType' specializedInfo, which denotes the devices used 
+       by component. */
+    const string USES_DEVICE_ID = "USES_DEVICE";
+
+    /* This string constant is the identifier for the CF::Components type value within a
+       ComponentType' specializedInfo field. */
+    const string COMPONENTS_ID = "COMPONENTS";
+
+    /* This structure associates a component's profile uses device identifier with the
+       assigned device identifier. */
+    struct UsesDeviceAssignmentType
+    {
+       string usesDeviceId;
+       string assignedDeviceId;
+    };
+
+    /* The sequence provides an unbounded sequence of UseDeviceAssignmentType
+       elements. */
+    typedef sequence <UsesDeviceAssignmentType> UsesDeviceAssignmentSeq;
+
+   /* This structure defines the specialized type for
+      the a manager component. */
+   struct ManagerInfo { 
+      CF::FileSystem fileSys;
+      CF::Components deployedComponents;
+   };
+};
+#endif

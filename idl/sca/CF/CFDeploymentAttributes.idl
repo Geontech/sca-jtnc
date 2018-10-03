@@ -1,0 +1,46 @@
+/*
+** RELEASE STATEMENT(s):
+**                          UNLIMITED RIGHTS
+**  The Government has the right to use, modify, reproduce, release, perform,
+**  display, or disclose this application programmable interface in whole or in
+**  part, in any manner and for any purpose whatsoever, and to have or
+**  authorize others to do so.
+**
+** Distribution Statement A - Approved for public release; distribution is
+** unlimited (27 August 2015).
+*/
+
+/*
+** JTNC Standard:
+**  Software Communications Architecture
+**  Appendix C: Core Framework Interface Description Language (IDL)
+**  Version: 4.1, 20 August 2015
+*/
+
+//Source file: CFDeploymentAttributes.idl
+
+#ifndef __CFDEPLOYMENTATTRIBUTES_DEFINED
+#define __CFDEPLOYMENTATTRIBUTES_DEFINED
+
+#include "CFPlatformTypes.idl"
+
+module CF {
+
+   /* This interface provides deployment attributes    
+      for an application. */
+   interface DeploymentAttributes { 
+   
+
+
+   
+   
+
+      /* This attribute contains the list of application 
+         Components that have been successfully deployed with this application
+         or ApplicationFactory during instantiation or a sequence length of zero  
+         if no application Components have been deployed. */
+      readonly attribute CF::Components deployedComponents;
+   };
+};
+#endif
+

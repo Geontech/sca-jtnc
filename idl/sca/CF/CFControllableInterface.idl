@@ -1,0 +1,63 @@
+/*
+** RELEASE STATEMENT(s):
+**                          UNLIMITED RIGHTS
+**  The Government has the right to use, modify, reproduce, release, perform,
+**  display, or disclose this application programmable interface in whole or in
+**  part, in any manner and for any purpose whatsoever, and to have or
+**  authorize others to do so.
+**
+** Distribution Statement A - Approved for public release; distribution is
+** unlimited (27 August 2015).
+*/
+
+/*
+** JTNC Standard:
+**  Software Communications Architecture
+**  Appendix C: Core Framework Interface Description Language (IDL)
+**  Version: 4.1, 20 August 2015
+*/
+
+//Source file: CFControllableInterface.idl
+
+#ifndef __CFCONTROLLABLEINTERFACE_DEFINED
+#define __CFCONTROLLABLEINTERFACE_DEFINED
+
+#include "CFCommonTypes.idl"
+
+module CF {
+
+   /* This interface provides a common API for the
+      control of a software component.  */
+   interface ControllableInterface {
+
+      /* This exception indicates that an error occurred during an attempt
+         to start the component. The message provides additional information
+         describing the reason for the error. */  
+      exception StartError { 
+         CF::ErrorNumberType errorNumber; 
+         string msg; 
+      }; 
+   
+      /* This exception indicates that an error occurred during
+         an attempt to stop the component. The message provides additional
+         information describing the reason for the error. */ 
+      exception StopError { 
+         CF::ErrorNumberType errorNumber; 
+         string msg; 
+      }; 
+ 
+      /* This attribute specifies whether the component is started. */ 
+      readonly attribute boolean started; 
+
+      /* This operation is provided to command a component implementing
+         this interface to start internal processing. */ 
+      void start () 
+         raises (CF::ControllableInterface::StartError); 
+   
+      /* This operation is provided to command a component implementing
+         this interface to stop all internal processing. */ 
+      void stop () 
+         raises (CF::ControllableInterface::StopError); 
+   };
+};
+#endif

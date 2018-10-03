@@ -1,0 +1,69 @@
+/*
+** RELEASE STATEMENT(s):
+**                          UNLIMITED RIGHTS
+**  The Government has the right to use, modify, reproduce, release, perform,
+**  display, or disclose this application programmable interface in whole or in
+**  part, in any manner and for any purpose whatsoever, and to have or
+**  authorize others to do so.
+**
+** Distribution Statement A - Approved for public release; distribution is
+** unlimited (27 August 2015).
+*/
+
+/*
+** JTNC Standard:
+**  Software Communications Architecture
+**  Appendix C: Core Framework Interface Description Language (IDL)
+**  Version: 4.1, 20 August 2015
+*/
+
+//Source file: CF.idl
+
+#ifndef __CF_DEFINED
+#define __CF_DEFINED
+
+/* This file is provided to maintain backward compatibility with
+   legacy systems that use CF.idl files. */
+
+
+/* Base Elements */
+#include "CFPrimitiveTypes.idl"
+#include "CFPrimitiveSeqTypes.idl"
+#include "CFCommonTypes.idl"
+
+/* Specialized Information */
+#include "CFSpecializedInfo.idl"
+
+/* Base Application */
+#include "CFComponentIdentifier.idl"
+#include "CFControllableInterface.idl"
+#include "CFLifeCycle.idl"
+#include "CFPortAccessor.idl"
+#include "CFPropertySet.idl"
+#include "CFTestableInterface.idl"
+
+/* Base Device */
+#include "CFAggregateDevice.idl"
+#include "CFCapacityManagement.idl"
+#include "CFDeviceAttributes.idl"
+#include "CFExecutableInterface.idl"
+#include "CFLoadableInterface.idl"
+#include "CFAdministratableInterface.idl"
+
+/* Framework Control */
+#include "CFApplicationManager.idl"
+#include "CFDeploymentAttributes.idl"
+#include "CFApplicationFactory.idl"
+#include "CFComponentRegistry.idl"
+#include "CFDomainInstallation.idl"
+#include "CFDomainManager.idl"
+#include "CFEventChannelRegistry.idl"
+#include "CFReleasableManager.idl"
+
+/* Framework Services */
+#include "CFComponentFactory.idl"
+#include "CFFile.idl"
+#include "CFFileManager.idl"
+#include "CFFileSystem.idl"
+
+#endif

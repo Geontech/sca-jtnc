@@ -1,0 +1,39 @@
+/*
+** RELEASE STATEMENT(s):
+**                          UNLIMITED RIGHTS
+**  The Government has the right to use, modify, reproduce, release, perform,
+**  display, or disclose this application programmable interface in whole or in
+**  part, in any manner and for any purpose whatsoever, and to have or
+**  authorize others to do so.
+**
+** Distribution Statement A - Approved for public release; distribution is
+** unlimited (27 August 2015).
+*/
+
+/*
+** JTNC Standard:
+**  Software Communications Architecture
+**  Appendix C: Core Framework Interface Description Language (IDL)
+**  Version: 4.1, 20 August 2015
+*/
+
+//Source file: CFDeviceAttributes.idl
+
+#ifndef __DeviceComponent_DEFINED
+#define __DeviceComponent_DEFINED
+
+#include "CFDeviceAttributes.idl"
+#include "CFAdministratableInterface.idl"
+#include "CFCapacityManagement.idl"
+#include "CFTestableInterface.idl"
+#include "CFPropertySet.idl"
+#include "CFPortAccessor.idl"
+#include "CFLifeCycle.idl"
+#include "CFControllableInterface.idl"
+
+module CF {
+
+   interface DeviceComponent: CF::DeviceAttributes, CF::AdministratableInterface, CF::CapacityManagement, CF::TestableInterface, CF::PropertySet, CF::PortAccessor, CF::LifeCycle, CF::ControllableInterface {
+   };
+};
+#endif

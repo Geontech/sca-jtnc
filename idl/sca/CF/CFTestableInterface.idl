@@ -1,0 +1,49 @@
+/*
+** RELEASE STATEMENT(s):
+**                          UNLIMITED RIGHTS
+**  The Government has the right to use, modify, reproduce, release, perform,
+**  display, or disclose this application programmable interface in whole or in
+**  part, in any manner and for any purpose whatsoever, and to have or
+**  authorize others to do so.
+**
+** Distribution Statement A - Approved for public release; distribution is
+** unlimited (27 August 2015).
+*/
+
+/*
+** JTNC Standard:
+**  Software Communications Architecture
+**  Appendix C: Core Framework Interface Description Language (IDL)
+**  Version: 4.1, 20 August 2015
+*/
+
+//Source file: CFTestableInterface.idl
+
+#ifndef __CFTESTABLEINTERFACE_DEFINED
+#define __CFTESTABLEINTERFACE_DEFINED
+
+#include "CFProperties.idl"
+
+module CF {
+
+   /* This interface defines a set of operations that
+      can be used to test component implementations. */ 
+   interface TestableInterface { 
+
+      /* This exception indicates the requested testid for a test
+         to be performed is not known by the component. */ 
+      exception UnknownTest { 
+      }; 
+
+      /* This operation allows components to be blackbox tested.
+         This allows Built-In Tests to be implemented which provides
+         a means to isolate faults (both software and hardware) within
+         the system. */ 
+      void runTest ( 
+            in unsigned long testid, 
+            inout CF::Properties testValues 
+            ) 
+         raises (CF::TestableInterface::UnknownTest, CF::UnknownProperties); 
+   };
+};
+#endif

@@ -1,0 +1,76 @@
+/*
+** RELEASE STATEMENT(s):
+**                          UNLIMITED RIGHTS
+**  The Government has the right to use, modify, reproduce, release, perform,
+**  display, or disclose this application programmable interface in whole or in
+**  part, in any manner and for any purpose whatsoever, and to have or
+**  authorize others to do so.
+**
+** Distribution Statement A - Approved for public release; distribution is
+** unlimited (27 August 2015).
+*/
+
+/*
+** JTNC Standard:
+**  Software Communications Architecture
+**  Appendix C: Core Framework Interface Description Language (IDL)
+**  Version: 4.1, 20 August 2015
+*/
+
+//Source file: CFDomainInstallation.idl
+
+#ifndef __CFDOMAININSTALLATION_DEFINED
+#define __CFDOMAININSTALLATION_DEFINED
+
+#include "CFPlatformTypes.idl"
+
+module CF {
+
+    interface DomainInstallation {
+
+      /* This exception is raised when an application installation has
+         not completed correctly. The message provides additional
+         information describing the reason for the error. */ 
+      exception ApplicationInstallationError { 
+         CF::ErrorNumberType errorNumber; 
+         string msg; 
+      };
+
+      exception ApplicationAlreadyInstalled { 
+      };  
+
+      /* This exception indicates the application ID is invalid. */ 
+      exception InvalidIdentifier { 
+      }; 
+
+      /* This exception is raised when an application uninstallation has
+         not completed correctly. The message provides additional
+         information describing the reason for the error. */ 
+      exception ApplicationUninstallationError { 
+         CF::ErrorNumberType errorNumber; 
+         string msg; 
+      }; 
+
+      /* This operation is used to register new
+         application software in the DomainManager's Domain profile. */ 
+      CF::ComponentType installApplication ( 
+            in string profileFileName 
+            ) 
+         raises (CF::InvalidProfile,
+                 CF::InvalidFileName, 
+                 CF::DomainInstallation::ApplicationInstallationError, 
+                 CF::DomainInstallation::ApplicationAlreadyInstalled); 
+
+      /* This operation is used to uninstall an
+         application and its associated ApplicationFactory from the
+         DomainManager. */ 
+      void uninstallApplication ( 
+            in string identifier 
+            ) 
+         raises (CF::DomainInstallation::InvalidIdentifier, 
+                 CF::DomainInstallation::ApplicationUninstallationError); 
+
+  };
+
+};
+#endif
