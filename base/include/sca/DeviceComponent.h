@@ -77,9 +77,7 @@ public:
 
     void setExecparamProperties(std::map<std::string, char*>&);
     virtual void  postConstruction( std::string &registrar_ior,
-                                    const std::string &idm_channel_ior="",
-                                    const std::string &nic="",
-                                    const int  sigfd=-1 );
+                                    const std::string &nic="");
     
     template<class T>
     static void start_device(T** devPtr, struct sigaction sa, int argc, char* argv[]) {
@@ -94,7 +92,6 @@ protected:
     bool _started;
     void initializeCommonAttributes(const std::string _id);
     std::string _identifier;
-    int sig_fd;
     omni_mutex component_running_mutex;
     omni_condition component_running;
     CF::ComponentRegistry_ptr _deviceManagerRegistry;

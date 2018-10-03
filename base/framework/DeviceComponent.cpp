@@ -152,19 +152,12 @@ void  DeviceComponent::setAdditionalParameters ( std::string &registrar_ior,
 }
 
 void  DeviceComponent::postConstruction (std::string &registrar_ior, 
-                                     const std::string &idm_channel_ior,
-                                     const std::string &nic,
-                                     const int sigfd )
+                                     const std::string &nic)
 {
-
-  // signalfd for processing sigXX events in service function, removes deadlock issue with io operations
-  sig_fd = sigfd;
-  
   // resolves Domain and Device Manger relationships
   setAdditionalParameters(registrar_ior, nic);
 
   // establish IDM Channel connectivity
-  //connectIDMChannel( idm_channel_ior );
    CF::ComponentType this_dev;
    this_dev.identifier = this->_identifier.c_str();
    this_dev.profile = this->profile.c_str();
@@ -210,19 +203,14 @@ void DeviceComponent::start_device(DeviceComponent::ctor_type ctor, struct sigac
 {
     char* devMgr_ior = 0;
     char* id = 0;
-    char* label = 0;
-    char* profile = 0;
-    //char* idm_channel_ior = 0;
-    std::string idm_channel_ior("");
+    char* blank_string = 0;
     char* composite_device = 0;
     //const char* logging_config_uri = 0;
     //int debug_level = -1; // use log level from configuration file 
     std::string logcfg_uri("");
     std::string log_dpath("");
     std::string log_id("");
-    std::string log_label("");
     bool skip_run = false;
-    bool enablesigfd=false;
         
     for (int index = 1; index < argc; ++index) {
         if (std::string(argv[index]) == std::string("-i")) {
@@ -238,16 +226,9 @@ void DeviceComponent::start_device(DeviceComponent::ctor_type ctor, struct sigac
             
         if (strcmp("COMPONENT_REGISTRY_IOR", argv[i]) == 0) {
             devMgr_ior = argv[++i];
-        } else if (strcmp("PROFILE_NAME", argv[i]) == 0) {
-            profile = argv[++i];
         } else if (strcmp("DEVICE_ID", argv[i]) == 0) {
             id = argv[++i];
             log_id = id;
-        } else if (strcmp("DEVICE_LABEL", argv[i]) == 0) {
-            label = argv[++i];
-            log_label = label;
-        } else if (strcmp("IDM_CHANNEL_IOR", argv[i]) == 0) {
-            idm_channel_ior = argv[++i];
         } else if (strcmp("COMPOSITE_DEVICE_IOR", argv[i]) == 0) {
             composite_device = argv[++i];
         /*} else if (strcmp("LOGGING_CONFIG_URI", argv[i]) == 0) {
@@ -256,8 +237,6 @@ void DeviceComponent::start_device(DeviceComponent::ctor_type ctor, struct sigac
             debug_level = atoi(argv[++i]);*/
         } else if (strcmp("DOM_PATH", argv[i]) == 0) {
             log_dpath = argv[++i];
-        } else if (strcmp("USESIGFD", argv[i]) == 0){
-            enablesigfd = true;
         } else if (strcmp("SKIP_RUN", argv[i]) == 0){
             skip_run = true;
             i++;             // skip flag has bogus argument need to skip over so execparams is processed correctly
@@ -268,26 +247,6 @@ void DeviceComponent::start_device(DeviceComponent::ctor_type ctor, struct sigac
     }
 
     std::cout<<"(2)"<<std::endl;
-    std::string logname = log_label+".system.Device";
-    // signal assist with processing SIGCHLD events for executable devices..
-    int sig_fd=-1;
-    if ( enablesigfd  ){
-      int err;
-      sigset_t  sigset;
-      err=sigemptyset(&sigset);
-      err=sigaddset(&sigset, SIGCHLD);
-      /* We must block the signals in order for signalfd to receive them */
-      err = sigprocmask(SIG_BLOCK, &sigset, NULL);
-      if ( err != 0 ) {
-        exit(EXIT_FAILURE);
-      }
-      /* Create the signalfd */
-      sig_fd = signalfd(-1, &sigset,0);
-      if ( sig_fd == -1 ) {
-        exit(EXIT_FAILURE);
-      }
-    }
-    std::cout<<"(3)"<<std::endl;
 
     // The ORB must be initialized before configuring logging, which may use
     // CORBA to get its configuration file. Devices do not need persistent IORs.
@@ -332,7 +291,7 @@ void DeviceComponent::start_device(DeviceComponent::ctor_type ctor, struct sigac
     signal(SIGINT, SIG_IGN);
     std::cout<<"(5)"<<std::endl;
 
-    DeviceComponent* device = ctor(devMgr_ior, id, profile, composite_device);
+    DeviceComponent* device = ctor(devMgr_ior, id, blank_string, composite_device);
     std::cout<<"(6)"<<std::endl;
     
     /*if ( !skip_run ) {
@@ -349,7 +308,7 @@ void DeviceComponent::start_device(DeviceComponent::ctor_type ctor, struct sigac
     std::string nic = "";
     try {
     std::cout<<"(8)"<<std::endl;
-      device->postConstruction( tmp_devMgr_ior, idm_channel_ior, nic, sig_fd);
+      device->postConstruction( tmp_devMgr_ior, nic);
     std::cout<<"(9)"<<std::endl;
     }
     catch( CF::InvalidObjectReference &ex ) {

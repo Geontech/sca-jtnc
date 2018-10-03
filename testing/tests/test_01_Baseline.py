@@ -65,5 +65,4 @@ class SBTestTest(scatest.CorbaTestCase):
         comp = sb.launch('cpp_dev')
         print 'cpp_dev', comp.query([])
         print 'cpp_dev', comp._get_identifier()
-        raw_input('press any key')
 
