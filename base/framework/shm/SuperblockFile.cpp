@@ -18,7 +18,7 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/.
  */
 
-#include <ossie/shm/SuperblockFile.h>
+#include <sca/shm/SuperblockFile.h>
 
 #include <stdexcept>
 #include <fstream>
@@ -27,12 +27,12 @@
 #include <signal.h>
 #include <unistd.h>
 
-#include <ossie/shm/System.h>
+#include <sca/shm/System.h>
 
 #include "Superblock.h"
 #include "atomic_counter.h"
 
-using namespace redhawk::shm;
+using namespace sca::shm;
 
 struct SuperblockFile::Header {
     // Magic number to identify superblock files. This should never change.
@@ -72,7 +72,7 @@ SuperblockFile::~SuperblockFile()
 
 bool SuperblockFile::IsSuperblockFile(const std::string& name)
 {
-    std::string path = redhawk::shm::getSystemPath();
+    std::string path = sca::shm::getSystemPath();
     path += "/" + name;
     std::ifstream file(path.c_str());
     if (!file) {

@@ -52,6 +52,8 @@ BUILT_SOURCES =	bio_dataBitSK.cpp \
 		bio_dataVITA49SK.cpp \
 		bio_runtimeStatsSK.cpp \
 		bulkioDataTypesSK.cpp \
+		bio_dataExtSK.cpp \
+		bio_dataExtDynSK.cpp \
 		bio_dataBitDynSK.cpp \
 		bio_dataDoubleDynSK.cpp \
 		bio_dataFloatDynSK.cpp \
@@ -75,7 +77,7 @@ CLEANFILES = $(BUILT_SOURCES)
 
 
 bulkioheaderdir = $(pkgincludedir)/BULKIO
-dist_bulkioheader_HEADERS = bio_dataBit.h bio_dataDouble.h bio_dataFloat.h bio_dataLongLong.h bio_dataSDDS.h bio_dataUlong.h bio_dataUshort.h bio_dataXML.h bio_updateSRI.h bio_dataChar.h bio_dataFile.h bio_dataLong.h bio_dataOctet.h bio_dataShort.h bio_dataUlongLong.h bio_dataVITA49.h bio_runtimeStats.h bulkioDataTypes.h
+dist_bulkioheader_HEADERS = bio_dataBit.h bio_dataExt.h bio_dataDouble.h bio_dataFloat.h bio_dataLongLong.h bio_dataSDDS.h bio_dataUlong.h bio_dataUshort.h bio_dataXML.h bio_updateSRI.h bio_dataChar.h bio_dataFile.h bio_dataLong.h bio_dataOctet.h bio_dataShort.h bio_dataUlongLong.h bio_dataVITA49.h bio_runtimeStats.h bulkioDataTypes.h
 
 lib_LTLIBRARIES = libscabulkioidl.la
 nodist_libscabulkioidl_la_SOURCES = $(BUILT_SOURCES)

@@ -18,10 +18,9 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/.
  */
 
-#include <ossie/Transport.h>
-#include <ossie/debug.h>
+#include <sca/Transport.h>
 
-namespace redhawk {
+namespace sca {
 
     class TransportRegistry::Impl {
     public:

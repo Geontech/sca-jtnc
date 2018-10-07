@@ -20,11 +20,11 @@
 
 #include <sys/statvfs.h>
 
-#include <ossie/shm/System.h>
+#include <sca/shm/System.h>
 
 #define SHMDIR "/dev/shm"
 
-namespace redhawk {
+namespace sca {
     namespace shm {
 
         const char* getSystemPath()

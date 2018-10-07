@@ -23,7 +23,7 @@
 
 #include <pthread.h>
 
-namespace redhawk {
+namespace sca {
 
     class shared_mutex {
     public:

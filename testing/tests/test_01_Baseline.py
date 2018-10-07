@@ -72,5 +72,9 @@ class SBTestTest(scatest.CorbaTestCase):
         #print 'cpp_dev', comp.query([])
         retval = comp.query([teststring])
         self.assertEquals(retval[0].value._v, 'foo')
+        print comp.teststring
+        comp.teststring = 'hello'
+        print comp.teststring
+        comp.api()
         #print 'cpp_dev', comp._get_identifier()
 

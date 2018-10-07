@@ -18,7 +18,7 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/.
  */
 
-#include <ossie/shm/MappedFile.h>
+#include <sca/shm/MappedFile.h>
 
 #include <stdexcept>
 #include <cstring>
@@ -29,7 +29,7 @@
 #include <fcntl.h>
 #include <errno.h>
 
-using namespace redhawk::shm;
+using namespace sca::shm;
 
 static std::string error_string()
 {

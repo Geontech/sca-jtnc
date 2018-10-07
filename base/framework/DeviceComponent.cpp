@@ -197,6 +197,40 @@ void  DeviceComponent::postConstruction (std::string &registrar_ior)
   }*/
 }
 
+void DeviceComponent::addPort (const std::string& name, PortBase* servant)
+{
+    insertPort(name, servant);
+
+    // Activate the port in its default POA (usually, the root)
+    PortableServer::POA_var poa = servant->_default_POA();
+    PortableServer::ObjectId_var oid = poa->activate_object(servant);
+
+    // Allow additional post-activation initialization
+    servant->initializePort();
+}
+
+void DeviceComponent::addPort (const std::string& name, const std::string& description, PortBase* servant)
+{
+    addPort(name, servant);
+    servant->setDescription(description);
+}
+
+void DeviceComponent::insertPort (const std::string& name, PortBase* servant)
+{
+    PortServantMap::iterator existing = _portServants.find(name);
+    if (existing != _portServants.end()) {
+        deactivatePort(existing->second);
+    }
+    _portServants[name] = servant;
+}
+
+void DeviceComponent::deactivatePort (PortBase* servant)
+{
+    PortableServer::POA_var poa = servant->_default_POA();
+    PortableServer::ObjectId_var oid = poa->servant_to_id(servant);
+    poa->deactivate_object(oid);
+}
+
 void DeviceComponent::start_device(DeviceComponent::ctor_type ctor, struct sigaction sa, int argc, char* argv[])
 {
     char* devMgr_ior = 0;

@@ -18,7 +18,7 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/.
  */
 
-#include <ossie/shm/Heap.h>
+#include <sca/shm/Heap.h>
 #include "Superblock.h"
 #include "Block.h"
 #include "ThreadState.h"
@@ -33,7 +33,7 @@
 
 #include <boost/thread.hpp>
 
-using namespace redhawk::shm;
+using namespace sca::shm;
 
 #define PAGE_ROUND_DOWN(x,p) ((x/p)*p)
 #define PAGE_ROUND_UP(x,p) (((x+p-1)/p)*p)

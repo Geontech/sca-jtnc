@@ -23,8 +23,8 @@
 #include "ThreadState.h"
 #include "offset_ptr.h"
 
-#include <ossie/shm/MappedFile.h>
-#include <ossie/BufferManager.h>
+#include <sca/shm/MappedFile.h>
+#include <sca/BufferManager.h>
 
 #include <stdexcept>
 #include <cstring>
@@ -33,10 +33,10 @@
 #include <sstream>
 #include <assert.h>
 
-using namespace redhawk;
-using redhawk::shm::Superblock;
-using redhawk::shm::Block;
-using redhawk::shm::ThreadState;
+using namespace sca;
+using sca::shm::Superblock;
+using sca::shm::Block;
+using sca::shm::ThreadState;
 
 #define ALLOC_DEBUG 0
 #if ALLOC_DEBUG > 0

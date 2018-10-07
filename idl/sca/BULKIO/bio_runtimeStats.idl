@@ -23,7 +23,7 @@
 
 #include "sca/CF/CFProperties.idl"
 #include "sca/CF/CFCommonTypes.idl"
-#include "sca/CF/CFPortAccessor.idl"
+#include "sca/CF/QueryablePort.idl"
 #include "sca/CF/AdditionalTypes.idl"
 #include "sca/BULKIO/bulkioDataTypes.idl"
 
@@ -86,7 +86,7 @@ module BULKIO {
 
     typedef sequence<UsesPortStatistics> UsesPortStatisticsSequence;
 
-    interface UsesPortStatisticsProvider : CF::PortAccessor {
+    interface UsesPortStatisticsProvider : ExtendedCF::QueryablePort {
         readonly attribute UsesPortStatisticsSequence statistics;
     };
 };

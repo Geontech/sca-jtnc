@@ -18,11 +18,11 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/.
  */
 
-#include <ossie/ProvidesPort.h>
-#include <ossie/PropertyMap.h>
-#include <ossie/ossieSupport.h>
+#include <sca/ProvidesPort.h>
+#include <sca/PropertyMap.h>
+#include <sca/scaSupport.h>
 
-namespace redhawk {
+namespace sca {
 
     ProvidesTransport::ProvidesTransport(NegotiableProvidesPortBase* port, const std::string& transportId) :
         _port(port),
@@ -58,8 +58,6 @@ namespace redhawk {
         TransportStack transports = TransportRegistry::GetTransports(repo_id);
         for (TransportStack::iterator iter = transports.begin(); iter != transports.end(); ++iter) {
             TransportFactory* transport = *iter;
-            RH_DEBUG(_portLog, "Adding provides transport '" << transport->transportType()
-                     << "' for '" << repo_id << "'");
             _transportManagers.push_back(transport->createProvidesManager(this));
         }
     }
@@ -78,7 +76,7 @@ namespace redhawk {
             ExtendedCF::TransportInfo transport;
             transport.transportType = (*manager)->transportType().c_str();
             transport.transportProperties = (*manager)->transportProperties();
-            ossie::corba::push_back(transports, transport);
+            sca::corba::push_back(transports, transport);
         }
         return transports._retn();
     }
@@ -100,8 +98,8 @@ namespace redhawk {
 
         // Create a unique identifier for this transport instance, that should
         // be used later for disconnect
-        std::string transport_id = ossie::generateUUID();
-        const redhawk::PropertyMap& transport_props = redhawk::PropertyMap::cast(transportProperties);
+        std::string transport_id = sca::generateUUID();
+        const sca::PropertyMap& transport_props = sca::PropertyMap::cast(transportProperties);
 
         // Ask the manager to create a transport instance; if for any reason it
         // doesn't want to (e.g., bad properties), it should throw an exception
@@ -128,7 +126,6 @@ namespace redhawk {
             delete transport;
             throw ExtendedCF::NegotiationError(exc.what());
         } catch (...) {
-            RH_ERROR(_portLog, "Unexpected error starting transport type '" << transportType << "'");
             delete transport;
             throw ExtendedCF::NegotiationError("failed to start transport");
         }
@@ -158,9 +155,9 @@ namespace redhawk {
         try {
             transport->second->stopTransport();
         } catch (const std::exception& exc) {
-            RH_ERROR(_portLog, "Error stopping transport '" << transportId << "': " << exc.what());
+            std::cout<<"Error stopping transport '" << transportId << "': " << exc.what()<<std::endl;
         } catch (...) {
-            RH_ERROR(_portLog, "Unknown error stopping transport '" << transportId << "'");
+            std::cout<<"Unknown error stopping transport '" << transportId << "'"<<std::endl;
         }
 
         // Finish cleaning up

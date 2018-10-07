@@ -20,10 +20,10 @@
 
 #include <iostream>
 
-#include <ossie/BufferManager.h>
+#include <sca/BufferManager.h>
 #include "inplace_list.h"
 
-using redhawk::BufferManager;
+using sca::BufferManager;
 
 struct BufferManager::CacheBlock {
     CacheBlock(size_t size) :
@@ -222,7 +222,7 @@ private:
 
     BufferManager* _manager;
     boost::mutex _lock;
-    typedef redhawk::inplace_list<CacheNode> CacheList;
+    typedef sca::inplace_list<CacheNode> CacheList;
     CacheList _cache;
     bool _enabled;
     size_t _time;

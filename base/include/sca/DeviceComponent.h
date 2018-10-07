@@ -35,10 +35,7 @@
 #include "CF/DeviceComponent.h"
 #include "sca/CorbaUtils.h"
 #include "sca/PropertySet_impl.h"
-/*#include "ossie/debug.h"
-#include "ossie/Events.h"
-#include "ossie/CorbaUtils.h"
-#include "ossie/Autocomplete.h"*/
+#include "sca/Port_impl.h"
 
 #ifndef ENABLE_LOGGING
 #define ENABLE_LOGGING /* */
@@ -74,6 +71,10 @@ public:
     CF::DeviceAttributes::OperationalType operationalState () throw (CORBA::SystemException);
     CF::AdministratableInterface::AdminType adminState ()throw (CORBA::SystemException);
     void adminState (CF::AdministratableInterface::AdminType _adminType);
+    void addPort (const std::string& name, PortBase* servant);
+    void addPort (const std::string& name, const std::string& description, PortBase* servant);
+    void insertPort (const std::string& name, PortBase* servant);
+    void deactivatePort (PortBase* servant);
 
     void setExecparamProperties(std::map<std::string, char*>&);
     virtual void  postConstruction( std::string &registrar_ior);
@@ -88,6 +89,8 @@ public:
     std::string profile;
 
 protected:
+    typedef std::map<std::string, PortBase*> PortServantMap;
+    PortServantMap _portServants;
     bool _started;
     void initializeCommonAttributes(const std::string _id);
     std::string _identifier;

@@ -78,9 +78,13 @@
 #define __CFCommonTypes_hh_EXTERNAL_GUARD__
 #include <sca/CF/CFCommonTypes.h>
 #endif
-#ifndef __CFPortAccessor_hh_EXTERNAL_GUARD__
-#define __CFPortAccessor_hh_EXTERNAL_GUARD__
-#include <sca/CF/CFPortAccessor.h>
+#ifndef __Port_hh_EXTERNAL_GUARD__
+#define __Port_hh_EXTERNAL_GUARD__
+#include <sca/CF/Port.h>
+#endif
+#ifndef __QueryablePort_hh_EXTERNAL_GUARD__
+#define __QueryablePort_hh_EXTERNAL_GUARD__
+#include <sca/CF/QueryablePort.h>
 #endif
 #ifndef __AdditionalTypes_hh_EXTERNAL_GUARD__
 #define __AdditionalTypes_hh_EXTERNAL_GUARD__
@@ -479,7 +483,7 @@ _CORBA_MODULE_BEG
   };
 
   class _objref_UsesPortStatisticsProvider :
-    public virtual CF::_objref_PortAccessor
+    public virtual ExtendedCF::_objref_QueryablePort
   {
   public:
     // IDL operations
@@ -513,7 +517,7 @@ _CORBA_MODULE_BEG
   };
 
   class _impl_UsesPortStatisticsProvider :
-    public virtual CF::_impl_PortAccessor
+    public virtual ExtendedCF::_impl_QueryablePort
   {
   public:
     virtual ~_impl_UsesPortStatisticsProvider();
@@ -553,7 +557,7 @@ _CORBA_MODULE_BEG
 
   class UsesPortStatisticsProvider :
     public virtual BULKIO::_impl_UsesPortStatisticsProvider,
-    public virtual POA_CF::PortAccessor
+    public virtual POA_ExtendedCF::QueryablePort
   {
   public:
     virtual ~UsesPortStatisticsProvider();

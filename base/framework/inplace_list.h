@@ -18,7 +18,7 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/.
  */
 
-namespace redhawk {
+namespace sca {
 
     template <class Node, Node* Node::*Prev=&Node::prev, Node* Node::*Next=&Node::next>
     struct list_node_traits {

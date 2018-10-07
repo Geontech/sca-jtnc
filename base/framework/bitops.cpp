@@ -18,7 +18,7 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/.
  */
 
-#include <ossie/bitops.h>
+#include <sca/bitops.h>
 
 #include <algorithm>
 #include <cstring>
@@ -26,7 +26,7 @@
 #include <iomanip>
 #include <stdexcept>
 
-namespace redhawk {
+namespace sca {
 namespace bitops {
 
     namespace {
@@ -602,7 +602,7 @@ namespace bitops {
     uint64_t getint(const byte* str, size_t start, size_t bits)
     {
         if (bits > 64) {
-            throw std::length_error("redhawk::bitops::getint()");
+            throw std::length_error("sca::bitops::getint()");
         }
         return apply_unary(str, start, bits, GetInteger());
     }
@@ -632,7 +632,7 @@ namespace bitops {
     void setint(byte* str, size_t start, uint64_t value, size_t bits)
     {
         if (bits > 64) {
-            throw std::length_error("redhawk::bitops::setint()");
+            throw std::length_error("sca::bitops::setint()");
         }
         apply_unary(str, start, bits, SetInteger(value, bits));
     }
@@ -969,4 +969,4 @@ namespace bitops {
     }
 
 } // namespace bitops
-} // namespace redhawk
+} // namespace sca

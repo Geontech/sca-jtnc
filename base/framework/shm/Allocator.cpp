@@ -20,16 +20,16 @@
 
 #include <iostream>
 
-#include <ossie/shm/Allocator.h>
-#include <ossie/shm/Heap.h>
+#include <sca/shm/Allocator.h>
+#include <sca/shm/Heap.h>
 
-#include <ossie/BufferManager.h>
+#include <sca/BufferManager.h>
 
 #include <boost/thread.hpp>
 
 #include "Block.h"
 
-namespace redhawk {
+namespace sca {
     namespace shm {
         namespace {
             static boost::once_flag heapInit = BOOST_ONCE_INIT;
@@ -41,7 +41,7 @@ namespace redhawk {
                 if (shm_env && strcmp(shm_env, "disable") == 0) {
                     std::cerr << "SHM disabled" << std::endl;
                 } else {
-                    const std::string name = redhawk::shm::getProcessHeapName(getpid());
+                    const std::string name = sca::shm::getProcessHeapName(getpid());
                     Heap* heap = 0;
                     try {
                         heap = new Heap(name);
@@ -85,16 +85,16 @@ namespace redhawk {
         {
             Heap* heap = getProcessHeap();
             if (!heap) {
-                throw std::logic_error("redhawk::shm::deallocate called without process heap");
+                throw std::logic_error("sca::shm::deallocate called without process heap");
             }
             heap->deallocate(ptr);
         }
 
         void* allocateHybrid(size_t bytes)
         {
-            redhawk::shm::Heap* heap = redhawk::shm::getProcessHeap();
+            sca::shm::Heap* heap = sca::shm::getProcessHeap();
             if (!heap) {
-                return redhawk::BufferManager::Allocate(bytes);
+                return sca::BufferManager::Allocate(bytes);
             }
 
             void* ptr = heap->allocate(bytes);
@@ -102,7 +102,7 @@ namespace redhawk {
                 return ptr;
             }
 
-            ptr = redhawk::BufferManager::Allocate(sizeof(Block) + bytes);
+            ptr = sca::BufferManager::Allocate(sizeof(Block) + bytes);
             if (ptr) {
                 Block* block = new (ptr) Block(0, 0);
                 return block->data();
@@ -113,9 +113,9 @@ namespace redhawk {
 
         void deallocateHybrid(void* ptr)
         {
-            redhawk::shm::Heap* heap = redhawk::shm::getProcessHeap();
+            sca::shm::Heap* heap = sca::shm::getProcessHeap();
             if (!heap) {
-                redhawk::BufferManager::Deallocate(ptr);
+                sca::BufferManager::Deallocate(ptr);
                 return;
             }
 
@@ -124,7 +124,7 @@ namespace redhawk {
             if (!block->getSuperblock()) {
                 // Invalidate the block and pass it on to BufferManager
                 block->~Block();
-                redhawk::BufferManager::Deallocate(block);
+                sca::BufferManager::Deallocate(block);
             } else {
                 heap->deallocate(ptr);
             }

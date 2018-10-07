@@ -52,6 +52,7 @@ import sca.cf.CFTestableInterface_idl
 import sca.cf.DeviceComponent_idl
 import sca.cf.UTCTime_idl
 import sca.cf.AdditionalTypes_idl
+import sca.cf.Port_idl
 
 # ** 2. Sub-modules
 

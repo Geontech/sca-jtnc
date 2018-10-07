@@ -23,6 +23,7 @@
 #include <boost/thread.hpp>
 #include <sca/DeviceComponent.h>
 #include <sca/ThreadedComponent.h>
+#include <bulkio/bulkio.h>
 
 class cpp_dev_base : public DeviceComponent, protected ThreadedComponent
 {
@@ -48,6 +49,8 @@ class cpp_dev_base : public DeviceComponent, protected ThreadedComponent
         std::string teststring;
         std::string devmgr_id;
         std::string dom_id;
+        bulkio::InFloatPort *dataFloatIn;
+        //bulkio::OutFloatPort *dataFloatOut;
 
     private:
         void construct();

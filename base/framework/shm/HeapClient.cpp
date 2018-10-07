@@ -18,12 +18,12 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/.
  */
 
-#include <ossie/shm/HeapClient.h>
-#include <ossie/shm/Heap.h>
+#include <sca/shm/HeapClient.h>
+#include <sca/shm/Heap.h>
 
 #include "Superblock.h"
 
-using namespace redhawk::shm;
+using namespace sca::shm;
 
 HeapClient::HeapClient()
 {

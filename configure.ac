@@ -41,7 +41,8 @@ AC_SUBST([LIBOSSIEPARSER_VERSION_INFO], [3:0:0])
 AC_SUBST([LIBOMNIJNI_VERSION_INFO], [1:0:1])
 AC_SUBST([LIBOSSIECFJNI_VERSION_INFO], [1:0:0])
 AC_SUBST([LIBREDHAWK_LOGGING_VERSION_INFO], [1:0:0])
-
+AC_SUBST([BULKIO_API_VERSION], [2.2])
+AC_SUBST([BULKIO_SO_VERSION], [0:0:0])
 
 dnl AC_CONFIG_MACRO_DIR([m4])
 dnl LT_INIT
@@ -250,6 +251,7 @@ CPPFLAGS="${CPPFLAGS} -UPACKAGE_NAME -UPACKAGE_BUGREPORT -UPACKAGE_TARNAME -UPAC
 
 AC_CONFIG_FILES(Makefile \
                 base/Makefile \
+                base/bulkio/Makefile \
                 base/framework/Makefile \
                 base/framework/python/Makefile \
                 base/framework/idl/CF/Makefile \

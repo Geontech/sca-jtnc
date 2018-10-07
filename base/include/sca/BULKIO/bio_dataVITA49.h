@@ -78,9 +78,13 @@
 #define __CFCommonTypes_hh_EXTERNAL_GUARD__
 #include <sca/CF/CFCommonTypes.h>
 #endif
-#ifndef __CFPortAccessor_hh_EXTERNAL_GUARD__
-#define __CFPortAccessor_hh_EXTERNAL_GUARD__
-#include <sca/CF/CFPortAccessor.h>
+#ifndef __Port_hh_EXTERNAL_GUARD__
+#define __Port_hh_EXTERNAL_GUARD__
+#include <sca/CF/Port.h>
+#endif
+#ifndef __QueryablePort_hh_EXTERNAL_GUARD__
+#define __QueryablePort_hh_EXTERNAL_GUARD__
+#include <sca/CF/QueryablePort.h>
 #endif
 #ifndef __AdditionalTypes_hh_EXTERNAL_GUARD__
 #define __AdditionalTypes_hh_EXTERNAL_GUARD__

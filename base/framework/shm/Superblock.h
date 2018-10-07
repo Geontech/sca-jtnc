@@ -26,7 +26,7 @@
 
 #include "shared_mutex.h"
 
-namespace redhawk {
+namespace sca {
 
     namespace shm {
 
@@ -80,7 +80,7 @@ namespace redhawk {
             const uint64_t _offset;
             const uint32_t _size;
             const uint32_t _dataStart;
-            mutable redhawk::shared_mutex _lock;
+            mutable sca::shared_mutex _lock;
 
             volatile size_t _used;
 

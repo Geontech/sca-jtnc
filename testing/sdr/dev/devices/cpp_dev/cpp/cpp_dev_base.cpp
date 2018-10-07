@@ -65,6 +65,10 @@ void cpp_dev_base::construct()
 {
     loadProperties();
     this->profile = "/devices/cpp_dev/cpp_dev.spd.xml";
+    dataFloatIn = new bulkio::InFloatPort("dataFloatIn");
+    addPort("dataFloatIn", "dataFloatIn description", dataFloatIn);
+    /*dataFloatOut = new bulkio::OutFloatPort("dataFloatOut");
+    addPort("dataFloatOut", dataFloatOut);*/
 }
 
 /*******************************************************************************************

@@ -20,11 +20,11 @@
 
 #include <stdexcept>
 
-#include <ossie/bitbuffer.h>
-#include <ossie/bitops.h>
+#include <sca/bitbuffer.h>
+#include <sca/bitops.h>
 
-using redhawk::shared_bitbuffer;
-using redhawk::bitbuffer;
+using sca::shared_bitbuffer;
+using sca::bitbuffer;
 
 //
 // shared_bitbuffer implementation
@@ -78,7 +78,7 @@ int shared_bitbuffer::operator[] (size_t pos) const
 
 uint64_t shared_bitbuffer::getint(size_t pos, size_t bits) const
 {
-    _M_check_pos(pos + bits, size(), "redhawk::shared_bitbuffer::getint()");
+    _M_check_pos(pos + bits, size(), "sca::shared_bitbuffer::getint()");
     return bitops::getint(data(), offset() + pos, bits);
 }
 
@@ -86,7 +86,7 @@ void shared_bitbuffer::trim(size_t start, size_t end)
 {
     // Check indices for range, which may update end if it was not given, or
     // larger than the source size.
-    _M_check_range(start, end, size(), "redhawk::shared_bitbuffer::trim");
+    _M_check_range(start, end, size(), "sca::shared_bitbuffer::trim");
     _M_offset += start;
     _M_size = (end - start);
 
@@ -210,13 +210,13 @@ bitbuffer::reference bitbuffer::operator[] (size_t pos)
 
 void bitbuffer::setint(size_t pos, uint64_t value, size_t bits)
 {
-    _M_check_pos(pos + bits, size(), "redhawk::bitbuffer::setint()");
+    _M_check_pos(pos + bits, size(), "sca::bitbuffer::setint()");
     bitops::setint(data(), offset() + pos, value, bits);
 }
 
 bitbuffer bitbuffer::slice(size_t start, size_t end)
 {
-    _M_check_pos(start, size(), "redhawk::bitbuffer::slice()");
+    _M_check_pos(start, size(), "sca::bitbuffer::slice()");
     bitbuffer temp(*this);
     temp.trim(start, end);
     return temp;
@@ -224,19 +224,19 @@ bitbuffer bitbuffer::slice(size_t start, size_t end)
 
 void bitbuffer::replace(size_t pos, size_t bits, const shared_bitbuffer& src, size_t srcpos)
 {
-    redhawk::bitops::copy(data(), offset() + pos, src.data(), src.offset() + srcpos, bits);
+    sca::bitops::copy(data(), offset() + pos, src.data(), src.offset() + srcpos, bits);
 }
 
 size_t bitbuffer::takeskip(size_t pos, const shared_bitbuffer& src, size_t take, size_t skip, size_t start, size_t end)
 {
     // Check indices for range, which may update end if it was not given, or
     // larger than the source size.
-    _M_check_range(start, end, src.size(), "redhawk::bitbuffer::takeskip");
+    _M_check_range(start, end, src.size(), "sca::bitbuffer::takeskip");
     // Check size of destination to ensure it can hold enough bits
     size_t count = end - start;
     size_t required = _M_takeskip_size(count, take, skip);
     if ((size() - pos) < required) {
-        throw std::length_error("redhawk::bitbuffer::takeskip");
+        throw std::length_error("sca::bitbuffer::takeskip");
     }
     // Account for internal bit offsets
     pos += offset();
@@ -266,14 +266,14 @@ void bitbuffer::_M_parse(const std::string& str)
 void bitbuffer::_M_resize(bitbuffer& dest)
 {
     size_t bits = std::min(size(), dest.size());
-    redhawk::bitops::copy(dest.data(), dest.offset(), data(), offset(), bits);
+    sca::bitops::copy(dest.data(), dest.offset(), data(), offset(), bits);
     this->swap(dest);
 }
 
 //
 // global operator implementations
 //
-bool redhawk::operator==(const shared_bitbuffer& lhs, const shared_bitbuffer& rhs)
+bool sca::operator==(const shared_bitbuffer& lhs, const shared_bitbuffer& rhs)
 {
     if (lhs.size() != rhs.size()) {
         // Different sizes always compare unequal
@@ -288,7 +288,7 @@ bool redhawk::operator==(const shared_bitbuffer& lhs, const shared_bitbuffer& rh
     }
 }
 
-bool redhawk::operator!=(const shared_bitbuffer& lhs, const shared_bitbuffer& rhs)
+bool sca::operator!=(const shared_bitbuffer& lhs, const shared_bitbuffer& rhs)
 {
     return !(lhs == rhs);
 }

@@ -18,8 +18,8 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/.
  */
 
-#ifndef REDHAWK_SHM_BLOCK_H
-#define REDHAWK_SHM_BLOCK_H
+#ifndef SCA_SHM_BLOCK_H
+#define SCA_SHM_BLOCK_H
 
 #include <inttypes.h>
 #include <assert.h>
@@ -27,7 +27,7 @@
 #include "atomic_counter.h"
 #include "offset_ptr.h"
 
-namespace redhawk {
+namespace sca {
 
     namespace shm {
 

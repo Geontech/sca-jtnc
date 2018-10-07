@@ -18,10 +18,10 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/.
  */
 
-#ifndef REDHAWK_THREADSTATE_H
-#define REDHAWK_THREADSTATE_H
+#ifndef SCA_THREADSTATE_H
+#define SCA_THREADSTATE_H
 
-namespace redhawk {
+namespace sca {
 
     namespace shm {
         class Superblock;
