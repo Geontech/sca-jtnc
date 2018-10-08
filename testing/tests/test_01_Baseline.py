@@ -75,6 +75,7 @@ class SBTestTest(scatest.CorbaTestCase):
         print comp.teststring
         comp.teststring = 'hello'
         print comp.teststring
-        comp.api()
+        snk=sb.DataSink()
+        comp.connect(snk)
         #print 'cpp_dev', comp._get_identifier()
 

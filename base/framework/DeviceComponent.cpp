@@ -79,6 +79,31 @@ void DeviceComponent::releaseObject() throw (CF::LifeCycle::ReleaseError, CORBA:
 }
 
 void DeviceComponent::connectUsesPorts(const CF::PortAccessor::Connections& portConnections) throw (CF::PortAccessor::InvalidPort, CORBA::SystemException) {
+    for (unsigned int i=0; i<portConnections.length(); i++) {
+        std::string port_name = sca::corba::returnString(portConnections[i].portConnectionId.portName);
+        std::string connection_id = sca::corba::returnString(portConnections[i].portConnectionId.connectionId);
+
+        PortServantMap::iterator existing = _portServants.find(port_name);
+        if (existing == _portServants.end()) {
+            CF::PortAccessor::ConnectionErrorType error;
+            error.portConnectionId = portConnections[i].portConnectionId;
+            error.errorCode = 1;
+            throw CF::PortAccessor::InvalidPort(error);
+        }
+        if (connection_id.empty()) {
+            connection_id = sca::generateUUID();
+        }
+        sca::UsesPort* usesport = dynamic_cast<sca::UsesPort*>(_portServants[port_name]);
+        if (usesport) {
+            usesport->connectPort(portConnections[i].portReference, connection_id.c_str());
+        } else {
+            CF::PortAccessor::ConnectionErrorType error;
+            error.portConnectionId = portConnections[i].portConnectionId;
+            error.errorCode = 1;
+            throw CF::PortAccessor::InvalidPort(error);
+        }
+    }
+
 }
 
 void DeviceComponent::disconnectPorts(const CF::PortAccessor::Disconnections& portDisconnections) throw (CF::PortAccessor::InvalidPort, CORBA::SystemException) {
@@ -86,12 +111,6 @@ void DeviceComponent::disconnectPorts(const CF::PortAccessor::Disconnections& po
 
 void DeviceComponent::getProvidesPorts(CF::PortAccessor::Connections& portConnections ) throw (CF::PortAccessor::InvalidPort, CORBA::SystemException) {
 }
-
-/*void DeviceComponent::configure (const CF::Properties& configProperties) throw (CF::PropertySet::PartialConfiguration, CF::PropertySet::InvalidConfiguration, CORBA::SystemException) {
-}
-
-void DeviceComponent::query (CF::Properties& configProperties) throw (CF::UnknownProperties, CORBA::SystemException) {
-}*/
 
 void DeviceComponent::runTest (CORBA::ULong TestID, CF::Properties& testValues) throw (CF::UnknownProperties, CF::TestableInterface::UnknownTest, CORBA::SystemException) {
 }
@@ -120,7 +139,7 @@ void DeviceComponent::adminState (CF::AdministratableInterface::AdminType _admin
 
 void DeviceComponent::setExecparamProperties(std::map<std::string, char*>& execparams)
 {
-    /*std::map<std::string, char*>::iterator iter;
+    std::map<std::string, char*>::iterator iter;
     for (iter = execparams.begin(); iter != execparams.end(); iter++) {
         const std::string id = iter->first;
         PropertyInterface* property = getPropertyFromId(id);
@@ -128,11 +147,11 @@ void DeviceComponent::setExecparamProperties(std::map<std::string, char*>& execp
         // Manager.  If the property is not found, then it might be a resource
         // property passed through the nodeBooter to the DeviceManager
         if (property) {
-            CORBA::Any val = ossie::string_to_any(iter->second, property->type);
+            CORBA::Any val = sca::string_to_any(iter->second, property->type);
             property->setValue(val);
         } else {
         }
-    }*/
+    }
 }
 
 void  DeviceComponent::setAdditionalParameters ( std::string &registrar_ior)
@@ -152,49 +171,20 @@ void  DeviceComponent::setAdditionalParameters ( std::string &registrar_ior)
 
 void  DeviceComponent::postConstruction (std::string &registrar_ior)
 {
-  // resolves Domain and Device Manger relationships
-  setAdditionalParameters(registrar_ior);
+    // resolves Domain and Device Manger relationships
+    setAdditionalParameters(registrar_ior);
 
-  // establish IDM Channel connectivity
-   CF::ComponentType this_dev;
-   this_dev.identifier = this->_identifier.c_str();
-   this_dev.profile = this->profile.c_str();
-   this_dev.type = CF::DEVICE_COMPONENT;
-   this_dev.componentObject = this->_this();
-   this_dev.providesPorts.length(0);
-   this_dev.specializedInfo.length(0);
-   /*struct ComponentType {
-      string identifier;
-      string profile;
-      CF::ComponentEnumType type;
-      Object componentObject;
-      CF::Ports providesPorts;
-      CF::Properties specializedInfo;
-   };*/
+    // establish IDM Channel connectivity
+    CF::ComponentType this_dev;
+    this_dev.identifier = this->_identifier.c_str();
+    this_dev.profile = this->profile.c_str();
+    this_dev.type = CF::DEVICE_COMPONENT;
+    this_dev.componentObject = this->_this();
+    this_dev.providesPorts.length(0);
+    this_dev.specializedInfo.length(0);
 
-  // register ourself with my DeviceManager
-  _deviceManagerRegistry->registerComponent(this_dev);
-
-  // setup original capacity values cache
-  /*PropertySet_impl::PropertyMap::iterator pi = propTable.begin();
-  for( ; pi != propTable.end(); pi++ ) {
-      PropertyInterface *p = pi->second;
-      if ( p and p->isAllocatable() ) {
-          CF::DataType res;
-          res.id = p->id.c_str();
-          p->getValue(res.value);
-          bool found = false;
-          for ( unsigned int j=0; j < originalCap.length(); j++) {
-              if ( strcmp(p->id.c_str(), originalCap[j].id) == 0 ) {
-                  originalCap[j].value = res.value;
-                  found = true;
-              }
-          }
-          if ( !found ) {
-              ossie::corba::push_back( originalCap, res );
-          }
-      }
-  }*/
+    // register ourself with my DeviceManager
+    _deviceManagerRegistry->registerComponent(this_dev);
 }
 
 void DeviceComponent::addPort (const std::string& name, PortBase* servant)

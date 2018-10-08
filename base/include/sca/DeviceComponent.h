@@ -34,6 +34,8 @@
 
 #include "CF/DeviceComponent.h"
 #include "sca/CorbaUtils.h"
+#include "sca/scaSupport.h"
+#include "sca/UsesPort.h"
 #include "sca/PropertySet_impl.h"
 #include "sca/Port_impl.h"
 
