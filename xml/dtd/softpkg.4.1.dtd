@@ -1,0 +1,127 @@
+softpkg.4.1.dtd UNCLASSIFIED 1 / 2
+Distribution Statement A - Approved for public release; distribution is unlimited (27 August 2015)
+<?xml version= "1.0" encoding= "UTF-8" ?>
+<!--
+** RELEASE STATEMENT(s):
+** UNLIMITED RIGHTS
+** The Government has the right to use, modify, reproduce, release, perform,
+** display, or disclose this application programmable interface in whole or in
+** part, in any manner and for any purpose whatsoever, and to have or
+** authorize others to do so.
+**
+** Distribution Statement A - Approved for public release; distribution is
+** unlimited (27 August 2015).
+-->
+<!--
+** JTNC Standard:
+** Software Communications Architecture
+** Appendix D-1: Platform Specific Model (PSM) Document Type Definition (DTD)
+** Version: 4.1, 20 August 2015
+-->
+<!-- softpkg.4.1.dtd -->
+<!ELEMENT softpkg
+    ( title?
+    , author+
+    , description?
+    , propertyfile?
+    , descriptor?
+    , implementation+
+    , usesdevice*
+)>
+<!ATTLIST softpkg
+    id ID #REQUIRED
+    name CDATA #REQUIRED
+    type (sca_compliant | sca_non_compliant) "sca_compliant"
+    version CDATA #IMPLIED >
+<!ELEMENT title (#PCDATA)>
+<!ELEMENT author
+    ( name*
+    , company?
+    , webpage?
+)>
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT company (#PCDATA)>
+<!ELEMENT webpage (#PCDATA)>
+<!ELEMENT description (#PCDATA)>
+<!ELEMENT propertyfile
+    ( localfile
+)>
+<!ATTLIST propertyfile
+    type CDATA #IMPLIED>
+<!ELEMENT localfile EMPTY>
+<!ATTLIST localfile
+    name CDATA #REQUIRED>
+<!ELEMENT descriptor
+    (localfile
+)>
+<!ATTLIST descriptor
+    name CDATA #IMPLIED>
+<!ELEMENT implementation
+    ( description?
+    , propertyfile?
+    , code
+    , compiler?
+    , programminglanguage?
+    softpkg.4.1.dtd UNCLASSIFIED 2 / 2
+    Distribution Statement A - Approved for public release; distribution is unlimited (27 August 2015)
+    , humanlanguage?
+    , runtime?
+    , ( os | processor | dependency )+
+    , usesdevice*
+)>
+<!ATTLIST implementation
+    id ID #REQUIRED
+    aepcompliance (aep_compliant | lw_aep_compliant | aep_non_compliant) "aep_compliant">
+<!ELEMENT code
+    ( localfile
+    , entrypoint?
+    , stacksize?
+    , priority?
+)>
+<!ATTLIST code
+    type CDATA #IMPLIED>
+<!ELEMENT entrypoint (#PCDATA)>
+<!ELEMENT stacksize (#PCDATA)>
+<!ELEMENT priority (#PCDATA)>
+<!ELEMENT compiler EMPTY>
+<!ATTLIST compiler
+    name CDATA #REQUIRED
+    version CDATA #IMPLIED>
+<!ELEMENT programminglanguage EMPTY>
+<!ATTLIST programminglanguage
+    name CDATA #REQUIRED
+    version CDATA #IMPLIED>
+<!ELEMENT humanlanguage EMPTY>
+<!ATTLIST humanlanguage
+    name CDATA #REQUIRED>
+<!ELEMENT runtime EMPTY>
+<!ATTLIST runtime
+    name CDATA #REQUIRED
+    version CDATA #IMPLIED>
+<!ELEMENT os EMPTY>
+<!ATTLIST os
+    name CDATA #REQUIRED
+    version CDATA #IMPLIED>
+<!ELEMENT processor EMPTY>
+<!ATTLIST processor
+    name CDATA #REQUIRED>
+<!ELEMENT dependency
+( softpkgref | propertyref )>
+<!ATTLIST dependency
+    type CDATA #REQUIRED>
+<!ELEMENT softpkgref
+    ( localfile
+    , implref?
+)>
+<!ELEMENT implref EMPTY>
+<!ATTLIST implref
+    refid CDATA #REQUIRED>
+<!ELEMENT propertyref EMPTY>
+<!ATTLIST propertyref
+    refid CDATA #REQUIRED
+    value CDATA #REQUIRED>
+<!ELEMENT usesdevice
+( propertyref+ )>
+<!ATTLIST usesdevice
+    id ID #REQUIRED
+    type CDATA #REQUIRED>

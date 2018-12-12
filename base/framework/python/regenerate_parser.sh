@@ -27,18 +27,20 @@ fi
 
 GENERATE_DS_FLAGS="-f --silence -m"
 echo "Generating DCD parser"
-${GENERATE_DS} ${GENERATE_DS_FLAGS} -o sca/parsers/dcd.py     ../../../xml/xsd/dcd.xsd
+${GENERATE_DS} ${GENERATE_DS_FLAGS} -o sca/parsers/dcd.py     ../../../xml/xsd/deviceconfiguration.4.1.xsd
 echo "Generating DMD parser"
-${GENERATE_DS} ${GENERATE_DS_FLAGS} -o sca/parsers/dmd.py     ../../../xml/xsd/dmd.xsd
+${GENERATE_DS} ${GENERATE_DS_FLAGS} -o sca/parsers/dmd.py     ../../../xml/xsd/domainmanagerconfiguration.4.1.xsd
 echo "Generating DPD parser"
-${GENERATE_DS} ${GENERATE_DS_FLAGS} -o sca/parsers/dpd.py     ../../../xml/xsd/dpd.xsd
+${GENERATE_DS} ${GENERATE_DS_FLAGS} -o sca/parsers/dpd.py     ../../../xml/xsd/devicepkg.4.1.xsd
 echo "Generating PRF parser"
-${GENERATE_DS} ${GENERATE_DS_FLAGS} -o sca/parsers/prf.py     ../../../xml/xsd/prf.xsd
-echo "Generating PROFILE parser"
-${GENERATE_DS} ${GENERATE_DS_FLAGS} -o sca/parsers/profile.py ../../../xml/xsd/profile.xsd
+${GENERATE_DS} ${GENERATE_DS_FLAGS} -o sca/parsers/prf.py     ../../../xml/xsd/properties.4.1.xsd
+echo "Generating AppDep parser"
+${GENERATE_DS} ${GENERATE_DS_FLAGS} -o sca/parsers/adep.py ../../../xml/xsd/applicationdeployment.4.1.xsd
+echo "Generating PlatDep parser"
+${GENERATE_DS} ${GENERATE_DS_FLAGS} -o sca/parsers/pdep.py ../../../xml/xsd/platformdeployment.4.1.xsd
 echo "Generating SAD parser"
-${GENERATE_DS} ${GENERATE_DS_FLAGS} -o sca/parsers/sad.py     ../../../xml/xsd/sad.xsd
+${GENERATE_DS} ${GENERATE_DS_FLAGS} -o sca/parsers/sad.py     ../../../xml/xsd/softwareassembly.4.1.xsd
 echo "Generating SCD parser"
-${GENERATE_DS} ${GENERATE_DS_FLAGS} -o sca/parsers/scd.py     ../../../xml/xsd/scd.xsd
+${GENERATE_DS} ${GENERATE_DS_FLAGS} -o sca/parsers/scd.py     ../../../xml/xsd/softwarecomponent.4.1.xsd
 echo "Generating SPD parser"
-${GENERATE_DS} ${GENERATE_DS_FLAGS} -o sca/parsers/spd.py     ../../../xml/xsd/spd.xsd
+${GENERATE_DS} ${GENERATE_DS_FLAGS} -o sca/parsers/spd.py     ../../../xml/xsd/softpkg.4.1.xsd

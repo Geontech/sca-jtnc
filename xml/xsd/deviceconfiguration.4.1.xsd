@@ -1,0 +1,400 @@
+<schema
+  xmlns='http://www.w3.org/2000/10/XMLSchema'
+  targetNamespace='http://www.w3.org/namespace/'
+  xmlns:t='http://www.w3.org/namespace/'>
+
+ <element name='deviceconfiguration'>
+  <complexType>
+   <sequence>
+    <element ref='t:description' minOccurs='0' maxOccurs='1'/>
+    <element ref='t:devicemanagersoftpkg'/>
+    <element ref='t:componentfiles' minOccurs='0' maxOccurs='1'/>
+    <element ref='t:partitioning' minOccurs='0' maxOccurs='1'/>
+    <element ref='t:connections' minOccurs='0' maxOccurs='1'/>
+    <element ref='t:domainmanager'/>
+    <element ref='t:filesystemnames' minOccurs='0' maxOccurs='1'/>
+   </sequence>
+   <attribute name='id' type='ID' use='required'/>
+   <attribute name='name' type='string' use='optional'/>
+   <attribute name='corba_provider' use='default' value='true'>
+    <simpleType>
+     <restriction base='string'>
+      <enumeration value='false'/>
+      <enumeration value='true'/>
+     </restriction>
+    </simpleType>
+   </attribute>
+   <attribute name='log_capable' use='default' value='false'>
+    <simpleType>
+     <restriction base='string'>
+      <enumeration value='false'/>
+      <enumeration value='true'/>
+     </restriction>
+    </simpleType>
+   </attribute>
+   <attribute name='log_producer' use='default' value='false'>
+    <simpleType>
+     <restriction base='string'>
+      <enumeration value='false'/>
+      <enumeration value='true'/>
+     </restriction>
+    </simpleType>
+   </attribute>
+   <attribute name='oe_profile' use='default' value='medium'>
+    <simpleType>
+     <restriction base='string'>
+      <enumeration value='lightweight'/>
+      <enumeration value='medium'/>
+      <enumeration value='full'/>
+     </restriction>
+    </simpleType>
+   </attribute>
+   <attribute name='devicemgr_deployment_data' use='default' value='false'>
+    <simpleType>
+     <restriction base='string'>
+      <enumeration value='false'/>
+      <enumeration value='true'/>
+     </restriction>
+    </simpleType>
+   </attribute>
+   <attribute name='platformcomponentfactorydeployment' use='default' value='true'>
+    <simpleType>
+     <restriction base='string'>
+      <enumeration value='false'/>
+      <enumeration value='true'/>
+     </restriction>
+    </simpleType>
+   </attribute>
+  </complexType>
+ </element>
+
+ <element name='description'>
+  <complexType mixed='true'>
+  </complexType>
+ </element>
+
+ <element name='devicemanagersoftpkg'>
+  <complexType>
+   <sequence>
+    <element ref='t:localfile'/>
+    <element ref='t:componentproperties' minOccurs='0' maxOccurs='1'/>
+   </sequence>
+  </complexType>
+ </element>
+
+ <element name='localfile'>
+  <complexType>
+   <attribute name='name' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='componentfiles'>
+  <complexType>
+   <sequence>
+    <element ref='t:componentfile' maxOccurs='unbounded'/>
+   </sequence>
+  </complexType>
+ </element>
+
+ <element name='componentfile'>
+  <complexType>
+   <sequence>
+    <element ref='t:localfile'/>
+   </sequence>
+   <attribute name='id' type='ID' use='required'/>
+   <attribute name='type' type='string' use='optional'/>
+  </complexType>
+ </element>
+
+ <element name='partitioning'>
+  <complexType>
+   <sequence minOccurs='0' maxOccurs='unbounded'>
+    <element ref='t:componentplacement'/>
+   </sequence>
+  </complexType>
+ </element>
+
+ <element name='componentplacement'>
+  <complexType>
+   <sequence>
+    <element ref='t:componentfileref'/>
+    <element ref='t:deployondevice' minOccurs='0' maxOccurs='1'/>
+    <element ref='t:compositepartofdevice' minOccurs='0' maxOccurs='1'/>
+    <element ref='t:devicepkgfile' minOccurs='0' maxOccurs='1'/>
+    <element ref='t:componentinstantiation' maxOccurs='unbounded'/>
+   </sequence>
+  </complexType>
+ </element>
+
+ <element name='componentfileref'>
+  <complexType>
+   <attribute name='refid' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='deployondevice'>
+  <complexType>
+   <attribute name='refid' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='compositepartofdevice'>
+  <complexType>
+   <attribute name='refid' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='devicepkgfile'>
+  <complexType>
+   <sequence>
+    <element ref='t:localfile'/>
+   </sequence>
+   <attribute name='type' type='string' use='optional'/>
+  </complexType>
+ </element>
+
+ <element name='componentinstantiation'>
+  <complexType>
+   <sequence>
+    <element ref='t:usagename' minOccurs='0' maxOccurs='1'/>
+    <element ref='t:componentproperties' minOccurs='0' maxOccurs='1'/>
+    <element ref='t:componentfactoryref' minOccurs='0' maxOccurs='1'/>
+    <element ref='t:coreaffinity' minOccurs='0' maxOccurs='unbounded'/>
+   </sequence>
+   <attribute name='id' type='ID' use='required'/>
+   <attribute name='processcollocation' type='string' use='optional'/>
+   <attribute name='stringifiedobjectref' type='string' use='optional'/>
+  </complexType>
+ </element>
+
+ <element name='usagename'>
+  <complexType mixed='true'>
+  </complexType>
+ </element>
+
+ <element name='componentproperties'>
+  <complexType>
+   <choice maxOccurs='unbounded'>
+    <element ref='t:simpleref'/>
+    <element ref='t:simplesequenceref'/>
+    <element ref='t:structref'/>
+    <element ref='t:structsequenceref'/>
+   </choice>
+  </complexType>
+ </element>
+
+ <element name='componentfactoryref'>
+  <complexType>
+   <sequence>
+    <element ref='t:componentfactoryproperties' minOccurs='0' maxOccurs='1'/>
+   </sequence>
+   <attribute name='refid' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='componentfactoryproperties'>
+  <complexType>
+   <choice maxOccurs='unbounded'>
+    <element ref='t:simpleref'/>
+    <element ref='t:simplesequenceref'/>
+    <element ref='t:structref'/>
+    <element ref='t:structsequenceref'/>
+   </choice>
+  </complexType>
+ </element>
+
+ <element name='simpleref'>
+  <complexType>
+   <attribute name='refid' type='string' use='required'/>
+   <attribute name='value' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='simplesequenceref'>
+  <complexType>
+   <sequence>
+    <element ref='t:values'/>
+   </sequence>
+   <attribute name='refid' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='structref'>
+  <complexType>
+   <sequence>
+    <element ref='t:simpleref' maxOccurs='unbounded'/>
+   </sequence>
+   <attribute name='refid' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='structsequenceref'>
+  <complexType>
+   <sequence>
+    <element ref='t:structvalue' maxOccurs='unbounded'/>
+   </sequence>
+   <attribute name='refid' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='structvalue'>
+  <complexType>
+   <sequence>
+    <element ref='t:simpleref' maxOccurs='unbounded'/>
+   </sequence>
+  </complexType>
+ </element>
+
+ <element name='values'>
+  <complexType>
+   <sequence>
+    <element ref='t:value' maxOccurs='unbounded'/>
+   </sequence>
+  </complexType>
+ </element>
+
+ <element name='value'>
+  <complexType mixed='true'>
+  </complexType>
+ </element>
+
+ <element name='coreaffinity'>
+  <complexType mixed='true'>
+  </complexType>
+ </element>
+
+ <element name='connections'>
+  <complexType>
+   <sequence>
+    <element ref='t:connectinterface' minOccurs='0' maxOccurs='unbounded'/>
+   </sequence>
+  </complexType>
+ </element>
+
+ <element name='connectinterface'>
+  <complexType>
+   <sequence>
+    <element ref='t:usesport'/>
+    <choice>
+     <element ref='t:providesport'/>
+     <element ref='t:componentsupportedinterface'/>
+    </choice>
+   </sequence>
+   <attribute name='id' type='ID' use='optional'/>
+  </complexType>
+ </element>
+
+ <element name='usesport'>
+  <complexType>
+   <sequence>
+    <element ref='t:identifier'/>
+    <choice>
+     <element ref='t:componentinstantiationref'/>
+     <element ref='t:assemblyinstantiationref'/>
+     <element ref='t:devicethatloadedthiscomponentref'/>
+     <element ref='t:deviceusedbythiscomponentref'/>
+     <element ref='t:domainfinder'/>
+    </choice>
+   </sequence>
+  </complexType>
+ </element>
+
+ <element name='identifier'>
+  <complexType mixed='true'>
+  </complexType>
+ </element>
+
+ <element name='componentinstantiationref'>
+  <complexType>
+   <attribute name='refid' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='assemblyinstantiationref'>
+  <complexType>
+   <attribute name='refid' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='devicethatloadedthiscomponentref'>
+  <complexType>
+   <attribute name='refid' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='deviceusedbythiscomponentref'>
+  <complexType>
+   <attribute name='refid' type='string' use='required'/>
+   <attribute name='usesrefid' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='domainfinder'>
+  <complexType>
+   <attribute name='type' use='required'>
+    <simpleType>
+     <restriction base='string'>
+      <enumeration value='filesystem'/>
+      <enumeration value='eventchannel'/>
+      <enumeration value='application'/>
+      <enumeration value='servicename'/>
+      <enumeration value='servicetype'/>
+     </restriction>
+    </simpleType>
+   </attribute>
+   <attribute name='name' type='string' use='optional'/>
+  </complexType>
+ </element>
+
+ <element name='providesport'>
+  <complexType>
+   <sequence>
+    <element ref='t:identifier'/>
+    <choice>
+     <element ref='t:componentinstantiationref'/>
+     <element ref='t:assemblyinstantiationref'/>
+     <element ref='t:devicethatloadedthiscomponentref'/>
+     <element ref='t:deviceusedbythiscomponentref'/>
+     <element ref='t:domainfinder'/>
+    </choice>
+   </sequence>
+   <attribute name='stringifiedobjectref' type='string' use='optional'/>
+  </complexType>
+ </element>
+
+ <element name='componentsupportedinterface'>
+  <complexType>
+   <sequence>
+    <element ref='t:identifier'/>
+    <choice>
+     <element ref='t:componentinstantiationref'/>
+     <element ref='t:devicethatloadedthiscomponentref'/>
+     <element ref='t:deviceusedbythiscomponentref'/>
+     <element ref='t:domainfinder'/>
+    </choice>
+   </sequence>
+  </complexType>
+ </element>
+
+ <element name='domainmanager'>
+  <complexType>
+   <attribute name='name' type='string' use='required'/>
+   <attribute name='type' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='filesystemnames'>
+  <complexType>
+   <sequence>
+    <element ref='t:filesystemname' maxOccurs='unbounded'/>
+   </sequence>
+  </complexType>
+ </element>
+
+ <element name='filesystemname'>
+  <complexType>
+   <attribute name='mountname' type='string' use='required'/>
+   <attribute name='deviceid' type='string' use='required'/>
+  </complexType>
+ </element>
+</schema>

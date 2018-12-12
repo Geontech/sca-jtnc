@@ -1,0 +1,240 @@
+<schema
+  xmlns='http://www.w3.org/2000/10/XMLSchema'
+  targetNamespace='http://www.w3.org/namespace/'
+  xmlns:t='http://www.w3.org/namespace/'>
+
+ <element name='domainmanagerconfiguration'>
+  <complexType>
+   <sequence>
+    <element ref='t:description' minOccurs='0' maxOccurs='1'/>
+    <element ref='t:domainmanagersoftpkg'/>
+    <element ref='t:deploymentlayout' minOccurs='0' maxOccurs='1'/>
+    <element ref='t:services' minOccurs='0' maxOccurs='1'/>
+   </sequence>
+   <attribute name='id' type='ID' use='required'/>
+   <attribute name='name' type='string' use='required'/>
+   <attribute name='accardinality' use='default' value='single'>
+    <simpleType>
+     <restriction base='string'>
+      <enumeration value='single'/>
+      <enumeration value='multiple'/>
+     </restriction>
+    </simpleType>
+   </attribute>
+   <attribute name='app_backwards_compatible' use='default' value='false'>
+    <simpleType>
+     <restriction base='string'>
+      <enumeration value='false'/>
+      <enumeration value='true'/>
+     </restriction>
+    </simpleType>
+   </attribute>
+   <attribute name='app_deployment_data' use='default' value='true'>
+    <simpleType>
+     <restriction base='string'>
+      <enumeration value='false'/>
+      <enumeration value='true'/>
+     </restriction>
+    </simpleType>
+   </attribute>
+   <attribute name='app_installable' use='default' value='true'>
+    <simpleType>
+     <restriction base='string'>
+      <enumeration value='false'/>
+      <enumeration value='true'/>
+     </restriction>
+    </simpleType>
+   </attribute>
+   <attribute name='app_releasable' use='default' value='true'>
+    <simpleType>
+     <restriction base='string'>
+      <enumeration value='false'/>
+      <enumeration value='true'/>
+     </restriction>
+    </simpleType>
+   </attribute>
+   <attribute name='corba_provider' use='default' value='true'>
+    <simpleType>
+     <restriction base='string'>
+      <enumeration value='false'/>
+      <enumeration value='true'/>
+     </restriction>
+    </simpleType>
+   </attribute>
+   <attribute name='channel_extension' use='default' value='false'>
+    <simpleType>
+     <restriction base='string'>
+      <enumeration value='false'/>
+      <enumeration value='true'/>
+     </restriction>
+    </simpleType>
+   </attribute>
+   <attribute name='event_channel' use='default' value='false'>
+    <simpleType>
+     <restriction base='string'>
+      <enumeration value='false'/>
+      <enumeration value='true'/>
+     </restriction>
+    </simpleType>
+   </attribute>
+   <attribute name='log_producer' use='default' value='false'>
+    <simpleType>
+     <restriction base='string'>
+      <enumeration value='false'/>
+      <enumeration value='true'/>
+     </restriction>
+    </simpleType>
+   </attribute>
+   <attribute name='nested_deployment' use='default' value='false'>
+    <simpleType>
+     <restriction base='string'>
+      <enumeration value='false'/>
+      <enumeration value='true'/>
+     </restriction>
+    </simpleType>
+   </attribute>
+   <attribute name='oe_profile' use='default' value='medium'>
+    <simpleType>
+     <restriction base='string'>
+      <enumeration value='lightweight'/>
+      <enumeration value='medium'/>
+      <enumeration value='full'/>
+     </restriction>
+    </simpleType>
+   </attribute>
+  </complexType>
+ </element>
+
+ <element name='description'>
+  <complexType mixed='true'>
+  </complexType>
+ </element>
+
+ <element name='domainmanagersoftpkg'>
+  <complexType>
+   <sequence>
+    <element ref='t:localfile'/>
+    <element ref='t:componentproperties' minOccurs='0' maxOccurs='1'/>
+   </sequence>
+  </complexType>
+ </element>
+
+ <element name='simpleref'>
+  <complexType>
+   <attribute name='refid' type='string' use='required'/>
+   <attribute name='value' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='simplesequenceref'>
+  <complexType>
+   <sequence>
+    <element ref='t:values'/>
+   </sequence>
+   <attribute name='refid' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='structref'>
+  <complexType>
+   <sequence>
+    <element ref='t:simpleref' maxOccurs='unbounded'/>
+   </sequence>
+   <attribute name='refid' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='structsequenceref'>
+  <complexType>
+   <sequence>
+    <element ref='t:structvalue' maxOccurs='unbounded'/>
+   </sequence>
+   <attribute name='refid' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='structvalue'>
+  <complexType>
+   <sequence>
+    <element ref='t:simpleref' maxOccurs='unbounded'/>
+   </sequence>
+  </complexType>
+ </element>
+
+ <element name='values'>
+  <complexType>
+   <sequence>
+    <element ref='t:value' maxOccurs='unbounded'/>
+   </sequence>
+  </complexType>
+ </element>
+
+ <element name='value'>
+  <complexType mixed='true'>
+  </complexType>
+ </element>
+
+ <element name='componentproperties'>
+  <complexType>
+   <choice maxOccurs='unbounded'>
+    <element ref='t:simpleref'/>
+    <element ref='t:simplesequenceref'/>
+    <element ref='t:structref'/>
+    <element ref='t:structsequenceref'/>
+   </choice>
+  </complexType>
+ </element>
+
+ <element name='localfile'>
+  <complexType>
+   <attribute name='name' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='deploymentlayout'>
+  <complexType>
+   <sequence>
+    <element ref='t:localfile'/>
+   </sequence>
+  </complexType>
+ </element>
+
+ <element name='services'>
+  <complexType>
+   <sequence>
+    <element ref='t:service' maxOccurs='unbounded'/>
+   </sequence>
+  </complexType>
+ </element>
+
+ <element name='service'>
+  <complexType>
+   <sequence>
+    <element ref='t:identifier'/>
+    <element ref='t:domainfinder'/>
+   </sequence>
+  </complexType>
+ </element>
+
+ <element name='domainfinder'>
+  <complexType>
+   <attribute name='type' use='required'>
+    <simpleType>
+     <restriction base='string'>
+      <enumeration value='filesystem'/>
+      <enumeration value='eventchannel'/>
+      <enumeration value='application'/>
+      <enumeration value='servicename'/>
+      <enumeration value='servicetype'/>
+     </restriction>
+    </simpleType>
+   </attribute>
+   <attribute name='name' type='string' use='optional'/>
+  </complexType>
+ </element>
+
+ <element name='identifier'>
+  <complexType mixed='true'>
+  </complexType>
+ </element>
+</schema>

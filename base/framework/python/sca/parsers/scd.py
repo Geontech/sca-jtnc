@@ -1,27 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# This file is protected by Copyright. Please refer to the COPYRIGHT file
-# distributed with this source distribution.
 #
-# This file is part of REDHAWK core.
-#
-# REDHAWK core is free software: you can redistribute it and/or modify it under
-# the terms of the GNU Lesser General Public License as published by the Free
-# Software Foundation, either version 3 of the License, or (at your option) any
-# later version.
-#
-# REDHAWK core is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
-# details.
-#
-# You should have received a copy of the GNU Lesser General Public License
-# along with this program.  If not, see http://www.gnu.org/licenses/.
-
-#
-# Generated Mon Jul 30 12:29:35 2018 by generateDS.py version 2.29.14.
-# Python 2.7.5 (default, Nov  6 2016, 00:28:07)  [GCC 4.8.5 20150623 (Red Hat 4.8.5-11)]
+# Generated Wed Nov 28 18:40:08 2018 by generateDS.py version 2.30.8.
+# Python 2.7.5 (default, Jul 13 2018, 13:06:57)  [GCC 4.8.5 20150623 (Red Hat 4.8.5-28)]
 #
 # Command line options:
 #   ('-f', '')
@@ -30,10 +12,10 @@
 #   ('-o', 'sca/parsers/scd.py')
 #
 # Command line arguments:
-#   ../../../xml/xsd/scd.xsd
+#   ../../../xml/xsd/softwarecomponent.4.1.xsd
 #
 # Command line:
-#   /usr/bin/generateDS.py -f --silence -m -o "sca/parsers/scd.py" ../../../xml/xsd/scd.xsd
+#   /usr/bin/generateDS.py -f --silence -m -o "sca/parsers/scd.py" ../../../xml/xsd/softwarecomponent.4.1.xsd
 #
 # Current working directory (os.getcwd()):
 #   python
@@ -51,7 +33,7 @@ except ImportError:
 
 
 Validate_simpletypes_ = True
-if sys.version_info[0] == 2:
+if sys.version_info.major == 2:
     BaseStrType_ = basestring
 else:
     BaseStrType_ = str
@@ -259,7 +241,8 @@ except ImportError as exp:
             time_parts = input_data.split('.')
             if len(time_parts) > 1:
                 micro_seconds = int(float('0.' + time_parts[1]) * 1000000)
-                input_data = '%s.%s' % (time_parts[0], micro_seconds, )
+                input_data = '%s.%s' % (
+                    time_parts[0], "{}".format(micro_seconds).rjust(6, "0"), )
                 dt = datetime_.datetime.strptime(
                     input_data, '%Y-%m-%dT%H:%M:%S.%f')
             else:
@@ -347,14 +330,15 @@ except ImportError as exp:
                         _svalue += '{0:02d}:{1:02d}'.format(hours, minutes)
             return _svalue
         def gds_validate_simple_patterns(self, patterns, target):
-            # pat is a list of lists of strings/patterns.  We should:
-            # - AND the outer elements
-            # - OR the inner elements
+            # pat is a list of lists of strings/patterns.
+            # The target value must match at least one of the patterns
+            # in order for the test to succeed.
             found1 = True
             for patterns1 in patterns:
                 found2 = False
                 for patterns2 in patterns1:
-                    if re_.search(patterns2, target) is not None:
+                    mo = re_.search(patterns2, target)
+                    if mo is not None and len(mo.group(0)) == len(target):
                         found2 = True
                         break
                 if not found2:
@@ -415,18 +399,22 @@ except ImportError as exp:
             return None
         @classmethod
         def gds_reverse_node_mapping(cls, mapping):
-            return dict(((v, k) for k, v in mapping.iteritems()))
+            return dict(((v, k) for k, v in mapping.items()))
         @staticmethod
         def gds_encode(instring):
-            if sys.version_info[0] == 2:
-                return instring.encode(ExternalEncoding)
+            if sys.version_info.major == 2:
+                if ExternalEncoding:
+                    encoding = ExternalEncoding
+                else:
+                    encoding = 'utf-8'
+                return instring.encode(encoding)
             else:
                 return instring
         @staticmethod
         def convert_unicode(instring):
             if isinstance(instring, str):
                 result = quote_xml(instring)
-            elif sys.version_info[0] == 2 and isinstance(instring, unicode):
+            elif sys.version_info.major == 2 and isinstance(instring, unicode):
                 result = quote_xml(instring).encode('utf8')
             else:
                 result = GeneratedsSuper.gds_encode(str(instring))
@@ -466,7 +454,7 @@ except ImportError as exp:
 # Globals
 #
 
-ExternalEncoding = 'ascii'
+ExternalEncoding = ''
 Tag_pattern_ = re_.compile(r'({.*})?(.*)')
 String_cleanup_pat_ = re_.compile(r"[\n\r\s]+")
 Namespace_extract_pat_ = re_.compile(r'{(.*)}(.*)')
@@ -616,7 +604,7 @@ class MixedContainer:
             self.exportSimple(outfile, level, name)
         else:    # category == MixedContainer.CategoryComplex
             self.value.export(
-                outfile, level, namespace, name,
+                outfile, level, namespace, name_=name,
                 pretty_print=pretty_print)
     def exportSimple(self, outfile, level, name):
         if self.content_type == MixedContainer.TypeString:
@@ -739,9 +727,9 @@ def _cast(typ, value):
 class softwarecomponent(GeneratedsSuper):
     subclass = None
     superclass = None
-    def __init__(self, corbaversion=None, componentrepid=None, componenttype=None, componentfeatures=None, interfaces=None, propertyfile=None):
+    def __init__(self, componentrepid=None, componenttype=None, componentfeatures=None, interfaces=None, propertyfile=None, **kwargs_):
         self.original_tagname_ = None
-        self.corbaversion = corbaversion
+        self.parent_object_ = kwargs_.get('parent_object_')
         self.componentrepid = componentrepid
         self.componenttype = componenttype
         self.componentfeatures = componentfeatures
@@ -758,27 +746,33 @@ class softwarecomponent(GeneratedsSuper):
         else:
             return softwarecomponent(*args_, **kwargs_)
     factory = staticmethod(factory)
-    def get_corbaversion(self): return self.corbaversion
-    def set_corbaversion(self, corbaversion): self.corbaversion = corbaversion
-    corbaversionProp = property(get_corbaversion, set_corbaversion)
-    def get_componentrepid(self): return self.componentrepid
-    def set_componentrepid(self, componentrepid): self.componentrepid = componentrepid
+    def get_componentrepid(self):
+        return self.componentrepid
+    def set_componentrepid(self, componentrepid):
+        self.componentrepid = componentrepid
     componentrepidProp = property(get_componentrepid, set_componentrepid)
-    def get_componenttype(self): return self.componenttype
-    def set_componenttype(self, componenttype): self.componenttype = componenttype
+    def get_componenttype(self):
+        return self.componenttype
+    def set_componenttype(self, componenttype):
+        self.componenttype = componenttype
     componenttypeProp = property(get_componenttype, set_componenttype)
-    def get_componentfeatures(self): return self.componentfeatures
-    def set_componentfeatures(self, componentfeatures): self.componentfeatures = componentfeatures
+    def get_componentfeatures(self):
+        return self.componentfeatures
+    def set_componentfeatures(self, componentfeatures):
+        self.componentfeatures = componentfeatures
     componentfeaturesProp = property(get_componentfeatures, set_componentfeatures)
-    def get_interfaces(self): return self.interfaces
-    def set_interfaces(self, interfaces): self.interfaces = interfaces
+    def get_interfaces(self):
+        return self.interfaces
+    def set_interfaces(self, interfaces):
+        self.interfaces = interfaces
     interfacesProp = property(get_interfaces, set_interfaces)
-    def get_propertyfile(self): return self.propertyfile
-    def set_propertyfile(self, propertyfile): self.propertyfile = propertyfile
+    def get_propertyfile(self):
+        return self.propertyfile
+    def set_propertyfile(self, propertyfile):
+        self.propertyfile = propertyfile
     propertyfileProp = property(get_propertyfile, set_propertyfile)
     def hasContent_(self):
         if (
-            self.corbaversion is not None or
             self.componentrepid is not None or
             self.componenttype is not None or
             self.componentfeatures is not None or
@@ -788,7 +782,7 @@ class softwarecomponent(GeneratedsSuper):
             return True
         else:
             return False
-    def export(self, outfile, level, namespace_='', name_='softwarecomponent', namespacedef_='', pretty_print=True):
+    def export(self, outfile, level, namespaceprefix_='t:', namespacedef_='xmlns:t="http://www.w3.org/namespace/"', name_='softwarecomponent', pretty_print=True):
         imported_ns_def_ = GenerateDSNamespaceDefs_.get('softwarecomponent')
         if imported_ns_def_ is not None:
             namespacedef_ = imported_ns_def_
@@ -799,37 +793,33 @@ class softwarecomponent(GeneratedsSuper):
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
         showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespace_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
         already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespace_, name_='softwarecomponent')
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='softwarecomponent')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespace_='', name_='softwarecomponent', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='softwarecomponent', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
-            outfile.write('</%s%s>%s' % (namespace_, name_, eol_))
+            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
             outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespace_='', name_='softwarecomponent'):
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='t:', name_='softwarecomponent'):
         pass
-    def exportChildren(self, outfile, level, namespace_='', name_='softwarecomponent', fromsubclass_=False, pretty_print=True):
+    def exportChildren(self, outfile, level, namespaceprefix_='t:', namespacedef_='xmlns:t="http://www.w3.org/namespace/"', name_='softwarecomponent', fromsubclass_=False, pretty_print=True):
         if pretty_print:
             eol_ = '\n'
         else:
             eol_ = ''
-        if self.corbaversion is not None:
-            showIndent(outfile, level, pretty_print)
-            outfile.write('<corbaversion>%s</corbaversion>%s' % (self.gds_encode(self.gds_format_string(quote_xml(self.corbaversion), input_name='corbaversion')), eol_))
         if self.componentrepid is not None:
-            self.componentrepid.export(outfile, level, namespace_, name_='componentrepid', pretty_print=pretty_print)
+            self.componentrepid.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='componentrepid', pretty_print=pretty_print)
         if self.componenttype is not None:
-            showIndent(outfile, level, pretty_print)
-            outfile.write('<componenttype>%s</componenttype>%s' % (self.gds_encode(self.gds_format_string(quote_xml(self.componenttype), input_name='componenttype')), eol_))
+            self.componenttype.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='componenttype', pretty_print=pretty_print)
         if self.componentfeatures is not None:
-            self.componentfeatures.export(outfile, level, namespace_, name_='componentfeatures', pretty_print=pretty_print)
+            self.componentfeatures.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='componentfeatures', pretty_print=pretty_print)
         if self.interfaces is not None:
-            self.interfaces.export(outfile, level, namespace_, name_='interfaces', pretty_print=pretty_print)
+            self.interfaces.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='interfaces', pretty_print=pretty_print)
         if self.propertyfile is not None:
-            self.propertyfile.export(outfile, level, namespace_, name_='propertyfile', pretty_print=pretty_print)
+            self.propertyfile.export(outfile, level, namespaceprefix_='t:', name_='propertyfile', pretty_print=pretty_print)
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -840,210 +830,56 @@ class softwarecomponent(GeneratedsSuper):
     def buildAttributes(self, node, attrs, already_processed):
         pass
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
-        if nodeName_ == 'corbaversion':
-            corbaversion_ = child_.text
-            corbaversion_ = self.gds_validate_string(corbaversion_, node, 'corbaversion')
-            self.corbaversion = corbaversion_
-        elif nodeName_ == 'componentrepid':
-            obj_ = componentRepId.factory()
+        if nodeName_ == 'componentrepid':
+            obj_ = componentrepid.factory(parent_object_=self)
             obj_.build(child_)
             self.componentrepid = obj_
             obj_.original_tagname_ = 'componentrepid'
         elif nodeName_ == 'componenttype':
-            componenttype_ = child_.text
-            componenttype_ = self.gds_validate_string(componenttype_, node, 'componenttype')
-            self.componenttype = componenttype_
+            obj_ = componenttype.factory(parent_object_=self)
+            obj_.build(child_)
+            self.componenttype = obj_
+            obj_.original_tagname_ = 'componenttype'
         elif nodeName_ == 'componentfeatures':
-            obj_ = componentFeatures.factory()
+            obj_ = componentfeatures.factory(parent_object_=self)
             obj_.build(child_)
             self.componentfeatures = obj_
             obj_.original_tagname_ = 'componentfeatures'
         elif nodeName_ == 'interfaces':
-            obj_ = interfaces.factory()
+            obj_ = interfaces.factory(parent_object_=self)
             obj_.build(child_)
             self.interfaces = obj_
             obj_.original_tagname_ = 'interfaces'
         elif nodeName_ == 'propertyfile':
-            obj_ = propertyFile.factory()
+            obj_ = propertyfile.factory(parent_object_=self)
             obj_.build(child_)
             self.propertyfile = obj_
             obj_.original_tagname_ = 'propertyfile'
 # end class softwarecomponent
 
 
-class propertyFile(GeneratedsSuper):
+class componentrepid(GeneratedsSuper):
     subclass = None
     superclass = None
-    def __init__(self, type_=None, localfile=None):
+    def __init__(self, repid=None, **kwargs_):
         self.original_tagname_ = None
-        self.type_ = _cast(None, type_)
-        self.localfile = localfile
-    def factory(*args_, **kwargs_):
-        if CurrentSubclassModule_ is not None:
-            subclass = getSubclassFromModule_(
-                CurrentSubclassModule_, propertyFile)
-            if subclass is not None:
-                return subclass(*args_, **kwargs_)
-        if propertyFile.subclass:
-            return propertyFile.subclass(*args_, **kwargs_)
-        else:
-            return propertyFile(*args_, **kwargs_)
-    factory = staticmethod(factory)
-    def get_localfile(self): return self.localfile
-    def set_localfile(self, localfile): self.localfile = localfile
-    localfileProp = property(get_localfile, set_localfile)
-    def get_type(self): return self.type_
-    def set_type(self, type_): self.type_ = type_
-    typeProp = property(get_type, set_type)
-    def hasContent_(self):
-        if (
-            self.localfile is not None
-        ):
-            return True
-        else:
-            return False
-    def export(self, outfile, level, namespace_='', name_='propertyFile', namespacedef_='', pretty_print=True):
-        imported_ns_def_ = GenerateDSNamespaceDefs_.get('propertyFile')
-        if imported_ns_def_ is not None:
-            namespacedef_ = imported_ns_def_
-        if pretty_print:
-            eol_ = '\n'
-        else:
-            eol_ = ''
-        if self.original_tagname_ is not None:
-            name_ = self.original_tagname_
-        showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespace_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
-        already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespace_, name_='propertyFile')
-        if self.hasContent_():
-            outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespace_='', name_='propertyFile', pretty_print=pretty_print)
-            showIndent(outfile, level, pretty_print)
-            outfile.write('</%s%s>%s' % (namespace_, name_, eol_))
-        else:
-            outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespace_='', name_='propertyFile'):
-        if self.type_ is not None and 'type_' not in already_processed:
-            already_processed.add('type_')
-            outfile.write(' type=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.type_), input_name='type')), ))
-    def exportChildren(self, outfile, level, namespace_='', name_='propertyFile', fromsubclass_=False, pretty_print=True):
-        if pretty_print:
-            eol_ = '\n'
-        else:
-            eol_ = ''
-        if self.localfile is not None:
-            self.localfile.export(outfile, level, namespace_, name_='localfile', pretty_print=pretty_print)
-    def build(self, node):
-        already_processed = set()
-        self.buildAttributes(node, node.attrib, already_processed)
-        for child in node:
-            nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
-            self.buildChildren(child, node, nodeName_)
-        return self
-    def buildAttributes(self, node, attrs, already_processed):
-        value = find_attr_value_('type', node)
-        if value is not None and 'type' not in already_processed:
-            already_processed.add('type')
-            self.type_ = value
-    def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
-        if nodeName_ == 'localfile':
-            obj_ = localFile.factory()
-            obj_.build(child_)
-            self.localfile = obj_
-            obj_.original_tagname_ = 'localfile'
-# end class propertyFile
-
-
-class localFile(GeneratedsSuper):
-    subclass = None
-    superclass = None
-    def __init__(self, name=None):
-        self.original_tagname_ = None
-        self.name = _cast(None, name)
-    def factory(*args_, **kwargs_):
-        if CurrentSubclassModule_ is not None:
-            subclass = getSubclassFromModule_(
-                CurrentSubclassModule_, localFile)
-            if subclass is not None:
-                return subclass(*args_, **kwargs_)
-        if localFile.subclass:
-            return localFile.subclass(*args_, **kwargs_)
-        else:
-            return localFile(*args_, **kwargs_)
-    factory = staticmethod(factory)
-    def get_name(self): return self.name
-    def set_name(self, name): self.name = name
-    nameProp = property(get_name, set_name)
-    def hasContent_(self):
-        if (
-
-        ):
-            return True
-        else:
-            return False
-    def export(self, outfile, level, namespace_='', name_='localFile', namespacedef_='', pretty_print=True):
-        imported_ns_def_ = GenerateDSNamespaceDefs_.get('localFile')
-        if imported_ns_def_ is not None:
-            namespacedef_ = imported_ns_def_
-        if pretty_print:
-            eol_ = '\n'
-        else:
-            eol_ = ''
-        if self.original_tagname_ is not None:
-            name_ = self.original_tagname_
-        showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespace_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
-        already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespace_, name_='localFile')
-        if self.hasContent_():
-            outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespace_='', name_='localFile', pretty_print=pretty_print)
-            outfile.write('</%s%s>%s' % (namespace_, name_, eol_))
-        else:
-            outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespace_='', name_='localFile'):
-        if self.name is not None and 'name' not in already_processed:
-            already_processed.add('name')
-            outfile.write(' name=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.name), input_name='name')), ))
-    def exportChildren(self, outfile, level, namespace_='', name_='localFile', fromsubclass_=False, pretty_print=True):
-        pass
-    def build(self, node):
-        already_processed = set()
-        self.buildAttributes(node, node.attrib, already_processed)
-        for child in node:
-            nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
-            self.buildChildren(child, node, nodeName_)
-        return self
-    def buildAttributes(self, node, attrs, already_processed):
-        value = find_attr_value_('name', node)
-        if value is not None and 'name' not in already_processed:
-            already_processed.add('name')
-            self.name = value
-    def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
-        pass
-# end class localFile
-
-
-class componentRepId(GeneratedsSuper):
-    subclass = None
-    superclass = None
-    def __init__(self, repid=None):
-        self.original_tagname_ = None
+        self.parent_object_ = kwargs_.get('parent_object_')
         self.repid = _cast(None, repid)
     def factory(*args_, **kwargs_):
         if CurrentSubclassModule_ is not None:
             subclass = getSubclassFromModule_(
-                CurrentSubclassModule_, componentRepId)
+                CurrentSubclassModule_, componentrepid)
             if subclass is not None:
                 return subclass(*args_, **kwargs_)
-        if componentRepId.subclass:
-            return componentRepId.subclass(*args_, **kwargs_)
+        if componentrepid.subclass:
+            return componentrepid.subclass(*args_, **kwargs_)
         else:
-            return componentRepId(*args_, **kwargs_)
+            return componentrepid(*args_, **kwargs_)
     factory = staticmethod(factory)
-    def get_repid(self): return self.repid
-    def set_repid(self, repid): self.repid = repid
+    def get_repid(self):
+        return self.repid
+    def set_repid(self, repid):
+        self.repid = repid
     repidProp = property(get_repid, set_repid)
     def hasContent_(self):
         if (
@@ -1052,8 +888,8 @@ class componentRepId(GeneratedsSuper):
             return True
         else:
             return False
-    def export(self, outfile, level, namespace_='', name_='componentRepId', namespacedef_='', pretty_print=True):
-        imported_ns_def_ = GenerateDSNamespaceDefs_.get('componentRepId')
+    def export(self, outfile, level, namespaceprefix_='t:', namespacedef_='xmlns:t="http://www.w3.org/namespace/"', name_='componentrepid', pretty_print=True):
+        imported_ns_def_ = GenerateDSNamespaceDefs_.get('componentrepid')
         if imported_ns_def_ is not None:
             namespacedef_ = imported_ns_def_
         if pretty_print:
@@ -1063,20 +899,20 @@ class componentRepId(GeneratedsSuper):
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
         showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespace_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
         already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespace_, name_='componentRepId')
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='componentrepid')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespace_='', name_='componentRepId', pretty_print=pretty_print)
-            outfile.write('</%s%s>%s' % (namespace_, name_, eol_))
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='componentrepid', pretty_print=pretty_print)
+            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
             outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespace_='', name_='componentRepId'):
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='t:', name_='componentrepid'):
         if self.repid is not None and 'repid' not in already_processed:
             already_processed.add('repid')
             outfile.write(' repid=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.repid), input_name='repid')), ))
-    def exportChildren(self, outfile, level, namespace_='', name_='componentRepId', fromsubclass_=False, pretty_print=True):
+    def exportChildren(self, outfile, level, namespaceprefix_='t:', namespacedef_='xmlns:t="http://www.w3.org/namespace/"', name_='componentrepid', fromsubclass_=False, pretty_print=True):
         pass
     def build(self, node):
         already_processed = set()
@@ -1092,49 +928,47 @@ class componentRepId(GeneratedsSuper):
             self.repid = value
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         pass
-# end class componentRepId
+# end class componentrepid
 
 
-class componentFeatures(GeneratedsSuper):
+class componenttype(GeneratedsSuper):
     subclass = None
     superclass = None
-    def __init__(self, supportsinterface=None, ports=None):
+    def __init__(self, valueOf_=None, mixedclass_=None, content_=None, **kwargs_):
         self.original_tagname_ = None
-        if supportsinterface is None:
-            self.supportsinterface = []
+        self.parent_object_ = kwargs_.get('parent_object_')
+        self.valueOf_ = valueOf_
+        if mixedclass_ is None:
+            self.mixedclass_ = MixedContainer
         else:
-            self.supportsinterface = supportsinterface
-        self.ports = ports
+            self.mixedclass_ = mixedclass_
+        if content_ is None:
+            self.content_ = []
+        else:
+            self.content_ = content_
+        self.valueOf_ = valueOf_
     def factory(*args_, **kwargs_):
         if CurrentSubclassModule_ is not None:
             subclass = getSubclassFromModule_(
-                CurrentSubclassModule_, componentFeatures)
+                CurrentSubclassModule_, componenttype)
             if subclass is not None:
                 return subclass(*args_, **kwargs_)
-        if componentFeatures.subclass:
-            return componentFeatures.subclass(*args_, **kwargs_)
+        if componenttype.subclass:
+            return componenttype.subclass(*args_, **kwargs_)
         else:
-            return componentFeatures(*args_, **kwargs_)
+            return componenttype(*args_, **kwargs_)
     factory = staticmethod(factory)
-    def get_supportsinterface(self): return self.supportsinterface
-    def set_supportsinterface(self, supportsinterface): self.supportsinterface = supportsinterface
-    def add_supportsinterface(self, value): self.supportsinterface.append(value)
-    def insert_supportsinterface_at(self, index, value): self.supportsinterface.insert(index, value)
-    def replace_supportsinterface_at(self, index, value): self.supportsinterface[index] = value
-    supportsinterfaceProp = property(get_supportsinterface, set_supportsinterface)
-    def get_ports(self): return self.ports
-    def set_ports(self, ports): self.ports = ports
-    portsProp = property(get_ports, set_ports)
+    def get_valueOf_(self): return self.valueOf_
+    def set_valueOf_(self, valueOf_): self.valueOf_ = valueOf_
     def hasContent_(self):
         if (
-            self.supportsinterface or
-            self.ports is not None
+            (1 if type(self.valueOf_) in [int,float] else self.valueOf_)
         ):
             return True
         else:
             return False
-    def export(self, outfile, level, namespace_='', name_='componentFeatures', namespacedef_='', pretty_print=True):
-        imported_ns_def_ = GenerateDSNamespaceDefs_.get('componentFeatures')
+    def export(self, outfile, level, namespaceprefix_='t:', namespacedef_='xmlns:t="http://www.w3.org/namespace/"', name_='componenttype', pretty_print=True):
+        imported_ns_def_ = GenerateDSNamespaceDefs_.get('componenttype')
         if imported_ns_def_ is not None:
             namespacedef_ = imported_ns_def_
         if pretty_print:
@@ -1144,27 +978,120 @@ class componentFeatures(GeneratedsSuper):
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
         showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespace_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
         already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespace_, name_='componentFeatures')
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='componenttype')
+        outfile.write('>')
+        self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_, pretty_print=pretty_print)
+        outfile.write(self.convert_unicode(self.valueOf_))
+        outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='t:', name_='componenttype'):
+        pass
+    def exportChildren(self, outfile, level, namespaceprefix_='t:', namespacedef_='xmlns:t="http://www.w3.org/namespace/"', name_='componenttype', fromsubclass_=False, pretty_print=True):
+        pass
+    def build(self, node):
+        already_processed = set()
+        self.buildAttributes(node, node.attrib, already_processed)
+        self.valueOf_ = get_all_text_(node)
+        if node.text is not None:
+            obj_ = self.mixedclass_(MixedContainer.CategoryText,
+                MixedContainer.TypeNone, '', node.text)
+            self.content_.append(obj_)
+        for child in node:
+            nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
+            self.buildChildren(child, node, nodeName_)
+        return self
+    def buildAttributes(self, node, attrs, already_processed):
+        pass
+    def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
+        if not fromsubclass_ and child_.tail is not None:
+            obj_ = self.mixedclass_(MixedContainer.CategoryText,
+                MixedContainer.TypeNone, '', child_.tail)
+            self.content_.append(obj_)
+        pass
+# end class componenttype
+
+
+class componentfeatures(GeneratedsSuper):
+    subclass = None
+    superclass = None
+    def __init__(self, supportsinterface=None, ports=None, **kwargs_):
+        self.original_tagname_ = None
+        self.parent_object_ = kwargs_.get('parent_object_')
+        if supportsinterface is None:
+            self.supportsinterface = []
+        else:
+            self.supportsinterface = supportsinterface
+        self.ports = ports
+    def factory(*args_, **kwargs_):
+        if CurrentSubclassModule_ is not None:
+            subclass = getSubclassFromModule_(
+                CurrentSubclassModule_, componentfeatures)
+            if subclass is not None:
+                return subclass(*args_, **kwargs_)
+        if componentfeatures.subclass:
+            return componentfeatures.subclass(*args_, **kwargs_)
+        else:
+            return componentfeatures(*args_, **kwargs_)
+    factory = staticmethod(factory)
+    def get_supportsinterface(self):
+        return self.supportsinterface
+    def set_supportsinterface(self, supportsinterface):
+        self.supportsinterface = supportsinterface
+    def add_supportsinterface(self, value):
+        self.supportsinterface.append(value)
+    def add_supportsinterface(self, value):
+        self.supportsinterface.append(value)
+    def insert_supportsinterface_at(self, index, value):
+        self.supportsinterface.insert(index, value)
+    def replace_supportsinterface_at(self, index, value):
+        self.supportsinterface[index] = value
+    supportsinterfaceProp = property(get_supportsinterface, set_supportsinterface)
+    def get_ports(self):
+        return self.ports
+    def set_ports(self, ports):
+        self.ports = ports
+    portsProp = property(get_ports, set_ports)
+    def hasContent_(self):
+        if (
+            self.supportsinterface or
+            self.ports is not None
+        ):
+            return True
+        else:
+            return False
+    def export(self, outfile, level, namespaceprefix_='t:', namespacedef_='xmlns:t="http://www.w3.org/namespace/"', name_='componentfeatures', pretty_print=True):
+        imported_ns_def_ = GenerateDSNamespaceDefs_.get('componentfeatures')
+        if imported_ns_def_ is not None:
+            namespacedef_ = imported_ns_def_
+        if pretty_print:
+            eol_ = '\n'
+        else:
+            eol_ = ''
+        if self.original_tagname_ is not None:
+            name_ = self.original_tagname_
+        showIndent(outfile, level, pretty_print)
+        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        already_processed = set()
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='componentfeatures')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespace_='', name_='componentFeatures', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='componentfeatures', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
-            outfile.write('</%s%s>%s' % (namespace_, name_, eol_))
+            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
             outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespace_='', name_='componentFeatures'):
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='t:', name_='componentfeatures'):
         pass
-    def exportChildren(self, outfile, level, namespace_='', name_='componentFeatures', fromsubclass_=False, pretty_print=True):
+    def exportChildren(self, outfile, level, namespaceprefix_='t:', namespacedef_='xmlns:t="http://www.w3.org/namespace/"', name_='componentfeatures', fromsubclass_=False, pretty_print=True):
         if pretty_print:
             eol_ = '\n'
         else:
             eol_ = ''
         for supportsinterface_ in self.supportsinterface:
-            supportsinterface_.export(outfile, level, namespace_, name_='supportsinterface', pretty_print=pretty_print)
+            supportsinterface_.export(outfile, level, namespaceprefix_='t:', name_='supportsinterface', pretty_print=pretty_print)
         if self.ports is not None:
-            self.ports.export(outfile, level, namespace_, name_='ports', pretty_print=pretty_print)
+            self.ports.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='ports', pretty_print=pretty_print)
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -1176,41 +1103,46 @@ class componentFeatures(GeneratedsSuper):
         pass
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         if nodeName_ == 'supportsinterface':
-            obj_ = supportsInterface.factory()
+            obj_ = supportsinterface.factory(parent_object_=self)
             obj_.build(child_)
             self.supportsinterface.append(obj_)
             obj_.original_tagname_ = 'supportsinterface'
         elif nodeName_ == 'ports':
-            obj_ = ports.factory()
+            obj_ = ports.factory(parent_object_=self)
             obj_.build(child_)
             self.ports = obj_
             obj_.original_tagname_ = 'ports'
-# end class componentFeatures
+# end class componentfeatures
 
 
-class supportsInterface(GeneratedsSuper):
+class supportsinterface(GeneratedsSuper):
     subclass = None
     superclass = None
-    def __init__(self, repid=None, supportsname=None):
+    def __init__(self, repid=None, supportsname=None, **kwargs_):
         self.original_tagname_ = None
+        self.parent_object_ = kwargs_.get('parent_object_')
         self.repid = _cast(None, repid)
         self.supportsname = _cast(None, supportsname)
     def factory(*args_, **kwargs_):
         if CurrentSubclassModule_ is not None:
             subclass = getSubclassFromModule_(
-                CurrentSubclassModule_, supportsInterface)
+                CurrentSubclassModule_, supportsinterface)
             if subclass is not None:
                 return subclass(*args_, **kwargs_)
-        if supportsInterface.subclass:
-            return supportsInterface.subclass(*args_, **kwargs_)
+        if supportsinterface.subclass:
+            return supportsinterface.subclass(*args_, **kwargs_)
         else:
-            return supportsInterface(*args_, **kwargs_)
+            return supportsinterface(*args_, **kwargs_)
     factory = staticmethod(factory)
-    def get_repid(self): return self.repid
-    def set_repid(self, repid): self.repid = repid
+    def get_repid(self):
+        return self.repid
+    def set_repid(self, repid):
+        self.repid = repid
     repidProp = property(get_repid, set_repid)
-    def get_supportsname(self): return self.supportsname
-    def set_supportsname(self, supportsname): self.supportsname = supportsname
+    def get_supportsname(self):
+        return self.supportsname
+    def set_supportsname(self, supportsname):
+        self.supportsname = supportsname
     supportsnameProp = property(get_supportsname, set_supportsname)
     def hasContent_(self):
         if (
@@ -1219,8 +1151,8 @@ class supportsInterface(GeneratedsSuper):
             return True
         else:
             return False
-    def export(self, outfile, level, namespace_='', name_='supportsInterface', namespacedef_='', pretty_print=True):
-        imported_ns_def_ = GenerateDSNamespaceDefs_.get('supportsInterface')
+    def export(self, outfile, level, namespaceprefix_='t:', namespacedef_='xmlns:t="http://www.w3.org/namespace/"', name_='supportsinterface', pretty_print=True):
+        imported_ns_def_ = GenerateDSNamespaceDefs_.get('supportsinterface')
         if imported_ns_def_ is not None:
             namespacedef_ = imported_ns_def_
         if pretty_print:
@@ -1230,23 +1162,23 @@ class supportsInterface(GeneratedsSuper):
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
         showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespace_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
         already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespace_, name_='supportsInterface')
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='supportsinterface')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespace_='', name_='supportsInterface', pretty_print=pretty_print)
-            outfile.write('</%s%s>%s' % (namespace_, name_, eol_))
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='supportsinterface', pretty_print=pretty_print)
+            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
             outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespace_='', name_='supportsInterface'):
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='t:', name_='supportsinterface'):
         if self.repid is not None and 'repid' not in already_processed:
             already_processed.add('repid')
             outfile.write(' repid=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.repid), input_name='repid')), ))
         if self.supportsname is not None and 'supportsname' not in already_processed:
             already_processed.add('supportsname')
             outfile.write(' supportsname=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.supportsname), input_name='supportsname')), ))
-    def exportChildren(self, outfile, level, namespace_='', name_='supportsInterface', fromsubclass_=False, pretty_print=True):
+    def exportChildren(self, outfile, level, namespaceprefix_='t:', namespacedef_='xmlns:t="http://www.w3.org/namespace/"', name_='supportsinterface', fromsubclass_=False, pretty_print=True):
         pass
     def build(self, node):
         already_processed = set()
@@ -1266,14 +1198,15 @@ class supportsInterface(GeneratedsSuper):
             self.supportsname = value
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         pass
-# end class supportsInterface
+# end class supportsinterface
 
 
 class ports(GeneratedsSuper):
     subclass = None
     superclass = None
-    def __init__(self, provides=None, uses=None):
+    def __init__(self, provides=None, uses=None, **kwargs_):
         self.original_tagname_ = None
+        self.parent_object_ = kwargs_.get('parent_object_')
         if provides is None:
             self.provides = []
         else:
@@ -1293,17 +1226,31 @@ class ports(GeneratedsSuper):
         else:
             return ports(*args_, **kwargs_)
     factory = staticmethod(factory)
-    def get_provides(self): return self.provides
-    def set_provides(self, provides): self.provides = provides
-    def add_provides(self, value): self.provides.append(value)
-    def insert_provides_at(self, index, value): self.provides.insert(index, value)
-    def replace_provides_at(self, index, value): self.provides[index] = value
+    def get_provides(self):
+        return self.provides
+    def set_provides(self, provides):
+        self.provides = provides
+    def add_provides(self, value):
+        self.provides.append(value)
+    def add_provides(self, value):
+        self.provides.append(value)
+    def insert_provides_at(self, index, value):
+        self.provides.insert(index, value)
+    def replace_provides_at(self, index, value):
+        self.provides[index] = value
     providesProp = property(get_provides, set_provides)
-    def get_uses(self): return self.uses
-    def set_uses(self, uses): self.uses = uses
-    def add_uses(self, value): self.uses.append(value)
-    def insert_uses_at(self, index, value): self.uses.insert(index, value)
-    def replace_uses_at(self, index, value): self.uses[index] = value
+    def get_uses(self):
+        return self.uses
+    def set_uses(self, uses):
+        self.uses = uses
+    def add_uses(self, value):
+        self.uses.append(value)
+    def add_uses(self, value):
+        self.uses.append(value)
+    def insert_uses_at(self, index, value):
+        self.uses.insert(index, value)
+    def replace_uses_at(self, index, value):
+        self.uses[index] = value
     usesProp = property(get_uses, set_uses)
     def hasContent_(self):
         if (
@@ -1313,7 +1260,7 @@ class ports(GeneratedsSuper):
             return True
         else:
             return False
-    def export(self, outfile, level, namespace_='', name_='ports', namespacedef_='', pretty_print=True):
+    def export(self, outfile, level, namespaceprefix_='t:', namespacedef_='xmlns:t="http://www.w3.org/namespace/"', name_='ports', pretty_print=True):
         imported_ns_def_ = GenerateDSNamespaceDefs_.get('ports')
         if imported_ns_def_ is not None:
             namespacedef_ = imported_ns_def_
@@ -1324,27 +1271,27 @@ class ports(GeneratedsSuper):
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
         showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespace_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
         already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespace_, name_='ports')
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='ports')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespace_='', name_='ports', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='ports', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
-            outfile.write('</%s%s>%s' % (namespace_, name_, eol_))
+            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
             outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespace_='', name_='ports'):
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='t:', name_='ports'):
         pass
-    def exportChildren(self, outfile, level, namespace_='', name_='ports', fromsubclass_=False, pretty_print=True):
+    def exportChildren(self, outfile, level, namespaceprefix_='t:', namespacedef_='xmlns:t="http://www.w3.org/namespace/"', name_='ports', fromsubclass_=False, pretty_print=True):
         if pretty_print:
             eol_ = '\n'
         else:
             eol_ = ''
         for provides_ in self.provides:
-            provides_.export(outfile, level, namespace_, name_='provides', pretty_print=pretty_print)
+            provides_.export(outfile, level, namespaceprefix_='t:', name_='provides', pretty_print=pretty_print)
         for uses_ in self.uses:
-            uses_.export(outfile, level, namespace_, name_='uses', pretty_print=pretty_print)
+            uses_.export(outfile, level, namespaceprefix_='t:', name_='uses', pretty_print=pretty_print)
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -1356,12 +1303,12 @@ class ports(GeneratedsSuper):
         pass
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         if nodeName_ == 'provides':
-            obj_ = provides.factory()
+            obj_ = provides.factory(parent_object_=self)
             obj_.build(child_)
             self.provides.append(obj_)
             obj_.original_tagname_ = 'provides'
         elif nodeName_ == 'uses':
-            obj_ = uses.factory()
+            obj_ = uses.factory(parent_object_=self)
             obj_.build(child_)
             self.uses.append(obj_)
             obj_.original_tagname_ = 'uses'
@@ -1371,11 +1318,12 @@ class ports(GeneratedsSuper):
 class provides(GeneratedsSuper):
     subclass = None
     superclass = None
-    def __init__(self, repid=None, providesname=None, description=None, porttype=None):
+    def __init__(self, repid=None, providesname=None, maxconnections=None, porttype=None, **kwargs_):
         self.original_tagname_ = None
+        self.parent_object_ = kwargs_.get('parent_object_')
         self.repid = _cast(None, repid)
         self.providesname = _cast(None, providesname)
-        self.description = description
+        self.maxconnections = _cast(None, maxconnections)
         if porttype is None:
             self.porttype = []
         else:
@@ -1391,30 +1339,42 @@ class provides(GeneratedsSuper):
         else:
             return provides(*args_, **kwargs_)
     factory = staticmethod(factory)
-    def get_description(self): return self.description
-    def set_description(self, description): self.description = description
-    descriptionProp = property(get_description, set_description)
-    def get_porttype(self): return self.porttype
-    def set_porttype(self, porttype): self.porttype = porttype
-    def add_porttype(self, value): self.porttype.append(value)
-    def insert_porttype_at(self, index, value): self.porttype.insert(index, value)
-    def replace_porttype_at(self, index, value): self.porttype[index] = value
+    def get_porttype(self):
+        return self.porttype
+    def set_porttype(self, porttype):
+        self.porttype = porttype
+    def add_porttype(self, value):
+        self.porttype.append(value)
+    def add_porttype(self, value):
+        self.porttype.append(value)
+    def insert_porttype_at(self, index, value):
+        self.porttype.insert(index, value)
+    def replace_porttype_at(self, index, value):
+        self.porttype[index] = value
     porttypeProp = property(get_porttype, set_porttype)
-    def get_repid(self): return self.repid
-    def set_repid(self, repid): self.repid = repid
+    def get_repid(self):
+        return self.repid
+    def set_repid(self, repid):
+        self.repid = repid
     repidProp = property(get_repid, set_repid)
-    def get_providesname(self): return self.providesname
-    def set_providesname(self, providesname): self.providesname = providesname
+    def get_providesname(self):
+        return self.providesname
+    def set_providesname(self, providesname):
+        self.providesname = providesname
     providesnameProp = property(get_providesname, set_providesname)
+    def get_maxconnections(self):
+        return self.maxconnections
+    def set_maxconnections(self, maxconnections):
+        self.maxconnections = maxconnections
+    maxconnectionsProp = property(get_maxconnections, set_maxconnections)
     def hasContent_(self):
         if (
-            self.description is not None or
             self.porttype
         ):
             return True
         else:
             return False
-    def export(self, outfile, level, namespace_='', name_='provides', namespacedef_='', pretty_print=True):
+    def export(self, outfile, level, namespaceprefix_='t:', namespacedef_='xmlns:t="http://www.w3.org/namespace/"', name_='provides', pretty_print=True):
         imported_ns_def_ = GenerateDSNamespaceDefs_.get('provides')
         if imported_ns_def_ is not None:
             namespacedef_ = imported_ns_def_
@@ -1425,33 +1385,33 @@ class provides(GeneratedsSuper):
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
         showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespace_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
         already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespace_, name_='provides')
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='provides')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespace_='', name_='provides', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='provides', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
-            outfile.write('</%s%s>%s' % (namespace_, name_, eol_))
+            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
             outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespace_='', name_='provides'):
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='t:', name_='provides'):
         if self.repid is not None and 'repid' not in already_processed:
             already_processed.add('repid')
             outfile.write(' repid=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.repid), input_name='repid')), ))
         if self.providesname is not None and 'providesname' not in already_processed:
             already_processed.add('providesname')
             outfile.write(' providesname=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.providesname), input_name='providesname')), ))
-    def exportChildren(self, outfile, level, namespace_='', name_='provides', fromsubclass_=False, pretty_print=True):
+        if self.maxconnections is not None and 'maxconnections' not in already_processed:
+            already_processed.add('maxconnections')
+            outfile.write(' maxconnections=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.maxconnections), input_name='maxconnections')), ))
+    def exportChildren(self, outfile, level, namespaceprefix_='t:', namespacedef_='xmlns:t="http://www.w3.org/namespace/"', name_='provides', fromsubclass_=False, pretty_print=True):
         if pretty_print:
             eol_ = '\n'
         else:
             eol_ = ''
-        if self.description is not None:
-            showIndent(outfile, level, pretty_print)
-            outfile.write('<description>%s</description>%s' % (self.gds_encode(self.gds_format_string(quote_xml(self.description), input_name='description')), eol_))
         for porttype_ in self.porttype:
-            porttype_.export(outfile, level, namespace_, name_='porttype', pretty_print=pretty_print)
+            porttype_.export(outfile, level, namespaceprefix_='t:', name_='porttype', pretty_print=pretty_print)
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -1468,13 +1428,13 @@ class provides(GeneratedsSuper):
         if value is not None and 'providesname' not in already_processed:
             already_processed.add('providesname')
             self.providesname = value
+        value = find_attr_value_('maxconnections', node)
+        if value is not None and 'maxconnections' not in already_processed:
+            already_processed.add('maxconnections')
+            self.maxconnections = value
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
-        if nodeName_ == 'description':
-            description_ = child_.text
-            description_ = self.gds_validate_string(description_, node, 'description')
-            self.description = description_
-        elif nodeName_ == 'porttype':
-            obj_ = portType.factory()
+        if nodeName_ == 'porttype':
+            obj_ = porttype.factory(parent_object_=self)
             obj_.build(child_)
             self.porttype.append(obj_)
             obj_.original_tagname_ = 'porttype'
@@ -1484,11 +1444,12 @@ class provides(GeneratedsSuper):
 class uses(GeneratedsSuper):
     subclass = None
     superclass = None
-    def __init__(self, repid=None, usesname=None, description=None, porttype=None):
+    def __init__(self, repid=None, usesname=None, maxconnections=None, porttype=None, **kwargs_):
         self.original_tagname_ = None
+        self.parent_object_ = kwargs_.get('parent_object_')
         self.repid = _cast(None, repid)
         self.usesname = _cast(None, usesname)
-        self.description = description
+        self.maxconnections = _cast(None, maxconnections)
         if porttype is None:
             self.porttype = []
         else:
@@ -1504,30 +1465,42 @@ class uses(GeneratedsSuper):
         else:
             return uses(*args_, **kwargs_)
     factory = staticmethod(factory)
-    def get_description(self): return self.description
-    def set_description(self, description): self.description = description
-    descriptionProp = property(get_description, set_description)
-    def get_porttype(self): return self.porttype
-    def set_porttype(self, porttype): self.porttype = porttype
-    def add_porttype(self, value): self.porttype.append(value)
-    def insert_porttype_at(self, index, value): self.porttype.insert(index, value)
-    def replace_porttype_at(self, index, value): self.porttype[index] = value
+    def get_porttype(self):
+        return self.porttype
+    def set_porttype(self, porttype):
+        self.porttype = porttype
+    def add_porttype(self, value):
+        self.porttype.append(value)
+    def add_porttype(self, value):
+        self.porttype.append(value)
+    def insert_porttype_at(self, index, value):
+        self.porttype.insert(index, value)
+    def replace_porttype_at(self, index, value):
+        self.porttype[index] = value
     porttypeProp = property(get_porttype, set_porttype)
-    def get_repid(self): return self.repid
-    def set_repid(self, repid): self.repid = repid
+    def get_repid(self):
+        return self.repid
+    def set_repid(self, repid):
+        self.repid = repid
     repidProp = property(get_repid, set_repid)
-    def get_usesname(self): return self.usesname
-    def set_usesname(self, usesname): self.usesname = usesname
+    def get_usesname(self):
+        return self.usesname
+    def set_usesname(self, usesname):
+        self.usesname = usesname
     usesnameProp = property(get_usesname, set_usesname)
+    def get_maxconnections(self):
+        return self.maxconnections
+    def set_maxconnections(self, maxconnections):
+        self.maxconnections = maxconnections
+    maxconnectionsProp = property(get_maxconnections, set_maxconnections)
     def hasContent_(self):
         if (
-            self.description is not None or
             self.porttype
         ):
             return True
         else:
             return False
-    def export(self, outfile, level, namespace_='', name_='uses', namespacedef_='', pretty_print=True):
+    def export(self, outfile, level, namespaceprefix_='t:', namespacedef_='xmlns:t="http://www.w3.org/namespace/"', name_='uses', pretty_print=True):
         imported_ns_def_ = GenerateDSNamespaceDefs_.get('uses')
         if imported_ns_def_ is not None:
             namespacedef_ = imported_ns_def_
@@ -1538,33 +1511,33 @@ class uses(GeneratedsSuper):
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
         showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespace_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
         already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespace_, name_='uses')
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='uses')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespace_='', name_='uses', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='uses', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
-            outfile.write('</%s%s>%s' % (namespace_, name_, eol_))
+            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
             outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespace_='', name_='uses'):
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='t:', name_='uses'):
         if self.repid is not None and 'repid' not in already_processed:
             already_processed.add('repid')
             outfile.write(' repid=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.repid), input_name='repid')), ))
         if self.usesname is not None and 'usesname' not in already_processed:
             already_processed.add('usesname')
             outfile.write(' usesname=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.usesname), input_name='usesname')), ))
-    def exportChildren(self, outfile, level, namespace_='', name_='uses', fromsubclass_=False, pretty_print=True):
+        if self.maxconnections is not None and 'maxconnections' not in already_processed:
+            already_processed.add('maxconnections')
+            outfile.write(' maxconnections=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.maxconnections), input_name='maxconnections')), ))
+    def exportChildren(self, outfile, level, namespaceprefix_='t:', namespacedef_='xmlns:t="http://www.w3.org/namespace/"', name_='uses', fromsubclass_=False, pretty_print=True):
         if pretty_print:
             eol_ = '\n'
         else:
             eol_ = ''
-        if self.description is not None:
-            showIndent(outfile, level, pretty_print)
-            outfile.write('<description>%s</description>%s' % (self.gds_encode(self.gds_format_string(quote_xml(self.description), input_name='description')), eol_))
         for porttype_ in self.porttype:
-            porttype_.export(outfile, level, namespace_, name_='porttype', pretty_print=pretty_print)
+            porttype_.export(outfile, level, namespaceprefix_='t:', name_='porttype', pretty_print=pretty_print)
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -1581,38 +1554,41 @@ class uses(GeneratedsSuper):
         if value is not None and 'usesname' not in already_processed:
             already_processed.add('usesname')
             self.usesname = value
+        value = find_attr_value_('maxconnections', node)
+        if value is not None and 'maxconnections' not in already_processed:
+            already_processed.add('maxconnections')
+            self.maxconnections = value
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
-        if nodeName_ == 'description':
-            description_ = child_.text
-            description_ = self.gds_validate_string(description_, node, 'description')
-            self.description = description_
-        elif nodeName_ == 'porttype':
-            obj_ = portType.factory()
+        if nodeName_ == 'porttype':
+            obj_ = porttype.factory(parent_object_=self)
             obj_.build(child_)
             self.porttype.append(obj_)
             obj_.original_tagname_ = 'porttype'
 # end class uses
 
 
-class portType(GeneratedsSuper):
+class porttype(GeneratedsSuper):
     subclass = None
     superclass = None
-    def __init__(self, type_=None):
+    def __init__(self, type_=None, **kwargs_):
         self.original_tagname_ = None
+        self.parent_object_ = kwargs_.get('parent_object_')
         self.type_ = _cast(None, type_)
     def factory(*args_, **kwargs_):
         if CurrentSubclassModule_ is not None:
             subclass = getSubclassFromModule_(
-                CurrentSubclassModule_, portType)
+                CurrentSubclassModule_, porttype)
             if subclass is not None:
                 return subclass(*args_, **kwargs_)
-        if portType.subclass:
-            return portType.subclass(*args_, **kwargs_)
+        if porttype.subclass:
+            return porttype.subclass(*args_, **kwargs_)
         else:
-            return portType(*args_, **kwargs_)
+            return porttype(*args_, **kwargs_)
     factory = staticmethod(factory)
-    def get_type(self): return self.type_
-    def set_type(self, type_): self.type_ = type_
+    def get_type(self):
+        return self.type_
+    def set_type(self, type_):
+        self.type_ = type_
     typeProp = property(get_type, set_type)
     def hasContent_(self):
         if (
@@ -1621,8 +1597,8 @@ class portType(GeneratedsSuper):
             return True
         else:
             return False
-    def export(self, outfile, level, namespace_='', name_='portType', namespacedef_='', pretty_print=True):
-        imported_ns_def_ = GenerateDSNamespaceDefs_.get('portType')
+    def export(self, outfile, level, namespaceprefix_='t:', namespacedef_='xmlns:t="http://www.w3.org/namespace/"', name_='porttype', pretty_print=True):
+        imported_ns_def_ = GenerateDSNamespaceDefs_.get('porttype')
         if imported_ns_def_ is not None:
             namespacedef_ = imported_ns_def_
         if pretty_print:
@@ -1632,20 +1608,20 @@ class portType(GeneratedsSuper):
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
         showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespace_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
         already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespace_, name_='portType')
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='porttype')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespace_='', name_='portType', pretty_print=pretty_print)
-            outfile.write('</%s%s>%s' % (namespace_, name_, eol_))
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='porttype', pretty_print=pretty_print)
+            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
             outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespace_='', name_='portType'):
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='t:', name_='porttype'):
         if self.type_ is not None and 'type_' not in already_processed:
             already_processed.add('type_')
             outfile.write(' type=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.type_), input_name='type')), ))
-    def exportChildren(self, outfile, level, namespace_='', name_='portType', fromsubclass_=False, pretty_print=True):
+    def exportChildren(self, outfile, level, namespaceprefix_='t:', namespacedef_='xmlns:t="http://www.w3.org/namespace/"', name_='porttype', fromsubclass_=False, pretty_print=True):
         pass
     def build(self, node):
         already_processed = set()
@@ -1661,14 +1637,15 @@ class portType(GeneratedsSuper):
             self.type_ = value
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         pass
-# end class portType
+# end class porttype
 
 
 class interfaces(GeneratedsSuper):
     subclass = None
     superclass = None
-    def __init__(self, interface=None):
+    def __init__(self, interface=None, **kwargs_):
         self.original_tagname_ = None
+        self.parent_object_ = kwargs_.get('parent_object_')
         if interface is None:
             self.interface = []
         else:
@@ -1684,11 +1661,18 @@ class interfaces(GeneratedsSuper):
         else:
             return interfaces(*args_, **kwargs_)
     factory = staticmethod(factory)
-    def get_interface(self): return self.interface
-    def set_interface(self, interface): self.interface = interface
-    def add_interface(self, value): self.interface.append(value)
-    def insert_interface_at(self, index, value): self.interface.insert(index, value)
-    def replace_interface_at(self, index, value): self.interface[index] = value
+    def get_interface(self):
+        return self.interface
+    def set_interface(self, interface):
+        self.interface = interface
+    def add_interface(self, value):
+        self.interface.append(value)
+    def add_interface(self, value):
+        self.interface.append(value)
+    def insert_interface_at(self, index, value):
+        self.interface.insert(index, value)
+    def replace_interface_at(self, index, value):
+        self.interface[index] = value
     interfaceProp = property(get_interface, set_interface)
     def hasContent_(self):
         if (
@@ -1697,7 +1681,7 @@ class interfaces(GeneratedsSuper):
             return True
         else:
             return False
-    def export(self, outfile, level, namespace_='', name_='interfaces', namespacedef_='', pretty_print=True):
+    def export(self, outfile, level, namespaceprefix_='t:', namespacedef_='xmlns:t="http://www.w3.org/namespace/"', name_='interfaces', pretty_print=True):
         imported_ns_def_ = GenerateDSNamespaceDefs_.get('interfaces')
         if imported_ns_def_ is not None:
             namespacedef_ = imported_ns_def_
@@ -1708,25 +1692,25 @@ class interfaces(GeneratedsSuper):
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
         showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespace_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
         already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespace_, name_='interfaces')
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='interfaces')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespace_='', name_='interfaces', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='interfaces', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
-            outfile.write('</%s%s>%s' % (namespace_, name_, eol_))
+            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
             outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespace_='', name_='interfaces'):
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='t:', name_='interfaces'):
         pass
-    def exportChildren(self, outfile, level, namespace_='', name_='interfaces', fromsubclass_=False, pretty_print=True):
+    def exportChildren(self, outfile, level, namespaceprefix_='t:', namespacedef_='xmlns:t="http://www.w3.org/namespace/"', name_='interfaces', fromsubclass_=False, pretty_print=True):
         if pretty_print:
             eol_ = '\n'
         else:
             eol_ = ''
         for interface_ in self.interface:
-            interface_.export(outfile, level, namespace_, name_='interface', pretty_print=pretty_print)
+            interface_.export(outfile, level, namespaceprefix_='t:', name_='interface', pretty_print=pretty_print)
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -1738,7 +1722,7 @@ class interfaces(GeneratedsSuper):
         pass
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         if nodeName_ == 'interface':
-            obj_ = interface.factory()
+            obj_ = interface.factory(parent_object_=self)
             obj_.build(child_)
             self.interface.append(obj_)
             obj_.original_tagname_ = 'interface'
@@ -1748,8 +1732,9 @@ class interfaces(GeneratedsSuper):
 class interface(GeneratedsSuper):
     subclass = None
     superclass = None
-    def __init__(self, repid=None, name=None, inheritsinterface=None):
+    def __init__(self, repid=None, name=None, inheritsinterface=None, **kwargs_):
         self.original_tagname_ = None
+        self.parent_object_ = kwargs_.get('parent_object_')
         self.repid = _cast(None, repid)
         self.name = _cast(None, name)
         if inheritsinterface is None:
@@ -1767,17 +1752,28 @@ class interface(GeneratedsSuper):
         else:
             return interface(*args_, **kwargs_)
     factory = staticmethod(factory)
-    def get_inheritsinterface(self): return self.inheritsinterface
-    def set_inheritsinterface(self, inheritsinterface): self.inheritsinterface = inheritsinterface
-    def add_inheritsinterface(self, value): self.inheritsinterface.append(value)
-    def insert_inheritsinterface_at(self, index, value): self.inheritsinterface.insert(index, value)
-    def replace_inheritsinterface_at(self, index, value): self.inheritsinterface[index] = value
+    def get_inheritsinterface(self):
+        return self.inheritsinterface
+    def set_inheritsinterface(self, inheritsinterface):
+        self.inheritsinterface = inheritsinterface
+    def add_inheritsinterface(self, value):
+        self.inheritsinterface.append(value)
+    def add_inheritsinterface(self, value):
+        self.inheritsinterface.append(value)
+    def insert_inheritsinterface_at(self, index, value):
+        self.inheritsinterface.insert(index, value)
+    def replace_inheritsinterface_at(self, index, value):
+        self.inheritsinterface[index] = value
     inheritsinterfaceProp = property(get_inheritsinterface, set_inheritsinterface)
-    def get_repid(self): return self.repid
-    def set_repid(self, repid): self.repid = repid
+    def get_repid(self):
+        return self.repid
+    def set_repid(self, repid):
+        self.repid = repid
     repidProp = property(get_repid, set_repid)
-    def get_name(self): return self.name
-    def set_name(self, name): self.name = name
+    def get_name(self):
+        return self.name
+    def set_name(self, name):
+        self.name = name
     nameProp = property(get_name, set_name)
     def hasContent_(self):
         if (
@@ -1786,7 +1782,7 @@ class interface(GeneratedsSuper):
             return True
         else:
             return False
-    def export(self, outfile, level, namespace_='', name_='interface', namespacedef_='', pretty_print=True):
+    def export(self, outfile, level, namespaceprefix_='t:', namespacedef_='xmlns:t="http://www.w3.org/namespace/"', name_='interface', pretty_print=True):
         imported_ns_def_ = GenerateDSNamespaceDefs_.get('interface')
         if imported_ns_def_ is not None:
             namespacedef_ = imported_ns_def_
@@ -1797,30 +1793,30 @@ class interface(GeneratedsSuper):
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
         showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespace_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
         already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespace_, name_='interface')
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='interface')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespace_='', name_='interface', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='interface', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
-            outfile.write('</%s%s>%s' % (namespace_, name_, eol_))
+            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
             outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespace_='', name_='interface'):
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='t:', name_='interface'):
         if self.repid is not None and 'repid' not in already_processed:
             already_processed.add('repid')
             outfile.write(' repid=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.repid), input_name='repid')), ))
         if self.name is not None and 'name' not in already_processed:
             already_processed.add('name')
             outfile.write(' name=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.name), input_name='name')), ))
-    def exportChildren(self, outfile, level, namespace_='', name_='interface', fromsubclass_=False, pretty_print=True):
+    def exportChildren(self, outfile, level, namespaceprefix_='t:', namespacedef_='xmlns:t="http://www.w3.org/namespace/"', name_='interface', fromsubclass_=False, pretty_print=True):
         if pretty_print:
             eol_ = '\n'
         else:
             eol_ = ''
         for inheritsinterface_ in self.inheritsinterface:
-            inheritsinterface_.export(outfile, level, namespace_, name_='inheritsinterface', pretty_print=pretty_print)
+            inheritsinterface_.export(outfile, level, namespaceprefix_='t:', name_='inheritsinterface', pretty_print=pretty_print)
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -1839,32 +1835,35 @@ class interface(GeneratedsSuper):
             self.name = value
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         if nodeName_ == 'inheritsinterface':
-            obj_ = inheritsInterface.factory()
+            obj_ = inheritsinterface.factory(parent_object_=self)
             obj_.build(child_)
             self.inheritsinterface.append(obj_)
             obj_.original_tagname_ = 'inheritsinterface'
 # end class interface
 
 
-class inheritsInterface(GeneratedsSuper):
+class inheritsinterface(GeneratedsSuper):
     subclass = None
     superclass = None
-    def __init__(self, repid=None):
+    def __init__(self, repid=None, **kwargs_):
         self.original_tagname_ = None
+        self.parent_object_ = kwargs_.get('parent_object_')
         self.repid = _cast(None, repid)
     def factory(*args_, **kwargs_):
         if CurrentSubclassModule_ is not None:
             subclass = getSubclassFromModule_(
-                CurrentSubclassModule_, inheritsInterface)
+                CurrentSubclassModule_, inheritsinterface)
             if subclass is not None:
                 return subclass(*args_, **kwargs_)
-        if inheritsInterface.subclass:
-            return inheritsInterface.subclass(*args_, **kwargs_)
+        if inheritsinterface.subclass:
+            return inheritsinterface.subclass(*args_, **kwargs_)
         else:
-            return inheritsInterface(*args_, **kwargs_)
+            return inheritsinterface(*args_, **kwargs_)
     factory = staticmethod(factory)
-    def get_repid(self): return self.repid
-    def set_repid(self, repid): self.repid = repid
+    def get_repid(self):
+        return self.repid
+    def set_repid(self, repid):
+        self.repid = repid
     repidProp = property(get_repid, set_repid)
     def hasContent_(self):
         if (
@@ -1873,8 +1872,8 @@ class inheritsInterface(GeneratedsSuper):
             return True
         else:
             return False
-    def export(self, outfile, level, namespace_='', name_='inheritsInterface', namespacedef_='', pretty_print=True):
-        imported_ns_def_ = GenerateDSNamespaceDefs_.get('inheritsInterface')
+    def export(self, outfile, level, namespaceprefix_='t:', namespacedef_='xmlns:t="http://www.w3.org/namespace/"', name_='inheritsinterface', pretty_print=True):
+        imported_ns_def_ = GenerateDSNamespaceDefs_.get('inheritsinterface')
         if imported_ns_def_ is not None:
             namespacedef_ = imported_ns_def_
         if pretty_print:
@@ -1884,20 +1883,20 @@ class inheritsInterface(GeneratedsSuper):
         if self.original_tagname_ is not None:
             name_ = self.original_tagname_
         showIndent(outfile, level, pretty_print)
-        outfile.write('<%s%s%s' % (namespace_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
         already_processed = set()
-        self.exportAttributes(outfile, level, already_processed, namespace_, name_='inheritsInterface')
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='inheritsinterface')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespace_='', name_='inheritsInterface', pretty_print=pretty_print)
-            outfile.write('</%s%s>%s' % (namespace_, name_, eol_))
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='inheritsinterface', pretty_print=pretty_print)
+            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
             outfile.write('/>%s' % (eol_, ))
-    def exportAttributes(self, outfile, level, already_processed, namespace_='', name_='inheritsInterface'):
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='t:', name_='inheritsinterface'):
         if self.repid is not None and 'repid' not in already_processed:
             already_processed.add('repid')
             outfile.write(' repid=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.repid), input_name='repid')), ))
-    def exportChildren(self, outfile, level, namespace_='', name_='inheritsInterface', fromsubclass_=False, pretty_print=True):
+    def exportChildren(self, outfile, level, namespaceprefix_='t:', namespacedef_='xmlns:t="http://www.w3.org/namespace/"', name_='inheritsinterface', fromsubclass_=False, pretty_print=True):
         pass
     def build(self, node):
         already_processed = set()
@@ -1913,11 +1912,172 @@ class inheritsInterface(GeneratedsSuper):
             self.repid = value
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         pass
-# end class inheritsInterface
+# end class inheritsinterface
+
+
+class propertyfile(GeneratedsSuper):
+    subclass = None
+    superclass = None
+    def __init__(self, type_=None, localfile=None, **kwargs_):
+        self.original_tagname_ = None
+        self.parent_object_ = kwargs_.get('parent_object_')
+        self.type_ = _cast(None, type_)
+        self.localfile = localfile
+    def factory(*args_, **kwargs_):
+        if CurrentSubclassModule_ is not None:
+            subclass = getSubclassFromModule_(
+                CurrentSubclassModule_, propertyfile)
+            if subclass is not None:
+                return subclass(*args_, **kwargs_)
+        if propertyfile.subclass:
+            return propertyfile.subclass(*args_, **kwargs_)
+        else:
+            return propertyfile(*args_, **kwargs_)
+    factory = staticmethod(factory)
+    def get_localfile(self):
+        return self.localfile
+    def set_localfile(self, localfile):
+        self.localfile = localfile
+    localfileProp = property(get_localfile, set_localfile)
+    def get_type(self):
+        return self.type_
+    def set_type(self, type_):
+        self.type_ = type_
+    typeProp = property(get_type, set_type)
+    def hasContent_(self):
+        if (
+            self.localfile is not None
+        ):
+            return True
+        else:
+            return False
+    def export(self, outfile, level, namespaceprefix_='t:', namespacedef_='xmlns:t="http://www.w3.org/namespace/"', name_='propertyfile', pretty_print=True):
+        imported_ns_def_ = GenerateDSNamespaceDefs_.get('propertyfile')
+        if imported_ns_def_ is not None:
+            namespacedef_ = imported_ns_def_
+        if pretty_print:
+            eol_ = '\n'
+        else:
+            eol_ = ''
+        if self.original_tagname_ is not None:
+            name_ = self.original_tagname_
+        showIndent(outfile, level, pretty_print)
+        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        already_processed = set()
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='propertyfile')
+        if self.hasContent_():
+            outfile.write('>%s' % (eol_, ))
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='propertyfile', pretty_print=pretty_print)
+            showIndent(outfile, level, pretty_print)
+            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
+        else:
+            outfile.write('/>%s' % (eol_, ))
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='t:', name_='propertyfile'):
+        if self.type_ is not None and 'type_' not in already_processed:
+            already_processed.add('type_')
+            outfile.write(' type=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.type_), input_name='type')), ))
+    def exportChildren(self, outfile, level, namespaceprefix_='t:', namespacedef_='xmlns:t="http://www.w3.org/namespace/"', name_='propertyfile', fromsubclass_=False, pretty_print=True):
+        if pretty_print:
+            eol_ = '\n'
+        else:
+            eol_ = ''
+        if self.localfile is not None:
+            self.localfile.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='localfile', pretty_print=pretty_print)
+    def build(self, node):
+        already_processed = set()
+        self.buildAttributes(node, node.attrib, already_processed)
+        for child in node:
+            nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
+            self.buildChildren(child, node, nodeName_)
+        return self
+    def buildAttributes(self, node, attrs, already_processed):
+        value = find_attr_value_('type', node)
+        if value is not None and 'type' not in already_processed:
+            already_processed.add('type')
+            self.type_ = value
+    def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
+        if nodeName_ == 'localfile':
+            obj_ = localfile.factory(parent_object_=self)
+            obj_.build(child_)
+            self.localfile = obj_
+            obj_.original_tagname_ = 'localfile'
+# end class propertyfile
+
+
+class localfile(GeneratedsSuper):
+    subclass = None
+    superclass = None
+    def __init__(self, name=None, **kwargs_):
+        self.original_tagname_ = None
+        self.parent_object_ = kwargs_.get('parent_object_')
+        self.name = _cast(None, name)
+    def factory(*args_, **kwargs_):
+        if CurrentSubclassModule_ is not None:
+            subclass = getSubclassFromModule_(
+                CurrentSubclassModule_, localfile)
+            if subclass is not None:
+                return subclass(*args_, **kwargs_)
+        if localfile.subclass:
+            return localfile.subclass(*args_, **kwargs_)
+        else:
+            return localfile(*args_, **kwargs_)
+    factory = staticmethod(factory)
+    def get_name(self):
+        return self.name
+    def set_name(self, name):
+        self.name = name
+    nameProp = property(get_name, set_name)
+    def hasContent_(self):
+        if (
+
+        ):
+            return True
+        else:
+            return False
+    def export(self, outfile, level, namespaceprefix_='t:', namespacedef_='xmlns:t="http://www.w3.org/namespace/"', name_='localfile', pretty_print=True):
+        imported_ns_def_ = GenerateDSNamespaceDefs_.get('localfile')
+        if imported_ns_def_ is not None:
+            namespacedef_ = imported_ns_def_
+        if pretty_print:
+            eol_ = '\n'
+        else:
+            eol_ = ''
+        if self.original_tagname_ is not None:
+            name_ = self.original_tagname_
+        showIndent(outfile, level, pretty_print)
+        outfile.write('<%s%s%s' % (namespaceprefix_, name_, namespacedef_ and ' ' + namespacedef_ or '', ))
+        already_processed = set()
+        self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='localfile')
+        if self.hasContent_():
+            outfile.write('>%s' % (eol_, ))
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='localfile', pretty_print=pretty_print)
+            outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
+        else:
+            outfile.write('/>%s' % (eol_, ))
+    def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='t:', name_='localfile'):
+        if self.name is not None and 'name' not in already_processed:
+            already_processed.add('name')
+            outfile.write(' name=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.name), input_name='name')), ))
+    def exportChildren(self, outfile, level, namespaceprefix_='t:', namespacedef_='xmlns:t="http://www.w3.org/namespace/"', name_='localfile', fromsubclass_=False, pretty_print=True):
+        pass
+    def build(self, node):
+        already_processed = set()
+        self.buildAttributes(node, node.attrib, already_processed)
+        for child in node:
+            nodeName_ = Tag_pattern_.match(child.tag).groups()[-1]
+            self.buildChildren(child, node, nodeName_)
+        return self
+    def buildAttributes(self, node, attrs, already_processed):
+        value = find_attr_value_('name', node)
+        if value is not None and 'name' not in already_processed:
+            already_processed.add('name')
+            self.name = value
+    def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
+        pass
+# end class localfile
 
 
 GDSClassesMapping = {
-    'softwarecomponent': softwarecomponent,
 }
 
 
@@ -1955,7 +2115,7 @@ def parse(inFileName, silence=False):
 ##         sys.stdout.write('<?xml version="1.0" ?>\n')
 ##         rootObj.export(
 ##             sys.stdout, 0, name_=rootTag,
-##             namespacedef_='',
+##             namespacedef_='xmlns:t="http://www.w3.org/namespace/"',
 ##             pretty_print=True)
     return rootObj
 
@@ -2006,7 +2166,7 @@ def parseString(inString, silence=False):
 ##         sys.stdout.write('<?xml version="1.0" ?>\n')
 ##         rootObj.export(
 ##             sys.stdout, 0, name_=rootTag,
-##             namespacedef_='')
+##             namespacedef_='xmlns:t="http://www.w3.org/namespace/"')
     return rootObj
 
 
@@ -2045,17 +2205,18 @@ if __name__ == '__main__':
 
 
 __all__ = [
-    "componentFeatures",
-    "componentRepId",
-    "inheritsInterface",
+    "componentfeatures",
+    "componentrepid",
+    "componenttype",
+    "inheritsinterface",
     "interface",
     "interfaces",
-    "localFile",
-    "portType",
+    "localfile",
     "ports",
-    "propertyFile",
+    "porttype",
+    "propertyfile",
     "provides",
     "softwarecomponent",
-    "supportsInterface",
+    "supportsinterface",
     "uses"
 ]

@@ -1,0 +1,83 @@
+<?xml version= "1.0" encoding= "UTF-8" ?>
+<!--
+** RELEASE STATEMENT(s):
+** UNLIMITED RIGHTS
+** The Government has the right to use, modify, reproduce, release, perform,
+** display, or disclose this application programmable interface in whole or in
+** part, in any manner and for any purpose whatsoever, and to have or
+** authorize others to do so.
+**
+** Distribution Statement A - Approved for public release; distribution is
+** unlimited (27 August 2015).
+-->
+<!--
+** JTNC Standard:
+** Software Communications Architecture
+** Appendix D-1: Platform Specific Model (PSM) Document Type Definition (DTD)
+** Version: 4.1, 20 August 2015
+-->
+<!-- domainmanagerconfiguration.4.1.dtd -->
+<!ELEMENT domainmanagerconfiguration
+( description?
+, domainmanagersoftpkg
+, deploymentlayout?
+, services?
+)>
+<!ATTLIST domainmanagerconfiguration
+id ID #REQUIRED
+name CDATA #REQUIRED
+accardinality (single | multiple) "single"
+app_backwards_compatible (false | true) "false"
+app_deployment_data (false | true) "true"
+app_installable (false | true) "true"
+app_releasable (false | true) "true"
+corba_provider (false | true) "true"
+channel_extension (false | true) "false"
+event_channel (false | true) "false"
+log_producer (false | true) "false"
+nested_deployment (false | true) "false"
+oe_profile (lightweight| medium | full) "medium" >
+<!ELEMENT description (#PCDATA)>
+<!ELEMENT domainmanagersoftpkg
+( localfile
+, componentproperties?
+) >
+<!ELEMENT simpleref EMPTY>
+<!ATTLIST simpleref
+refid CDATA #REQUIRED
+value CDATA #REQUIRED>
+<!ELEMENT simplesequenceref
+( values )>
+<!ATTLIST simplesequenceref
+refid CDATA #REQUIRED>
+<!ELEMENT structref
+( simpleref+ )>
+<!ATTLIST structref
+refid CDATA #REQUIRED>
+<!ELEMENT structsequenceref
+( structvalue+ )>
+<!ATTLIST structsequenceref
+refid CDATA #REQUIRED>
+<!ELEMENT structvalue
+( simpleref+ )>
+<!ELEMENT values
+( value+ )>
+<!ELEMENT value (#PCDATA)>
+<!ELEMENT componentproperties
+( simpleref | simplesequenceref | structref | structsequenceref )+ >
+<!ELEMENT localfile EMPTY>
+<!ATTLIST localfile
+name CDATA #REQUIRED>
+<!ELEMENT deploymentlayout
+( localfile
+)>
+<!ELEMENT services
+( service+ ) >
+<!ELEMENT service
+( identifier
+, domainfinder)>
+<!ELEMENT domainfinder EMPTY>
+<!ATTLIST domainfinder
+type (filesystem | eventchannel | application | servicename | servicetype) #REQUIRED
+name CDATA #IMPLIED>
+<!ELEMENT identifier (#PCDATA)>

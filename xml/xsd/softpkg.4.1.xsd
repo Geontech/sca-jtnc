@@ -1,0 +1,223 @@
+<schema
+  xmlns='http://www.w3.org/2000/10/XMLSchema'
+  targetNamespace='http://www.w3.org/namespace/'
+  xmlns:t='http://www.w3.org/namespace/'>
+
+ <element name='softpkg'>
+  <complexType>
+   <sequence>
+    <element ref='t:title' minOccurs='0' maxOccurs='1'/>
+    <element ref='t:author' maxOccurs='unbounded'/>
+    <element ref='t:description' minOccurs='0' maxOccurs='1'/>
+    <element ref='t:propertyfile' minOccurs='0' maxOccurs='1'/>
+    <element ref='t:descriptor' minOccurs='0' maxOccurs='1'/>
+    <element ref='t:implementation' maxOccurs='unbounded'/>
+    <element ref='t:usesdevice' minOccurs='0' maxOccurs='unbounded'/>
+   </sequence>
+   <attribute name='id' type='ID' use='required'/>
+   <attribute name='name' type='string' use='required'/>
+   <attribute name='type' use='default' value='sca_compliant'>
+    <simpleType>
+     <restriction base='string'>
+      <enumeration value='sca_compliant'/>
+      <enumeration value='sca_non_compliant'/>
+     </restriction>
+    </simpleType>
+   </attribute>
+   <attribute name='version' type='string' use='optional'/>
+  </complexType>
+ </element>
+
+ <element name='title'>
+  <complexType mixed='true'>
+  </complexType>
+ </element>
+
+ <element name='author'>
+  <complexType>
+   <sequence>
+    <element ref='t:name' minOccurs='0' maxOccurs='unbounded'/>
+    <element ref='t:company' minOccurs='0' maxOccurs='1'/>
+    <element ref='t:webpage' minOccurs='0' maxOccurs='1'/>
+   </sequence>
+  </complexType>
+ </element>
+
+ <element name='name'>
+  <complexType mixed='true'>
+  </complexType>
+ </element>
+
+ <element name='company'>
+  <complexType mixed='true'>
+  </complexType>
+ </element>
+
+ <element name='webpage'>
+  <complexType mixed='true'>
+  </complexType>
+ </element>
+
+ <element name='description'>
+  <complexType mixed='true'>
+  </complexType>
+ </element>
+
+ <element name='propertyfile'>
+  <complexType>
+   <sequence>
+    <element ref='t:localfile'/>
+   </sequence>
+   <attribute name='type' type='string' use='optional'/>
+  </complexType>
+ </element>
+
+ <element name='localfile'>
+  <complexType>
+   <attribute name='name' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='descriptor'>
+  <complexType>
+   <sequence>
+    <element ref='t:localfile'/>
+   </sequence>
+   <attribute name='name' type='string' use='optional'/>
+  </complexType>
+ </element>
+
+ <element name='implementation'>
+  <complexType>
+   <sequence>
+    <element ref='t:description' minOccurs='0' maxOccurs='1'/>
+    <element ref='t:propertyfile' minOccurs='0' maxOccurs='1'/>
+    <element ref='t:code'/>
+    <element ref='t:compiler' minOccurs='0' maxOccurs='1'/>
+    <element ref='t:programminglanguage' minOccurs='0' maxOccurs='1'/>
+    <element ref='t:softpkg.4.1.dtd'/>
+    <element ref='t:UNCLASSIFIED'/>
+    <!--sequence maxOccurs='unbounded'-->
+    </sequence>
+   <attribute name='id' type='ID' use='required'/>
+   <attribute name='aepcompliance' use='default' value='aep_compliant'>
+    <simpleType>
+     <restriction base='string'>
+      <enumeration value='aep_compliant'/>
+      <enumeration value='lw_aep_compliant'/>
+      <enumeration value='aep_non_compliant'/>
+     </restriction>
+    </simpleType>
+   </attribute>
+  </complexType>
+ </element>
+
+ <element name='code'>
+  <complexType>
+   <sequence>
+    <element ref='t:localfile'/>
+    <element ref='t:entrypoint' minOccurs='0' maxOccurs='1'/>
+    <element ref='t:stacksize' minOccurs='0' maxOccurs='1'/>
+    <element ref='t:priority' minOccurs='0' maxOccurs='1'/>
+   </sequence>
+   <attribute name='type' type='string' use='optional'/>
+  </complexType>
+ </element>
+
+ <element name='entrypoint'>
+  <complexType mixed='true'>
+  </complexType>
+ </element>
+
+ <element name='stacksize'>
+  <complexType mixed='true'>
+  </complexType>
+ </element>
+
+ <element name='priority'>
+  <complexType mixed='true'>
+  </complexType>
+ </element>
+
+ <element name='compiler'>
+  <complexType>
+   <attribute name='name' type='string' use='required'/>
+   <attribute name='version' type='string' use='optional'/>
+  </complexType>
+ </element>
+
+ <element name='programminglanguage'>
+  <complexType>
+   <attribute name='name' type='string' use='required'/>
+   <attribute name='version' type='string' use='optional'/>
+  </complexType>
+ </element>
+
+ <element name='humanlanguage'>
+  <complexType>
+   <attribute name='name' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='runtime'>
+  <complexType>
+   <attribute name='name' type='string' use='required'/>
+   <attribute name='version' type='string' use='optional'/>
+  </complexType>
+ </element>
+
+ <element name='os'>
+  <complexType>
+   <attribute name='name' type='string' use='required'/>
+   <attribute name='version' type='string' use='optional'/>
+  </complexType>
+ </element>
+
+ <element name='processor'>
+  <complexType>
+   <attribute name='name' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='dependency'>
+  <complexType>
+   <choice>
+    <element ref='t:softpkgref'/>
+    <element ref='t:propertyref'/>
+   </choice>
+   <attribute name='type' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='softpkgref'>
+  <complexType>
+   <sequence>
+    <element ref='t:localfile'/>
+    <element ref='t:implref' minOccurs='0' maxOccurs='1'/>
+   </sequence>
+  </complexType>
+ </element>
+
+ <element name='implref'>
+  <complexType>
+   <attribute name='refid' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='propertyref'>
+  <complexType>
+   <attribute name='refid' type='string' use='required'/>
+   <attribute name='value' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='usesdevice'>
+  <complexType>
+   <sequence>
+    <element ref='t:propertyref' maxOccurs='unbounded'/>
+   </sequence>
+   <attribute name='id' type='ID' use='required'/>
+   <attribute name='type' type='string' use='required'/>
+  </complexType>
+ </element>
+</schema>

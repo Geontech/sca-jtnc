@@ -21,15 +21,16 @@ with this program.  If not, see http://www.gnu.org/licenses/.
 
 <!--<!DOCTYPE catalog PUBLIC "-//OASIS//DTD Entity Resolution XML Catalog V1.0//EN" "http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd">-->
 <!DOCTYPE catalog
-  PUBLIC '-//JTRS//DTD SCA V2.2.2 //EN'
+  PUBLIC '-//JTRS//DTD SCA V4.1 //EN'
   'catalog.dtd'>
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
-    <public publicId="-//JTRS//DTD SCA V2.2.2 DCD//EN" uri="deviceconfiguration.dtd"/>
-    <public publicId="-//JTRS//DTD SCA V2.2.2 DPD//EN" uri="devicepkg.dtd"/>
-    <public publicId="-//JTRS//DTD SCA V2.2.2 DMD//EN" uri="domainmanagerconfiguration.dtd"/>
-    <public publicId="-//JTRS//DTD SCA V2.2.2 SPD//EN" uri="softpkg.dtd"/>
-    <public publicId="-//JTRS//DTD SCA V2.2.2 SAD//EN" uri="softwareassembly.dtd"/>
-    <public publicId="-//JTRS//DTD SCA V2.2.2 SCD//EN" uri="softwarecomponent.dtd"/>
-    <public publicId="-//JTRS//DTD SCA V2.2.2 PRF//EN" uri="properties.dtd"/>
-    <public publicId="-//JTRS//DTD SCA V2.2.2 PROFILE//EN" uri="profile.dtd"/>
+    <public publicId="-//JTRS//DTD SCA V4.1 DCD//EN" uri="deviceconfiguration.4.1.dtd"/>
+    <public publicId="-//JTRS//DTD SCA V4.1 DPD//EN" uri="devicepkg.4.1.dtd"/>
+    <public publicId="-//JTRS//DTD SCA V4.1 DMD//EN" uri="domainmanagerconfiguration.4.1.dtd"/>
+    <public publicId="-//JTRS//DTD SCA V4.1 SPD//EN" uri="softpkg.4.1.dtd"/>
+    <public publicId="-//JTRS//DTD SCA V4.1 SAD//EN" uri="softwareassembly.4.1.dtd"/>
+    <public publicId="-//JTRS//DTD SCA V4.1 SCD//EN" uri="softwarecomponent.4.1.dtd"/>
+    <public publicId="-//JTRS//DTD SCA V4.1 PRF//EN" uri="properties.4.1.dtd"/>
+    <public publicId="-//JTRS//DTD SCA V4.1 PRF//EN" uri="platformdeployment.4.1.dtd"/>
+    <public publicId="-//JTRS//DTD SCA V4.1 PROFILE//EN" uri="applicationdeployment.4.1.dtd"/>
 </catalog>

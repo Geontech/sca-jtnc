@@ -1,0 +1,194 @@
+<?xml version= "1.0" encoding= "UTF-8" ?>
+<!--
+** RELEASE STATEMENT(s):
+** UNLIMITED RIGHTS
+** The Government has the right to use, modify, reproduce, release, perform,
+** display, or disclose this application programmable interface in whole or in
+** part, in any manner and for any purpose whatsoever, and to have or
+** authorize others to do so.
+**
+** Distribution Statement A - Approved for public release; distribution is
+** unlimited (27 August 2015).
+-->
+<!--
+** JTNC Standard:
+** Software Communications Architecture
+** Appendix D-1: Platform Specific Model (PSM) Document Type Definition (DTD)
+** Version: 4.1, 20 August 2015
+-->
+<!-- softwareassembly.4.1.dtd -->
+<!ELEMENT softwareassembly
+( description?
+, componentfiles
+, partitioning
+, deploymentdependencies?
+, assemblycontroller
+, connections?
+, externalports?
+, deploymentprefs?
+)>
+<!ATTLIST softwareassembly
+name ID #REQUIRED
+sca_version CDATA "V4.1"
+version CDATA #IMPLIED>
+<!ELEMENT description (#PCDATA)>
+<!ELEMENT componentfiles
+( componentfile+ )>
+<!ELEMENT componentfile
+( localfile )>
+<!ATTLIST componentfile
+id ID #REQUIRED
+type CDATA #IMPLIED>
+<!ELEMENT localfile EMPTY>
+<!ATTLIST localfile
+name CDATA #REQUIRED>
+<!ELEMENT partitioning
+( componentplacement | hostcollocation |
+assemblyplacement )+>
+<!ELEMENT componentplacement
+( componentfileref
+, componentinstantiation+
+)>
+<!ELEMENT componentfileref EMPTY>
+<!ATTLIST componentfileref
+refid CDATA #REQUIRED>
+<!ELEMENT componentinstantiation
+( componentproperties?
+, coreaffinity*
+, deploymentdependencies?
+, componentfactoryref?
+)>
+<!ATTLIST componentinstantiation
+id ID #REQUIRED
+processcollocation CDATA #IMPLIED
+stringifiedobjectref CDATA #IMPLIED>
+<!ELEMENT coreaffinity (#PCDATA)>
+<!ELEMENT componentfactoryref
+( componentfactoryproperties? )>
+<!ATTLIST componentfactoryref
+refid CDATA #REQUIRED>
+<!ELEMENT componentfactoryproperties
+( simpleref | simplesequenceref | structref | structsequenceref )+ >
+<!ELEMENT simpleref EMPTY>
+<!ATTLIST simpleref
+refid CDATA #REQUIRED
+value CDATA #REQUIRED>
+<!ELEMENT simplesequenceref
+( values )>
+<!ATTLIST simplesequenceref
+refid CDATA #REQUIRED>
+<!ELEMENT structref
+( simpleref+ )>
+<!ATTLIST structref
+refid CDATA #REQUIRED>
+<!ELEMENT structsequenceref
+( structvalue+ )>
+<!ATTLIST structsequenceref
+refid CDATA #REQUIRED>
+<!ELEMENT structvalue
+( simpleref+ )>
+<!ELEMENT values
+( value+ )>
+<!ELEMENT value (#PCDATA)>
+<!ELEMENT hostcollocation
+( componentplacement )+>
+<!ATTLIST hostcollocation
+id ID #IMPLIED
+name CDATA #IMPLIED>
+<!ELEMENT assemblyplacement
+( componentfileref
+, assemblyinstantiation+
+)>
+<!ELEMENT assemblyinstantiation
+( componentproperties?
+, deviceassignments?
+, deploymentdependencies?
+, executionaffinityassignments?
+)>
+<!ATTLIST assemblyinstantiation
+id ID #REQUIRED>
+<!ELEMENT componentproperties
+( simpleref | simplesequenceref | structref | structsequenceref )+ >
+<!ELEMENT deviceassignments
+( deviceassignment )+>
+<!ELEMENT deviceassignment EMPTY>
+<!ATTLIST deviceassignment
+componentid CDATA #REQUIRED
+assignedDeviceid CDATA #REQUIRED>
+<!ELEMENT deploymentdependencies
+(propertyref
+)+>
+<!ELEMENT executionaffinityassignments
+( executionaffinityassignment+ )>
+<!ELEMENT executionaffinityassignment
+( coreaffinity* )>
+<!ATTLIST executionaffinityassignment
+componentid CDATA #REQUIRED
+processcollocation CDATA #IMPLIED>
+<!ELEMENT propertyref EMPTY>
+<!ATTLIST propertyref
+refid CDATA #REQUIRED
+value CDATA #REQUIRED>
+<!ELEMENT assemblycontroller
+(( componentinstantiationref | assemblyinstantiationref),
+assemblyinstantiationref* )>
+<!ELEMENT connections
+( connectinterface* )>
+<!ELEMENT connectinterface
+( usesport
+, ( providesport | componentsupportedinterface )
+)>
+<!ATTLIST connectinterface
+id ID #IMPLIED>
+<!ELEMENT usesport
+(identifier
+, ( componentinstantiationref |
+assemblyinstantiationref |
+devicethatloadedthiscomponentref | deviceusedbythiscomponentref |
+domainfinder )
+)>
+<!ELEMENT identifier (#PCDATA)>
+<!ELEMENT componentinstantiationref EMPTY>
+<!ATTLIST componentinstantiationref
+refid CDATA #REQUIRED>
+<!ELEMENT assemblyinstantiationref EMPTY>
+<!ATTLIST assemblyinstantiationref
+refid CDATA #REQUIRED>
+<!ELEMENT devicethatloadedthiscomponentref EMPTY>
+<!ATTLIST devicethatloadedthiscomponentref
+refid CDATA #REQUIRED>
+<!ELEMENT deviceusedbythiscomponentref EMPTY>
+<!ATTLIST deviceusedbythiscomponentref
+refid CDATA #REQUIRED
+usesrefid CDATA #REQUIRED>
+<!ELEMENT domainfinder EMPTY>
+<!ATTLIST domainfinder
+type (filesystem | eventchannel | application | servicename | servicetype) #REQUIRED
+name CDATA #IMPLIED>
+<!ELEMENT providesport
+(identifier
+, ( componentinstantiationref |
+assemblyinstantiationref |
+devicethatloadedthiscomponentref | deviceusedbythiscomponentref | domainfinder )
+)>
+<!ATTLIST providesport
+stringifiedobjectref CDATA #IMPLIED>
+<!ELEMENT componentsupportedinterface
+(identifier
+, ( componentinstantiationref | devicethatloadedthiscomponentref |
+deviceusedbythiscomponentref | domainfinder)
+)>
+<!ELEMENT externalports
+( port+
+)>
+<!ELEMENT port
+( description?
+, ( usesidentifier | providesidentifier | supportedidentifier)
+, (componentinstantiationref | assemblyinstantiationref)
+)>
+<!ELEMENT usesidentifier (#PCDATA)>
+<!ELEMENT providesidentifier (#PCDATA)>
+<!ELEMENT supportedidentifier (#PCDATA)>
+<!ELEMENT deploymentprefs
+( localfile
+)>

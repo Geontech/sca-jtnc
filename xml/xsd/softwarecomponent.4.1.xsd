@@ -1,0 +1,129 @@
+<schema
+  xmlns='http://www.w3.org/2000/10/XMLSchema'
+  targetNamespace='http://www.w3.org/namespace/'
+  xmlns:t='http://www.w3.org/namespace/'>
+
+ <element name='softwarecomponent'>
+  <complexType>
+   <sequence>
+    <element ref='t:componentrepid'/>
+    <element ref='t:componenttype'/>
+    <element ref='t:componentfeatures'/>
+    <element ref='t:interfaces'/>
+    <element ref='t:propertyfile' minOccurs='0' maxOccurs='1'/>
+   </sequence>
+  </complexType>
+ </element>
+
+ <element name='componentrepid'>
+  <complexType>
+   <attribute name='repid' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='componenttype'>
+  <complexType mixed='true'>
+  </complexType>
+ </element>
+
+ <element name='componentfeatures'>
+  <complexType>
+   <sequence>
+    <element ref='t:supportsinterface' minOccurs='0' maxOccurs='unbounded'/>
+    <element ref='t:ports'/>
+   </sequence>
+  </complexType>
+ </element>
+
+ <element name='supportsinterface'>
+  <complexType>
+   <attribute name='repid' type='string' use='required'/>
+   <attribute name='supportsname' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='ports'>
+  <complexType>
+   <choice minOccurs='0' maxOccurs='unbounded'>
+    <element ref='t:provides'/>
+    <element ref='t:uses'/>
+   </choice>
+  </complexType>
+ </element>
+
+ <element name='provides'>
+  <complexType>
+   <sequence>
+    <element ref='t:porttype' minOccurs='0' maxOccurs='unbounded'/>
+   </sequence>
+   <attribute name='repid' type='string' use='required'/>
+   <attribute name='providesname' type='string' use='required'/>
+   <attribute name='maxconnections' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='uses'>
+  <complexType>
+   <sequence>
+    <element ref='t:porttype' minOccurs='0' maxOccurs='unbounded'/>
+   </sequence>
+   <attribute name='repid' type='string' use='required'/>
+   <attribute name='usesname' type='string' use='required'/>
+   <attribute name='maxconnections' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='porttype'>
+  <complexType>
+   <attribute name='type' use='required'>
+    <simpleType>
+     <restriction base='string'>
+      <enumeration value='data'/>
+      <enumeration value='control'/>
+      <enumeration value='responses'/>
+      <enumeration value='test'/>
+     </restriction>
+    </simpleType>
+   </attribute>
+  </complexType>
+ </element>
+
+ <element name='interfaces'>
+  <complexType>
+   <sequence>
+    <element ref='t:interface' maxOccurs='unbounded'/>
+   </sequence>
+  </complexType>
+ </element>
+
+ <element name='interface'>
+  <complexType>
+   <sequence>
+    <element ref='t:inheritsinterface' minOccurs='0' maxOccurs='unbounded'/>
+   </sequence>
+   <attribute name='repid' type='string' use='required'/>
+   <attribute name='name' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='inheritsinterface'>
+  <complexType>
+   <attribute name='repid' type='string' use='required'/>
+  </complexType>
+ </element>
+
+ <element name='propertyfile'>
+  <complexType>
+   <sequence>
+    <element ref='t:localfile'/>
+   </sequence>
+   <attribute name='type' type='string' use='optional'/>
+  </complexType>
+ </element>
+
+ <element name='localfile'>
+  <complexType>
+   <attribute name='name' type='string' use='required'/>
+  </complexType>
+ </element>
+</schema>

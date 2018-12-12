@@ -1,0 +1,171 @@
+<?xml version= "1.0" encoding= "UTF-8" ?>
+<!--
+** RELEASE STATEMENT(s):
+** UNLIMITED RIGHTS
+** The Government has the right to use, modify, reproduce, release, perform,
+** display, or disclose this application programmable interface in whole or in
+** part, in any manner and for any purpose whatsoever, and to have or
+** authorize others to do so.
+**
+** Distribution Statement A - Approved for public release; distribution is
+** unlimited (27 August 2015).
+-->
+<!--
+** JTNC Standard:
+** Software Communications Architecture
+** Appendix D-1: Platform Specific Model (PSM) Document Type Definition (DTD)
+** Version: 4.1, 20 August 2015
+-->
+<!-- deviceconfiguration.4.1.dtd -->
+<!ELEMENT deviceconfiguration
+( description?
+, devicemanagersoftpkg
+, componentfiles?
+, partitioning?
+, connections?
+, domainmanager
+, filesystemnames?
+)>
+<!ATTLIST deviceconfiguration
+id ID #REQUIRED
+name CDATA #IMPLIED
+corba_provider (false | true) "true"
+log_capable (false | true) "false"
+log_producer (false | true) "false"
+oe_profile (lightweight| medium | full) "medium"
+devicemgr_deployment_data (false | true) "false"
+platformcomponentfactorydeployment (false | true) "true">
+<!ELEMENT description (#PCDATA)>
+<!ELEMENT devicemanagersoftpkg
+( localfile
+, componentproperties?
+)>
+<!ELEMENT localfile EMPTY>
+<!ATTLIST localfile
+name CDATA #REQUIRED>
+<!ELEMENT componentfiles
+( componentfile+ )>
+<!ELEMENT componentfile
+( localfile )>
+<!ATTLIST componentfile
+id ID #REQUIRED
+type CDATA #IMPLIED>
+<!ELEMENT partitioning
+( componentplacement )*>
+<!ELEMENT componentplacement
+( componentfileref
+, deployondevice?
+, compositepartofdevice?
+, devicepkgfile?
+, componentinstantiation+
+)>
+<!ELEMENT componentfileref EMPTY>
+<!ATTLIST componentfileref
+refid CDATA #REQUIRED>
+<!ELEMENT deployondevice EMPTY>
+<!ATTLIST deployondevice
+refid CDATA #REQUIRED>
+<!ELEMENT compositepartofdevice EMPTY>
+<!ATTLIST compositepartofdevice
+refid CDATA #REQUIRED>
+<!ELEMENT devicepkgfile
+( localfile
+)>
+<!ATTLIST devicepkgfile
+type CDATA #IMPLIED>
+<!ELEMENT componentinstantiation
+( usagename?
+,componentproperties?
+,componentfactoryref?
+,coreaffinity*
+)>
+<!ATTLIST componentinstantiation
+id ID #REQUIRED
+processcollocation CDATA #IMPLIED
+stringifiedobjectref CDATA #IMPLIED >
+<!ELEMENT usagename (#PCDATA)>
+<!ELEMENT componentproperties
+( simpleref | simplesequenceref | structref | structsequenceref )+ >
+<!ELEMENT componentfactoryref
+( componentfactoryproperties? )>
+<!ATTLIST componentfactoryref
+refid CDATA #REQUIRED>
+<!ELEMENT componentfactoryproperties
+( simpleref | simplesequenceref | structref | structsequenceref )+ >
+<!ELEMENT simpleref EMPTY>
+<!ATTLIST simpleref
+refid CDATA #REQUIRED
+value CDATA #REQUIRED>
+<!ELEMENT simplesequenceref
+( values )>
+<!ATTLIST simplesequenceref
+refid CDATA #REQUIRED>
+<!ELEMENT structref
+( simpleref+ )>
+<!ATTLIST structref
+refid CDATA #REQUIRED>
+<!ELEMENT structsequenceref
+( structvalue+ )>
+<!ATTLIST structsequenceref
+refid CDATA #REQUIRED>
+<!ELEMENT structvalue
+( simpleref+ )>
+<!ELEMENT values
+( value+ )>
+<!ELEMENT value (#PCDATA)>
+<!ELEMENT coreaffinity (#PCDATA)>
+<!ELEMENT connections
+( connectinterface* )>
+<!ELEMENT connectinterface
+( usesport
+, ( providesport | componentsupportedinterface )
+)>
+<!ATTLIST connectinterface
+id ID #IMPLIED>
+<!ELEMENT usesport
+(identifier
+, ( componentinstantiationref |
+assemblyinstantiationref |
+devicethatloadedthiscomponentref | deviceusedbythiscomponentref | domainfinder )
+)>
+<!ELEMENT identifier (#PCDATA)>
+<!ELEMENT componentinstantiationref EMPTY>
+<!ATTLIST componentinstantiationref
+refid CDATA #REQUIRED>
+<!ELEMENT assemblyinstantiationref EMPTY>
+<!ATTLIST assemblyinstantiationref
+refid CDATA #REQUIRED>
+<!ELEMENT devicethatloadedthiscomponentref EMPTY>
+<!ATTLIST devicethatloadedthiscomponentref
+refid CDATA #REQUIRED>
+<!ELEMENT deviceusedbythiscomponentref EMPTY>
+<!ATTLIST deviceusedbythiscomponentref
+refid CDATA #REQUIRED
+usesrefid CDATA #REQUIRED>
+<!ELEMENT domainfinder EMPTY>
+<!ATTLIST domainfinder
+type (filesystem | eventchannel | application | servicename | servicetype) #REQUIRED
+name CDATA #IMPLIED>
+<!ELEMENT providesport
+(identifier
+, ( componentinstantiationref |
+assemblyinstantiationref |
+devicethatloadedthiscomponentref | deviceusedbythiscomponentref | domainfinder )
+)>
+<!ATTLIST providesport
+stringifiedobjectref CDATA #IMPLIED>
+<!ELEMENT componentsupportedinterface
+(identifier
+, ( componentinstantiationref | devicethatloadedthiscomponentref |
+deviceusedbythiscomponentref | domainfinder)
+)>
+<!ELEMENT domainmanager EMPTY>
+<!ATTLIST domainmanager
+name CDATA #REQUIRED
+type CDATA #REQUIRED>
+<!ELEMENT filesystemnames
+( filesystemname+ )>
+<!ELEMENT filesystemname EMPTY>
+<!ATTLIST filesystemname
+mountname CDATA #REQUIRED
+deviceid CDATA #REQUIRED>
