@@ -930,17 +930,17 @@ class properties(GeneratedsSuper):
 class simple(GeneratedsSuper):
     subclass = None
     superclass = None
-    def __init__(self, id=None, type_=None, name=None, mode=None, description=None, value=None, units=None, range=None, enumerations=None, kind=None, action=None, **kwargs_):
+    def __init__(self, _id=None, type_=None, name=None, mode=None, description=None, value=None, units=None, _range=None, enumerations=None, kind=None, action=None, **kwargs_):
         self.original_tagname_ = None
         self.parent_object_ = kwargs_.get('parent_object_')
-        self.id = _cast(None, id)
+        self._id = _cast(None, _id)
         self.type_ = _cast(None, type_)
         self.name = _cast(None, name)
         self.mode = _cast(None, mode)
         self.description = description
         self.value = value
         self.units = units
-        self.range = range
+        self._range = _range
         self.enumerations = enumerations
         if kind is None:
             self.kind = []
@@ -974,9 +974,9 @@ class simple(GeneratedsSuper):
         self.units = units
     unitsProp = property(get_units, set_units)
     def get_range(self):
-        return self.range
-    def set_range(self, range):
-        self.range = range
+        return self._range
+    def set_range(self, _range):
+        self._range = _range
     rangeProp = property(get_range, set_range)
     def get_enumerations(self):
         return self.enumerations
@@ -1002,9 +1002,9 @@ class simple(GeneratedsSuper):
         self.action = action
     actionProp = property(get_action, set_action)
     def get_id(self):
-        return self.id
-    def set_id(self, id):
-        self.id = id
+        return self._id
+    def set_id(self, _id):
+        self._id = _id
     idProp = property(get_id, set_id)
     def get_type(self):
         return self.type_
@@ -1026,7 +1026,7 @@ class simple(GeneratedsSuper):
             self.description is not None or
             self.value is not None or
             self.units is not None or
-            self.range is not None or
+            self._range is not None or
             self.enumerations is not None or
             self.kind or
             self.action is not None
@@ -1056,9 +1056,9 @@ class simple(GeneratedsSuper):
         else:
             outfile.write('/>%s' % (eol_, ))
     def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='t:', name_='simple'):
-        if self.id is not None and 'id' not in already_processed:
+        if self._id is not None and 'id' not in already_processed:
             already_processed.add('id')
-            outfile.write(' id=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.id), input_name='id')), ))
+            outfile.write(' id=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self._id), input_name='id')), ))
         if self.type_ is not None and 'type_' not in already_processed:
             already_processed.add('type_')
             outfile.write(' type=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.type_), input_name='type')), ))
@@ -1079,8 +1079,8 @@ class simple(GeneratedsSuper):
             self.value.export(outfile, level, namespaceprefix_='t:', name_='value', pretty_print=pretty_print)
         if self.units is not None:
             self.units.export(outfile, level, namespaceprefix_='t:', name_='units', pretty_print=pretty_print)
-        if self.range is not None:
-            self.range.export(outfile, level, namespaceprefix_='t:', name_='range', pretty_print=pretty_print)
+        if self._range is not None:
+            self._range.export(outfile, level, namespaceprefix_='t:', name_='range', pretty_print=pretty_print)
         if self.enumerations is not None:
             self.enumerations.export(outfile, level, namespaceprefix_='t:', name_='enumerations', pretty_print=pretty_print)
         for kind_ in self.kind:
@@ -1098,7 +1098,7 @@ class simple(GeneratedsSuper):
         value = find_attr_value_('id', node)
         if value is not None and 'id' not in already_processed:
             already_processed.add('id')
-            self.id = value
+            self._id = value
         value = find_attr_value_('type', node)
         if value is not None and 'type' not in already_processed:
             already_processed.add('type')
@@ -1128,9 +1128,9 @@ class simple(GeneratedsSuper):
             self.units = obj_
             obj_.original_tagname_ = 'units'
         elif nodeName_ == 'range':
-            obj_ = range.factory(parent_object_=self)
+            obj_ = _range.factory(parent_object_=self)
             obj_.build(child_)
-            self.range = obj_
+            self._range = obj_
             obj_.original_tagname_ = 'range'
         elif nodeName_ == 'enumerations':
             obj_ = enumerations.factory(parent_object_=self)
@@ -1393,7 +1393,7 @@ class units(GeneratedsSuper):
 # end class units
 
 
-class range(GeneratedsSuper):
+class _range(GeneratedsSuper):
     subclass = None
     superclass = None
     def __init__(self, min=None, max=None, **kwargs_):
@@ -1404,13 +1404,13 @@ class range(GeneratedsSuper):
     def factory(*args_, **kwargs_):
         if CurrentSubclassModule_ is not None:
             subclass = getSubclassFromModule_(
-                CurrentSubclassModule_, range)
+                CurrentSubclassModule_, _range)
             if subclass is not None:
                 return subclass(*args_, **kwargs_)
-        if range.subclass:
-            return range.subclass(*args_, **kwargs_)
+        if _range.subclass:
+            return _range.subclass(*args_, **kwargs_)
         else:
-            return range(*args_, **kwargs_)
+            return _range(*args_, **kwargs_)
     factory = staticmethod(factory)
     def get_min(self):
         return self.min
@@ -1803,17 +1803,17 @@ class action(GeneratedsSuper):
 class simplesequence(GeneratedsSuper):
     subclass = None
     superclass = None
-    def __init__(self, id=None, type_=None, name=None, mode=None, description=None, values=None, units=None, range=None, kind=None, action=None, **kwargs_):
+    def __init__(self, _id=None, type_=None, name=None, mode=None, description=None, values=None, units=None, _range=None, kind=None, action=None, **kwargs_):
         self.original_tagname_ = None
         self.parent_object_ = kwargs_.get('parent_object_')
-        self.id = _cast(None, id)
+        self._id = _cast(None, _id)
         self.type_ = _cast(None, type_)
         self.name = _cast(None, name)
         self.mode = _cast(None, mode)
         self.description = description
         self.values = values
         self.units = units
-        self.range = range
+        self._range = _range
         if kind is None:
             self.kind = []
         else:
@@ -1846,9 +1846,9 @@ class simplesequence(GeneratedsSuper):
         self.units = units
     unitsProp = property(get_units, set_units)
     def get_range(self):
-        return self.range
-    def set_range(self, range):
-        self.range = range
+        return self._range
+    def set_range(self, _range):
+        self._range = _range
     rangeProp = property(get_range, set_range)
     def get_kind(self):
         return self.kind
@@ -1869,9 +1869,9 @@ class simplesequence(GeneratedsSuper):
         self.action = action
     actionProp = property(get_action, set_action)
     def get_id(self):
-        return self.id
-    def set_id(self, id):
-        self.id = id
+        return self._id
+    def set_id(self, _id):
+        self._id = _id
     idProp = property(get_id, set_id)
     def get_type(self):
         return self.type_
@@ -1893,7 +1893,7 @@ class simplesequence(GeneratedsSuper):
             self.description is not None or
             self.values is not None or
             self.units is not None or
-            self.range is not None or
+            self._range is not None or
             self.kind or
             self.action is not None
         ):
@@ -1922,9 +1922,9 @@ class simplesequence(GeneratedsSuper):
         else:
             outfile.write('/>%s' % (eol_, ))
     def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='t:', name_='simplesequence'):
-        if self.id is not None and 'id' not in already_processed:
+        if self._id is not None and 'id' not in already_processed:
             already_processed.add('id')
-            outfile.write(' id=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.id), input_name='id')), ))
+            outfile.write(' id=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self._id), input_name='id')), ))
         if self.type_ is not None and 'type_' not in already_processed:
             already_processed.add('type_')
             outfile.write(' type=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.type_), input_name='type')), ))
@@ -1945,8 +1945,8 @@ class simplesequence(GeneratedsSuper):
             self.values.export(outfile, level, namespaceprefix_='t:', name_='values', pretty_print=pretty_print)
         if self.units is not None:
             self.units.export(outfile, level, namespaceprefix_='t:', name_='units', pretty_print=pretty_print)
-        if self.range is not None:
-            self.range.export(outfile, level, namespaceprefix_='t:', name_='range', pretty_print=pretty_print)
+        if self._range is not None:
+            self._range.export(outfile, level, namespaceprefix_='t:', name_='range', pretty_print=pretty_print)
         for kind_ in self.kind:
             kind_.export(outfile, level, namespaceprefix_='t:', name_='kind', pretty_print=pretty_print)
         if self.action is not None:
@@ -1962,7 +1962,7 @@ class simplesequence(GeneratedsSuper):
         value = find_attr_value_('id', node)
         if value is not None and 'id' not in already_processed:
             already_processed.add('id')
-            self.id = value
+            self._id = value
         value = find_attr_value_('type', node)
         if value is not None and 'type' not in already_processed:
             already_processed.add('type')
@@ -1992,9 +1992,9 @@ class simplesequence(GeneratedsSuper):
             self.units = obj_
             obj_.original_tagname_ = 'units'
         elif nodeName_ == 'range':
-            obj_ = range.factory(parent_object_=self)
+            obj_ = _range.factory(parent_object_=self)
             obj_.build(child_)
-            self.range = obj_
+            self._range = obj_
             obj_.original_tagname_ = 'range'
         elif nodeName_ == 'kind':
             obj_ = kind.factory(parent_object_=self)
@@ -2101,10 +2101,10 @@ class values(GeneratedsSuper):
 class test(GeneratedsSuper):
     subclass = None
     superclass = None
-    def __init__(self, id=None, label=None, description=None, inputvalue=None, resultvalue=None, **kwargs_):
+    def __init__(self, _id=None, label=None, description=None, inputvalue=None, resultvalue=None, **kwargs_):
         self.original_tagname_ = None
         self.parent_object_ = kwargs_.get('parent_object_')
-        self.id = _cast(None, id)
+        self._id = _cast(None, _id)
         self.label = _cast(None, label)
         self.description = description
         self.inputvalue = inputvalue
@@ -2136,9 +2136,9 @@ class test(GeneratedsSuper):
         self.resultvalue = resultvalue
     resultvalueProp = property(get_resultvalue, set_resultvalue)
     def get_id(self):
-        return self.id
-    def set_id(self, id):
-        self.id = id
+        return self._id
+    def set_id(self, _id):
+        self._id = _id
     idProp = property(get_id, set_id)
     def get_label(self):
         return self.label
@@ -2176,9 +2176,9 @@ class test(GeneratedsSuper):
         else:
             outfile.write('/>%s' % (eol_, ))
     def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='t:', name_='test'):
-        if self.id is not None and 'id' not in already_processed:
+        if self._id is not None and 'id' not in already_processed:
             already_processed.add('id')
-            outfile.write(' id=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.id), input_name='id')), ))
+            outfile.write(' id=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self._id), input_name='id')), ))
         if self.label is not None and 'label' not in already_processed:
             already_processed.add('label')
             outfile.write(' label=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.label), input_name='label')), ))
@@ -2204,7 +2204,7 @@ class test(GeneratedsSuper):
         value = find_attr_value_('id', node)
         if value is not None and 'id' not in already_processed:
             already_processed.add('id')
-            self.id = value
+            self._id = value
         value = find_attr_value_('label', node)
         if value is not None and 'label' not in already_processed:
             already_processed.add('label')
@@ -2409,10 +2409,10 @@ class resultvalue(GeneratedsSuper):
 class struct(GeneratedsSuper):
     subclass = None
     superclass = None
-    def __init__(self, id=None, name=None, mode=None, description=None, simple=None, configurationkind=None, **kwargs_):
+    def __init__(self, _id=None, name=None, mode=None, description=None, simple=None, configurationkind=None, **kwargs_):
         self.original_tagname_ = None
         self.parent_object_ = kwargs_.get('parent_object_')
-        self.id = _cast(None, id)
+        self._id = _cast(None, _id)
         self.name = _cast(None, name)
         self.mode = _cast(None, mode)
         self.description = description
@@ -2456,9 +2456,9 @@ class struct(GeneratedsSuper):
         self.configurationkind = configurationkind
     configurationkindProp = property(get_configurationkind, set_configurationkind)
     def get_id(self):
-        return self.id
-    def set_id(self, id):
-        self.id = id
+        return self._id
+    def set_id(self, _id):
+        self._id = _id
     idProp = property(get_id, set_id)
     def get_name(self):
         return self.name
@@ -2501,9 +2501,9 @@ class struct(GeneratedsSuper):
         else:
             outfile.write('/>%s' % (eol_, ))
     def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='t:', name_='struct'):
-        if self.id is not None and 'id' not in already_processed:
+        if self._id is not None and 'id' not in already_processed:
             already_processed.add('id')
-            outfile.write(' id=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.id), input_name='id')), ))
+            outfile.write(' id=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self._id), input_name='id')), ))
         if self.name is not None and 'name' not in already_processed:
             already_processed.add('name')
             outfile.write(' name=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.name), input_name='name')), ))
@@ -2532,7 +2532,7 @@ class struct(GeneratedsSuper):
         value = find_attr_value_('id', node)
         if value is not None and 'id' not in already_processed:
             already_processed.add('id')
-            self.id = value
+            self._id = value
         value = find_attr_value_('name', node)
         if value is not None and 'name' not in already_processed:
             already_processed.add('name')
@@ -2636,10 +2636,10 @@ class configurationkind(GeneratedsSuper):
 class structsequence(GeneratedsSuper):
     subclass = None
     superclass = None
-    def __init__(self, id=None, structrefid=None, name=None, mode=None, description=None, structvalue=None, configurationkind=None, **kwargs_):
+    def __init__(self, _id=None, structrefid=None, name=None, mode=None, description=None, structvalue=None, configurationkind=None, **kwargs_):
         self.original_tagname_ = None
         self.parent_object_ = kwargs_.get('parent_object_')
-        self.id = _cast(None, id)
+        self._id = _cast(None, _id)
         self.structrefid = _cast(None, structrefid)
         self.name = _cast(None, name)
         self.mode = _cast(None, mode)
@@ -2684,9 +2684,9 @@ class structsequence(GeneratedsSuper):
         self.configurationkind = configurationkind
     configurationkindProp = property(get_configurationkind, set_configurationkind)
     def get_id(self):
-        return self.id
-    def set_id(self, id):
-        self.id = id
+        return self._id
+    def set_id(self, _id):
+        self._id = _id
     idProp = property(get_id, set_id)
     def get_structrefid(self):
         return self.structrefid
@@ -2734,9 +2734,9 @@ class structsequence(GeneratedsSuper):
         else:
             outfile.write('/>%s' % (eol_, ))
     def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='t:', name_='structsequence'):
-        if self.id is not None and 'id' not in already_processed:
+        if self._id is not None and 'id' not in already_processed:
             already_processed.add('id')
-            outfile.write(' id=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.id), input_name='id')), ))
+            outfile.write(' id=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self._id), input_name='id')), ))
         if self.structrefid is not None and 'structrefid' not in already_processed:
             already_processed.add('structrefid')
             outfile.write(' structrefid=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.structrefid), input_name='structrefid')), ))
@@ -2768,7 +2768,7 @@ class structsequence(GeneratedsSuper):
         value = find_attr_value_('id', node)
         if value is not None and 'id' not in already_processed:
             already_processed.add('id')
-            self.id = value
+            self._id = value
         value = find_attr_value_('structrefid', node)
         if value is not None and 'structrefid' not in already_processed:
             already_processed.add('structrefid')

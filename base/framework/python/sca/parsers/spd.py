@@ -727,10 +727,10 @@ def _cast(typ, value):
 class softpkg(GeneratedsSuper):
     subclass = None
     superclass = None
-    def __init__(self, id=None, name=None, type_=None, version=None, title=None, author=None, description=None, propertyfile=None, descriptor=None, implementation=None, usesdevice=None, **kwargs_):
+    def __init__(self, _id=None, name=None, type_=None, version=None, title=None, author=None, description=None, propertyfile=None, descriptor=None, implementation=None, usesdevice=None, **kwargs_):
         self.original_tagname_ = None
         self.parent_object_ = kwargs_.get('parent_object_')
-        self.id = _cast(None, id)
+        self._id = _cast(None, _id)
         self.name = _cast(None, name)
         self.type_ = _cast(None, type_)
         self.version = _cast(None, version)
@@ -821,9 +821,9 @@ class softpkg(GeneratedsSuper):
         self.usesdevice[index] = value
     usesdeviceProp = property(get_usesdevice, set_usesdevice)
     def get_id(self):
-        return self.id
-    def set_id(self, id):
-        self.id = id
+        return self._id
+    def set_id(self, _id):
+        self._id = _id
     idProp = property(get_id, set_id)
     def get_name(self):
         return self.name
@@ -875,9 +875,9 @@ class softpkg(GeneratedsSuper):
         else:
             outfile.write('/>%s' % (eol_, ))
     def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='t:', name_='softpkg'):
-        if self.id is not None and 'id' not in already_processed:
+        if self._id is not None and 'id' not in already_processed:
             already_processed.add('id')
-            outfile.write(' id=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.id), input_name='id')), ))
+            outfile.write(' id=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self._id), input_name='id')), ))
         if self.name is not None and 'name' not in already_processed:
             already_processed.add('name')
             outfile.write(' name=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.name), input_name='name')), ))
@@ -917,7 +917,7 @@ class softpkg(GeneratedsSuper):
         value = find_attr_value_('id', node)
         if value is not None and 'id' not in already_processed:
             already_processed.add('id')
-            self.id = value
+            self._id = value
         value = find_attr_value_('name', node)
         if value is not None and 'name' not in already_processed:
             already_processed.add('name')
@@ -1745,10 +1745,10 @@ class descriptor(GeneratedsSuper):
 class implementation(GeneratedsSuper):
     subclass = None
     superclass = None
-    def __init__(self, id=None, aepcompliance=None, description=None, propertyfile=None, code=None, compiler=None, programminglanguage=None, softpkg_4_1_dtd=None, UNCLASSIFIED=None, **kwargs_):
+    def __init__(self, _id=None, aepcompliance=None, description=None, propertyfile=None, code=None, compiler=None, programminglanguage=None, softpkg_4_1_dtd=None, UNCLASSIFIED=None, **kwargs_):
         self.original_tagname_ = None
         self.parent_object_ = kwargs_.get('parent_object_')
-        self.id = _cast(None, id)
+        self._id = _cast(None, _id)
         self.aepcompliance = _cast(None, aepcompliance)
         self.description = description
         self.propertyfile = propertyfile
@@ -1804,9 +1804,9 @@ class implementation(GeneratedsSuper):
         self.UNCLASSIFIED = UNCLASSIFIED
     UNCLASSIFIEDProp = property(get_UNCLASSIFIED, set_UNCLASSIFIED)
     def get_id(self):
-        return self.id
-    def set_id(self, id):
-        self.id = id
+        return self._id
+    def set_id(self, _id):
+        self._id = _id
     idProp = property(get_id, set_id)
     def get_aepcompliance(self):
         return self.aepcompliance
@@ -1848,9 +1848,9 @@ class implementation(GeneratedsSuper):
         else:
             outfile.write('/>%s' % (eol_, ))
     def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='t:', name_='implementation'):
-        if self.id is not None and 'id' not in already_processed:
+        if self._id is not None and 'id' not in already_processed:
             already_processed.add('id')
-            outfile.write(' id=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.id), input_name='id')), ))
+            outfile.write(' id=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self._id), input_name='id')), ))
         if self.aepcompliance is not None and 'aepcompliance' not in already_processed:
             already_processed.add('aepcompliance')
             outfile.write(' aepcompliance=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.aepcompliance), input_name='aepcompliance')), ))
@@ -1886,7 +1886,7 @@ class implementation(GeneratedsSuper):
         value = find_attr_value_('id', node)
         if value is not None and 'id' not in already_processed:
             already_processed.add('id')
-            self.id = value
+            self._id = value
         value = find_attr_value_('aepcompliance', node)
         if value is not None and 'aepcompliance' not in already_processed:
             already_processed.add('aepcompliance')
@@ -3149,10 +3149,10 @@ class propertyref(GeneratedsSuper):
 class usesdevice(GeneratedsSuper):
     subclass = None
     superclass = None
-    def __init__(self, id=None, type_=None, propertyref=None, **kwargs_):
+    def __init__(self, _id=None, type_=None, propertyref=None, **kwargs_):
         self.original_tagname_ = None
         self.parent_object_ = kwargs_.get('parent_object_')
-        self.id = _cast(None, id)
+        self._id = _cast(None, _id)
         self.type_ = _cast(None, type_)
         if propertyref is None:
             self.propertyref = []
@@ -3183,9 +3183,9 @@ class usesdevice(GeneratedsSuper):
         self.propertyref[index] = value
     propertyrefProp = property(get_propertyref, set_propertyref)
     def get_id(self):
-        return self.id
-    def set_id(self, id):
-        self.id = id
+        return self._id
+    def set_id(self, _id):
+        self._id = _id
     idProp = property(get_id, set_id)
     def get_type(self):
         return self.type_
@@ -3221,9 +3221,9 @@ class usesdevice(GeneratedsSuper):
         else:
             outfile.write('/>%s' % (eol_, ))
     def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='t:', name_='usesdevice'):
-        if self.id is not None and 'id' not in already_processed:
+        if self._id is not None and 'id' not in already_processed:
             already_processed.add('id')
-            outfile.write(' id=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.id), input_name='id')), ))
+            outfile.write(' id=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self._id), input_name='id')), ))
         if self.type_ is not None and 'type_' not in already_processed:
             already_processed.add('type_')
             outfile.write(' type=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.type_), input_name='type')), ))
@@ -3245,7 +3245,7 @@ class usesdevice(GeneratedsSuper):
         value = find_attr_value_('id', node)
         if value is not None and 'id' not in already_processed:
             already_processed.add('id')
-            self.id = value
+            self._id = value
         value = find_attr_value_('type', node)
         if value is not None and 'type' not in already_processed:
             already_processed.add('type')

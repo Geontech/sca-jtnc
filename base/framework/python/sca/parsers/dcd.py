@@ -727,10 +727,10 @@ def _cast(typ, value):
 class deviceconfiguration(GeneratedsSuper):
     subclass = None
     superclass = None
-    def __init__(self, id=None, name=None, corba_provider=None, log_capable=None, log_producer=None, oe_profile=None, devicemgr_deployment_data=None, platformcomponentfactorydeployment=None, description=None, devicemanagersoftpkg=None, componentfiles=None, partitioning=None, connections=None, domainmanager=None, filesystemnames=None, **kwargs_):
+    def __init__(self, _id=None, name=None, corba_provider=None, log_capable=None, log_producer=None, oe_profile=None, devicemgr_deployment_data=None, platformcomponentfactorydeployment=None, description=None, devicemanagersoftpkg=None, componentfiles=None, partitioning=None, connections=None, domainmanager=None, filesystemnames=None, **kwargs_):
         self.original_tagname_ = None
         self.parent_object_ = kwargs_.get('parent_object_')
-        self.id = _cast(None, id)
+        self._id = _cast(None, _id)
         self.name = _cast(None, name)
         self.corba_provider = _cast(None, corba_provider)
         self.log_capable = _cast(None, log_capable)
@@ -792,9 +792,9 @@ class deviceconfiguration(GeneratedsSuper):
         self.filesystemnames = filesystemnames
     filesystemnamesProp = property(get_filesystemnames, set_filesystemnames)
     def get_id(self):
-        return self.id
-    def set_id(self, id):
-        self.id = id
+        return self._id
+    def set_id(self, _id):
+        self._id = _id
     idProp = property(get_id, set_id)
     def get_name(self):
         return self.name
@@ -866,9 +866,9 @@ class deviceconfiguration(GeneratedsSuper):
         else:
             outfile.write('/>%s' % (eol_, ))
     def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='t:', name_='deviceconfiguration'):
-        if self.id is not None and 'id' not in already_processed:
+        if self._id is not None and 'id' not in already_processed:
             already_processed.add('id')
-            outfile.write(' id=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.id), input_name='id')), ))
+            outfile.write(' id=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self._id), input_name='id')), ))
         if self.name is not None and 'name' not in already_processed:
             already_processed.add('name')
             outfile.write(' name=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.name), input_name='name')), ))
@@ -920,7 +920,7 @@ class deviceconfiguration(GeneratedsSuper):
         value = find_attr_value_('id', node)
         if value is not None and 'id' not in already_processed:
             already_processed.add('id')
-            self.id = value
+            self._id = value
         value = find_attr_value_('name', node)
         if value is not None and 'name' not in already_processed:
             already_processed.add('name')
@@ -1326,10 +1326,10 @@ class componentfiles(GeneratedsSuper):
 class componentfile(GeneratedsSuper):
     subclass = None
     superclass = None
-    def __init__(self, id=None, type_=None, localfile=None, **kwargs_):
+    def __init__(self, _id=None, type_=None, localfile=None, **kwargs_):
         self.original_tagname_ = None
         self.parent_object_ = kwargs_.get('parent_object_')
-        self.id = _cast(None, id)
+        self._id = _cast(None, _id)
         self.type_ = _cast(None, type_)
         self.localfile = localfile
     def factory(*args_, **kwargs_):
@@ -1349,9 +1349,9 @@ class componentfile(GeneratedsSuper):
         self.localfile = localfile
     localfileProp = property(get_localfile, set_localfile)
     def get_id(self):
-        return self.id
-    def set_id(self, id):
-        self.id = id
+        return self._id
+    def set_id(self, _id):
+        self._id = _id
     idProp = property(get_id, set_id)
     def get_type(self):
         return self.type_
@@ -1387,9 +1387,9 @@ class componentfile(GeneratedsSuper):
         else:
             outfile.write('/>%s' % (eol_, ))
     def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='t:', name_='componentfile'):
-        if self.id is not None and 'id' not in already_processed:
+        if self._id is not None and 'id' not in already_processed:
             already_processed.add('id')
-            outfile.write(' id=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.id), input_name='id')), ))
+            outfile.write(' id=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self._id), input_name='id')), ))
         if self.type_ is not None and 'type_' not in already_processed:
             already_processed.add('type_')
             outfile.write(' type=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.type_), input_name='type')), ))
@@ -1411,7 +1411,7 @@ class componentfile(GeneratedsSuper):
         value = find_attr_value_('id', node)
         if value is not None and 'id' not in already_processed:
             already_processed.add('id')
-            self.id = value
+            self._id = value
         value = find_attr_value_('type', node)
         if value is not None and 'type' not in already_processed:
             already_processed.add('type')
@@ -1970,10 +1970,10 @@ class devicepkgfile(GeneratedsSuper):
 class componentinstantiation(GeneratedsSuper):
     subclass = None
     superclass = None
-    def __init__(self, id=None, processcollocation=None, stringifiedobjectref=None, usagename=None, componentproperties=None, componentfactoryref=None, coreaffinity=None, **kwargs_):
+    def __init__(self, _id=None, processcollocation=None, stringifiedobjectref=None, usagename=None, componentproperties=None, componentfactoryref=None, coreaffinity=None, **kwargs_):
         self.original_tagname_ = None
         self.parent_object_ = kwargs_.get('parent_object_')
-        self.id = _cast(None, id)
+        self._id = _cast(None, _id)
         self.processcollocation = _cast(None, processcollocation)
         self.stringifiedobjectref = _cast(None, stringifiedobjectref)
         self.usagename = usagename
@@ -2023,9 +2023,9 @@ class componentinstantiation(GeneratedsSuper):
         self.coreaffinity[index] = value
     coreaffinityProp = property(get_coreaffinity, set_coreaffinity)
     def get_id(self):
-        return self.id
-    def set_id(self, id):
-        self.id = id
+        return self._id
+    def set_id(self, _id):
+        self._id = _id
     idProp = property(get_id, set_id)
     def get_processcollocation(self):
         return self.processcollocation
@@ -2069,9 +2069,9 @@ class componentinstantiation(GeneratedsSuper):
         else:
             outfile.write('/>%s' % (eol_, ))
     def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='t:', name_='componentinstantiation'):
-        if self.id is not None and 'id' not in already_processed:
+        if self._id is not None and 'id' not in already_processed:
             already_processed.add('id')
-            outfile.write(' id=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.id), input_name='id')), ))
+            outfile.write(' id=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self._id), input_name='id')), ))
         if self.processcollocation is not None and 'processcollocation' not in already_processed:
             already_processed.add('processcollocation')
             outfile.write(' processcollocation=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.processcollocation), input_name='processcollocation')), ))
@@ -2102,7 +2102,7 @@ class componentinstantiation(GeneratedsSuper):
         value = find_attr_value_('id', node)
         if value is not None and 'id' not in already_processed:
             already_processed.add('id')
-            self.id = value
+            self._id = value
         value = find_attr_value_('processcollocation', node)
         if value is not None and 'processcollocation' not in already_processed:
             already_processed.add('processcollocation')
@@ -3440,10 +3440,10 @@ class connections(GeneratedsSuper):
 class connectinterface(GeneratedsSuper):
     subclass = None
     superclass = None
-    def __init__(self, id=None, usesport=None, providesport=None, componentsupportedinterface=None, **kwargs_):
+    def __init__(self, _id=None, usesport=None, providesport=None, componentsupportedinterface=None, **kwargs_):
         self.original_tagname_ = None
         self.parent_object_ = kwargs_.get('parent_object_')
-        self.id = _cast(None, id)
+        self._id = _cast(None, _id)
         self.usesport = usesport
         self.providesport = providesport
         self.componentsupportedinterface = componentsupportedinterface
@@ -3474,9 +3474,9 @@ class connectinterface(GeneratedsSuper):
         self.componentsupportedinterface = componentsupportedinterface
     componentsupportedinterfaceProp = property(get_componentsupportedinterface, set_componentsupportedinterface)
     def get_id(self):
-        return self.id
-    def set_id(self, id):
-        self.id = id
+        return self._id
+    def set_id(self, _id):
+        self._id = _id
     idProp = property(get_id, set_id)
     def hasContent_(self):
         if (
@@ -3509,9 +3509,9 @@ class connectinterface(GeneratedsSuper):
         else:
             outfile.write('/>%s' % (eol_, ))
     def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='t:', name_='connectinterface'):
-        if self.id is not None and 'id' not in already_processed:
+        if self._id is not None and 'id' not in already_processed:
             already_processed.add('id')
-            outfile.write(' id=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.id), input_name='id')), ))
+            outfile.write(' id=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self._id), input_name='id')), ))
     def exportChildren(self, outfile, level, namespaceprefix_='t:', namespacedef_='xmlns:t="http://www.w3.org/namespace/"', name_='connectinterface', fromsubclass_=False, pretty_print=True):
         if pretty_print:
             eol_ = '\n'
@@ -3534,7 +3534,7 @@ class connectinterface(GeneratedsSuper):
         value = find_attr_value_('id', node)
         if value is not None and 'id' not in already_processed:
             already_processed.add('id')
-            self.id = value
+            self._id = value
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         if nodeName_ == 'usesport':
             obj_ = usesport.factory(parent_object_=self)

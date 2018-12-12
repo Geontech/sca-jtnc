@@ -727,10 +727,10 @@ def _cast(typ, value):
 class devicepkg(GeneratedsSuper):
     subclass = None
     superclass = None
-    def __init__(self, id=None, name=None, version=None, title=None, author=None, description=None, hwdeviceregistration=None, **kwargs_):
+    def __init__(self, _id=None, name=None, version=None, title=None, author=None, description=None, hwdeviceregistration=None, **kwargs_):
         self.original_tagname_ = None
         self.parent_object_ = kwargs_.get('parent_object_')
-        self.id = _cast(None, id)
+        self._id = _cast(None, _id)
         self.name = _cast(None, name)
         self.version = _cast(None, version)
         self.title = title
@@ -780,9 +780,9 @@ class devicepkg(GeneratedsSuper):
         self.hwdeviceregistration = hwdeviceregistration
     hwdeviceregistrationProp = property(get_hwdeviceregistration, set_hwdeviceregistration)
     def get_id(self):
-        return self.id
-    def set_id(self, id):
-        self.id = id
+        return self._id
+    def set_id(self, _id):
+        self._id = _id
     idProp = property(get_id, set_id)
     def get_name(self):
         return self.name
@@ -826,9 +826,9 @@ class devicepkg(GeneratedsSuper):
         else:
             outfile.write('/>%s' % (eol_, ))
     def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='t:', name_='devicepkg'):
-        if self.id is not None and 'id' not in already_processed:
+        if self._id is not None and 'id' not in already_processed:
             already_processed.add('id')
-            outfile.write(' id=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.id), input_name='id')), ))
+            outfile.write(' id=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self._id), input_name='id')), ))
         if self.name is not None and 'name' not in already_processed:
             already_processed.add('name')
             outfile.write(' name=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.name), input_name='name')), ))
@@ -859,7 +859,7 @@ class devicepkg(GeneratedsSuper):
         value = find_attr_value_('id', node)
         if value is not None and 'id' not in already_processed:
             already_processed.add('id')
-            self.id = value
+            self._id = value
         value = find_attr_value_('name', node)
         if value is not None and 'name' not in already_processed:
             already_processed.add('name')
@@ -1417,10 +1417,10 @@ class description(GeneratedsSuper):
 class hwdeviceregistration(GeneratedsSuper):
     subclass = None
     superclass = None
-    def __init__(self, id=None, name=None, version=None, propertyfile=None, description=None, manufacturer=None, modelnumber=None, deviceclass=None, childhwdevice=None, **kwargs_):
+    def __init__(self, _id=None, name=None, version=None, propertyfile=None, description=None, manufacturer=None, modelnumber=None, deviceclass=None, childhwdevice=None, **kwargs_):
         self.original_tagname_ = None
         self.parent_object_ = kwargs_.get('parent_object_')
-        self.id = _cast(None, id)
+        self._id = _cast(None, _id)
         self.name = _cast(None, name)
         self.version = _cast(None, version)
         self.propertyfile = propertyfile
@@ -1482,9 +1482,9 @@ class hwdeviceregistration(GeneratedsSuper):
         self.childhwdevice[index] = value
     childhwdeviceProp = property(get_childhwdevice, set_childhwdevice)
     def get_id(self):
-        return self.id
-    def set_id(self, id):
-        self.id = id
+        return self._id
+    def set_id(self, _id):
+        self._id = _id
     idProp = property(get_id, set_id)
     def get_name(self):
         return self.name
@@ -1530,9 +1530,9 @@ class hwdeviceregistration(GeneratedsSuper):
         else:
             outfile.write('/>%s' % (eol_, ))
     def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='t:', name_='hwdeviceregistration'):
-        if self.id is not None and 'id' not in already_processed:
+        if self._id is not None and 'id' not in already_processed:
             already_processed.add('id')
-            outfile.write(' id=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.id), input_name='id')), ))
+            outfile.write(' id=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self._id), input_name='id')), ))
         if self.name is not None and 'name' not in already_processed:
             already_processed.add('name')
             outfile.write(' name=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.name), input_name='name')), ))
@@ -1567,7 +1567,7 @@ class hwdeviceregistration(GeneratedsSuper):
         value = find_attr_value_('id', node)
         if value is not None and 'id' not in already_processed:
             already_processed.add('id')
-            self.id = value
+            self._id = value
         value = find_attr_value_('name', node)
         if value is not None and 'name' not in already_processed:
             already_processed.add('name')

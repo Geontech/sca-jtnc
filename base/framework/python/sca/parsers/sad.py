@@ -1110,10 +1110,10 @@ class componentfiles(GeneratedsSuper):
 class componentfile(GeneratedsSuper):
     subclass = None
     superclass = None
-    def __init__(self, id=None, type_=None, localfile=None, **kwargs_):
+    def __init__(self, _id=None, type_=None, localfile=None, **kwargs_):
         self.original_tagname_ = None
         self.parent_object_ = kwargs_.get('parent_object_')
-        self.id = _cast(None, id)
+        self._id = _cast(None, _id)
         self.type_ = _cast(None, type_)
         self.localfile = localfile
     def factory(*args_, **kwargs_):
@@ -1133,9 +1133,9 @@ class componentfile(GeneratedsSuper):
         self.localfile = localfile
     localfileProp = property(get_localfile, set_localfile)
     def get_id(self):
-        return self.id
-    def set_id(self, id):
-        self.id = id
+        return self._id
+    def set_id(self, _id):
+        self._id = _id
     idProp = property(get_id, set_id)
     def get_type(self):
         return self.type_
@@ -1171,9 +1171,9 @@ class componentfile(GeneratedsSuper):
         else:
             outfile.write('/>%s' % (eol_, ))
     def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='t:', name_='componentfile'):
-        if self.id is not None and 'id' not in already_processed:
+        if self._id is not None and 'id' not in already_processed:
             already_processed.add('id')
-            outfile.write(' id=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.id), input_name='id')), ))
+            outfile.write(' id=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self._id), input_name='id')), ))
         if self.type_ is not None and 'type_' not in already_processed:
             already_processed.add('type_')
             outfile.write(' type=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.type_), input_name='type')), ))
@@ -1195,7 +1195,7 @@ class componentfile(GeneratedsSuper):
         value = find_attr_value_('id', node)
         if value is not None and 'id' not in already_processed:
             already_processed.add('id')
-            self.id = value
+            self._id = value
         value = find_attr_value_('type', node)
         if value is not None and 'type' not in already_processed:
             already_processed.add('type')
@@ -1600,10 +1600,10 @@ class componentfileref(GeneratedsSuper):
 class componentinstantiation(GeneratedsSuper):
     subclass = None
     superclass = None
-    def __init__(self, id=None, processcollocation=None, stringifiedobjectref=None, componentproperties=None, coreaffinity=None, deploymentdependencies=None, componentfactoryref=None, **kwargs_):
+    def __init__(self, _id=None, processcollocation=None, stringifiedobjectref=None, componentproperties=None, coreaffinity=None, deploymentdependencies=None, componentfactoryref=None, **kwargs_):
         self.original_tagname_ = None
         self.parent_object_ = kwargs_.get('parent_object_')
-        self.id = _cast(None, id)
+        self._id = _cast(None, _id)
         self.processcollocation = _cast(None, processcollocation)
         self.stringifiedobjectref = _cast(None, stringifiedobjectref)
         self.componentproperties = componentproperties
@@ -1653,9 +1653,9 @@ class componentinstantiation(GeneratedsSuper):
         self.componentfactoryref = componentfactoryref
     componentfactoryrefProp = property(get_componentfactoryref, set_componentfactoryref)
     def get_id(self):
-        return self.id
-    def set_id(self, id):
-        self.id = id
+        return self._id
+    def set_id(self, _id):
+        self._id = _id
     idProp = property(get_id, set_id)
     def get_processcollocation(self):
         return self.processcollocation
@@ -1699,9 +1699,9 @@ class componentinstantiation(GeneratedsSuper):
         else:
             outfile.write('/>%s' % (eol_, ))
     def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='t:', name_='componentinstantiation'):
-        if self.id is not None and 'id' not in already_processed:
+        if self._id is not None and 'id' not in already_processed:
             already_processed.add('id')
-            outfile.write(' id=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.id), input_name='id')), ))
+            outfile.write(' id=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self._id), input_name='id')), ))
         if self.processcollocation is not None and 'processcollocation' not in already_processed:
             already_processed.add('processcollocation')
             outfile.write(' processcollocation=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.processcollocation), input_name='processcollocation')), ))
@@ -1732,7 +1732,7 @@ class componentinstantiation(GeneratedsSuper):
         value = find_attr_value_('id', node)
         if value is not None and 'id' not in already_processed:
             already_processed.add('id')
-            self.id = value
+            self._id = value
         value = find_attr_value_('processcollocation', node)
         if value is not None and 'processcollocation' not in already_processed:
             already_processed.add('processcollocation')
@@ -2736,10 +2736,10 @@ class value(GeneratedsSuper):
 class hostcollocation(GeneratedsSuper):
     subclass = None
     superclass = None
-    def __init__(self, id=None, name=None, componentplacement=None, **kwargs_):
+    def __init__(self, _id=None, name=None, componentplacement=None, **kwargs_):
         self.original_tagname_ = None
         self.parent_object_ = kwargs_.get('parent_object_')
-        self.id = _cast(None, id)
+        self._id = _cast(None, _id)
         self.name = _cast(None, name)
         if componentplacement is None:
             self.componentplacement = []
@@ -2770,9 +2770,9 @@ class hostcollocation(GeneratedsSuper):
         self.componentplacement[index] = value
     componentplacementProp = property(get_componentplacement, set_componentplacement)
     def get_id(self):
-        return self.id
-    def set_id(self, id):
-        self.id = id
+        return self._id
+    def set_id(self, _id):
+        self._id = _id
     idProp = property(get_id, set_id)
     def get_name(self):
         return self.name
@@ -2808,9 +2808,9 @@ class hostcollocation(GeneratedsSuper):
         else:
             outfile.write('/>%s' % (eol_, ))
     def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='t:', name_='hostcollocation'):
-        if self.id is not None and 'id' not in already_processed:
+        if self._id is not None and 'id' not in already_processed:
             already_processed.add('id')
-            outfile.write(' id=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.id), input_name='id')), ))
+            outfile.write(' id=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self._id), input_name='id')), ))
         if self.name is not None and 'name' not in already_processed:
             already_processed.add('name')
             outfile.write(' name=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.name), input_name='name')), ))
@@ -2832,7 +2832,7 @@ class hostcollocation(GeneratedsSuper):
         value = find_attr_value_('id', node)
         if value is not None and 'id' not in already_processed:
             already_processed.add('id')
-            self.id = value
+            self._id = value
         value = find_attr_value_('name', node)
         if value is not None and 'name' not in already_processed:
             already_processed.add('name')
@@ -2952,10 +2952,10 @@ class assemblyplacement(GeneratedsSuper):
 class assemblyinstantiation(GeneratedsSuper):
     subclass = None
     superclass = None
-    def __init__(self, id=None, componentproperties=None, deviceassignments=None, deploymentdependencies=None, executionaffinityassignments=None, **kwargs_):
+    def __init__(self, _id=None, componentproperties=None, deviceassignments=None, deploymentdependencies=None, executionaffinityassignments=None, **kwargs_):
         self.original_tagname_ = None
         self.parent_object_ = kwargs_.get('parent_object_')
-        self.id = _cast(None, id)
+        self._id = _cast(None, _id)
         self.componentproperties = componentproperties
         self.deviceassignments = deviceassignments
         self.deploymentdependencies = deploymentdependencies
@@ -2992,9 +2992,9 @@ class assemblyinstantiation(GeneratedsSuper):
         self.executionaffinityassignments = executionaffinityassignments
     executionaffinityassignmentsProp = property(get_executionaffinityassignments, set_executionaffinityassignments)
     def get_id(self):
-        return self.id
-    def set_id(self, id):
-        self.id = id
+        return self._id
+    def set_id(self, _id):
+        self._id = _id
     idProp = property(get_id, set_id)
     def hasContent_(self):
         if (
@@ -3028,9 +3028,9 @@ class assemblyinstantiation(GeneratedsSuper):
         else:
             outfile.write('/>%s' % (eol_, ))
     def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='t:', name_='assemblyinstantiation'):
-        if self.id is not None and 'id' not in already_processed:
+        if self._id is not None and 'id' not in already_processed:
             already_processed.add('id')
-            outfile.write(' id=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.id), input_name='id')), ))
+            outfile.write(' id=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self._id), input_name='id')), ))
     def exportChildren(self, outfile, level, namespaceprefix_='t:', namespacedef_='xmlns:t="http://www.w3.org/namespace/"', name_='assemblyinstantiation', fromsubclass_=False, pretty_print=True):
         if pretty_print:
             eol_ = '\n'
@@ -3055,7 +3055,7 @@ class assemblyinstantiation(GeneratedsSuper):
         value = find_attr_value_('id', node)
         if value is not None and 'id' not in already_processed:
             already_processed.add('id')
-            self.id = value
+            self._id = value
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         if nodeName_ == 'componentproperties':
             obj_ = componentproperties.factory(parent_object_=self)
@@ -3991,10 +3991,10 @@ class connections(GeneratedsSuper):
 class connectinterface(GeneratedsSuper):
     subclass = None
     superclass = None
-    def __init__(self, id=None, usesport=None, providesport=None, componentsupportedinterface=None, **kwargs_):
+    def __init__(self, _id=None, usesport=None, providesport=None, componentsupportedinterface=None, **kwargs_):
         self.original_tagname_ = None
         self.parent_object_ = kwargs_.get('parent_object_')
-        self.id = _cast(None, id)
+        self._id = _cast(None, _id)
         self.usesport = usesport
         self.providesport = providesport
         self.componentsupportedinterface = componentsupportedinterface
@@ -4025,9 +4025,9 @@ class connectinterface(GeneratedsSuper):
         self.componentsupportedinterface = componentsupportedinterface
     componentsupportedinterfaceProp = property(get_componentsupportedinterface, set_componentsupportedinterface)
     def get_id(self):
-        return self.id
-    def set_id(self, id):
-        self.id = id
+        return self._id
+    def set_id(self, _id):
+        self._id = _id
     idProp = property(get_id, set_id)
     def hasContent_(self):
         if (
@@ -4060,9 +4060,9 @@ class connectinterface(GeneratedsSuper):
         else:
             outfile.write('/>%s' % (eol_, ))
     def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='t:', name_='connectinterface'):
-        if self.id is not None and 'id' not in already_processed:
+        if self._id is not None and 'id' not in already_processed:
             already_processed.add('id')
-            outfile.write(' id=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.id), input_name='id')), ))
+            outfile.write(' id=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self._id), input_name='id')), ))
     def exportChildren(self, outfile, level, namespaceprefix_='t:', namespacedef_='xmlns:t="http://www.w3.org/namespace/"', name_='connectinterface', fromsubclass_=False, pretty_print=True):
         if pretty_print:
             eol_ = '\n'
@@ -4085,7 +4085,7 @@ class connectinterface(GeneratedsSuper):
         value = find_attr_value_('id', node)
         if value is not None and 'id' not in already_processed:
             already_processed.add('id')
-            self.id = value
+            self._id = value
     def buildChildren(self, child_, node, nodeName_, fromsubclass_=False):
         if nodeName_ == 'usesport':
             obj_ = usesport.factory(parent_object_=self)

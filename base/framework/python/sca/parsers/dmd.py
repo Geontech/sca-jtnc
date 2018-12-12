@@ -727,10 +727,10 @@ def _cast(typ, value):
 class domainmanagerconfiguration(GeneratedsSuper):
     subclass = None
     superclass = None
-    def __init__(self, id=None, name=None, accardinality=None, app_backwards_compatible=None, app_deployment_data=None, app_installable=None, app_releasable=None, corba_provider=None, channel_extension=None, event_channel=None, log_producer=None, nested_deployment=None, oe_profile=None, description=None, domainmanagersoftpkg=None, deploymentlayout=None, services=None, **kwargs_):
+    def __init__(self, _id=None, name=None, accardinality=None, app_backwards_compatible=None, app_deployment_data=None, app_installable=None, app_releasable=None, corba_provider=None, channel_extension=None, event_channel=None, log_producer=None, nested_deployment=None, oe_profile=None, description=None, domainmanagersoftpkg=None, deploymentlayout=None, services=None, **kwargs_):
         self.original_tagname_ = None
         self.parent_object_ = kwargs_.get('parent_object_')
-        self.id = _cast(None, id)
+        self._id = _cast(None, _id)
         self.name = _cast(None, name)
         self.accardinality = _cast(None, accardinality)
         self.app_backwards_compatible = _cast(None, app_backwards_compatible)
@@ -779,9 +779,9 @@ class domainmanagerconfiguration(GeneratedsSuper):
         self.services = services
     servicesProp = property(get_services, set_services)
     def get_id(self):
-        return self.id
-    def set_id(self, id):
-        self.id = id
+        return self._id
+    def set_id(self, _id):
+        self._id = _id
     idProp = property(get_id, set_id)
     def get_name(self):
         return self.name
@@ -875,9 +875,9 @@ class domainmanagerconfiguration(GeneratedsSuper):
         else:
             outfile.write('/>%s' % (eol_, ))
     def exportAttributes(self, outfile, level, already_processed, namespaceprefix_='t:', name_='domainmanagerconfiguration'):
-        if self.id is not None and 'id' not in already_processed:
+        if self._id is not None and 'id' not in already_processed:
             already_processed.add('id')
-            outfile.write(' id=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.id), input_name='id')), ))
+            outfile.write(' id=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self._id), input_name='id')), ))
         if self.name is not None and 'name' not in already_processed:
             already_processed.add('name')
             outfile.write(' name=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.name), input_name='name')), ))
@@ -938,7 +938,7 @@ class domainmanagerconfiguration(GeneratedsSuper):
         value = find_attr_value_('id', node)
         if value is not None and 'id' not in already_processed:
             already_processed.add('id')
-            self.id = value
+            self._id = value
         value = find_attr_value_('name', node)
         if value is not None and 'name' not in already_processed:
             already_processed.add('name')
