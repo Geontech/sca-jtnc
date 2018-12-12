@@ -140,6 +140,7 @@ class LocalLauncher(SandboxLauncher):
 
     def _resolveDependencies(self, sdrRoot, device, implementation):
         dep_files = []
+        return dep_files
         for dependency in implementation.get_dependency():
             softpkg = dependency.get_softpkgref()
             if not softpkg:
@@ -228,7 +229,7 @@ class LocalLauncher(SandboxLauncher):
 
         # Execute the entry point, either on the virtual device or the Sandbox
         # component host
-        entry_point = sdrroot.relativePath(comp._profile, impl.get_code().get_entrypoint())
+        entry_point = sdrroot.relativePath(comp._profile, impl.get_code().get_entrypoint().valueOf_)
         if impl.get_code().get_type() == 'SharedLibrary':
             if self._shared:
                 container = comp._sandbox._getComponentHost(_debugger = debugger)

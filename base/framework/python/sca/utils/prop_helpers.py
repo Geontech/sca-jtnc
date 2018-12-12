@@ -39,7 +39,7 @@ import operator as _operator
 import warnings as _warnings
 from sca.utils.type_helpers import OutOfRangeException, EnumValueError
 from sca.utils.formatting import TablePrinter
-from sca.parsers.prf import configurationKind as _configurationKind
+from sca.parsers.prf import configurationkind as _configurationkind
 SCA_TYPES = globals()['_SCA_TYPES']
 
 _warnings.filterwarnings('once',category=DeprecationWarning)
@@ -280,7 +280,7 @@ def isMatch(prop, modes, kinds, actions):
         m = prop.get_mode()
     matchMode = (m in modes)
 
-    if isinstance(prop, (_parsers.PRFParser.simple, _parsers.PRFParser.simpleSequence)):
+    if isinstance(prop, (_parsers.PRFParser.simple, _parsers.PRFParser.simplesequence)):
         if prop.get_action() == None:
             a = "external"
         else:
@@ -289,7 +289,7 @@ def isMatch(prop, modes, kinds, actions):
 
         matchKind = False
         if prop.get_kind() == None or prop.get_kind() == []:
-            k = [_configurationKind()]
+            k = [_configurationkind()]
         else:
             k = prop.get_kind()
         for kind in k:
@@ -315,7 +315,7 @@ def isMatch(prop, modes, kinds, actions):
 
         matchKind = False
         if prop.get_configurationkind() == None or prop.get_configurationkind() == []:
-            k = [_configurationKind()]
+            k = [_configurationkind()]
         else:
             k = prop.get_configurationkind()
         for kind in k:
@@ -1086,12 +1086,12 @@ class structProperty(Property):
                     if isinstance(p, _parsers.prf.simple):
                         classType = 'simple'
                         break
-                    elif isinstance(p, _parsers.prf.simpleSequence):
-                        classType = 'simpleSequence'
+                    elif isinstance(p, _parsers.prf.simplesequence):
+                        classType = 'simplesequence'
                         break
             if classType == 'simple':
                 prop = simpleProperty(_id, _type, enum, compRef=compRef, kinds=kinds, defValue=_defValue, parent=self)
-            elif classType == 'simpleSequence':
+            elif classType == 'simplesequence':
                 prop = sequenceProperty(_id, _type, compRef=compRef, kinds=kinds, defValue=_defValue, parent=self)
             prop.clean_name = _clean_name
             self.members[_id] = prop

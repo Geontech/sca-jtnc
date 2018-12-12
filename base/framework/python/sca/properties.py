@@ -1418,7 +1418,7 @@ class struct_property(_property):
                                           description=self.__doc__)
 
         for kind in self.kinds:
-            struct.add_configurationkind(sca.parsers.prf.configurationKind(kind))
+            struct.add_configurationkind(sca.parsers.prf.configurationkind(kind))
 
         for name, attr in self.structdef.__dict__.items():
             if type(attr) is simple_property: 
@@ -1526,7 +1526,7 @@ class structseq_property(_sequence_property):
                                                      description=self.__doc__)
 
         for kind in self.kinds:
-            structseq.add_configurationkind(sca.parsers.prf.configurationKind(kind))
+            structseq.add_configurationkind(sca.parsers.prf.configurationkind(kind))
 
         struct = sca.parsers.prf.struct(id_="")
         for name, attr in self.structdef.__dict__.items():

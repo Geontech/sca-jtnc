@@ -143,7 +143,7 @@ class ScaComponentTestCase(unittest.TestCase):
         """
         Stops, release, and kill the process running the component
         """
-        if self.comp_obj != None and self.scd.get_componenttype() in \
+        if self.comp_obj != None and self.scd.get_componenttype().valueOf_ in \
             ("resource", "device", "loadabledevice", "executabledevice"):
             try:
                 self.comp.releaseObject()

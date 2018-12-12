@@ -124,24 +124,26 @@ class VirtualDevice(object):
         log.debug("VirtualDevice processor '%s' OS '%s'", self._processor, self._osName)
 
     def _matchProcessor(self, implementation):
-        if not implementation.get_processor():
-            # Implementation specifies no processor dependency
-            return True
+        return True
+        #if not implementation.get_processor():
+            ## Implementation specifies no processor dependency
+            #return True
 
-        for proc in implementation.get_processor():
-            if proc.get_name() == self._processor:
-                return True
-        return False
+        #for proc in implementation.get_processor():
+            #if proc.get_name() == self._processor:
+                #return True
+        #return False
 
     def _matchOS(self, implementation):
-        if not implementation.get_os():
-            # Implementation specifies no OS dependency
-            return True
+        return True
+        #if not implementation.get_os():
+            ## Implementation specifies no OS dependency
+            #return True
 
-        for operating_system in implementation.get_os():
-            if operating_system.get_name() == self._osName:
-                return True
-        return False
+        #for operating_system in implementation.get_os():
+            #if operating_system.get_name() == self._osName:
+                #return True
+        #return False
 
     def _checkImplementation(self, sdrroot, profile, impl):
         # Match device properties
@@ -158,7 +160,7 @@ class VirtualDevice(object):
 
         # If the implementation has an entry point, make sure it exists too
         if impl.get_code().get_entrypoint():
-            entry_point = impl.get_code().get_entrypoint()
+            entry_point = impl.get_code().get_entrypoint().valueOf_
             filename = sdrroot.relativePath(profile, entry_point)
             log.trace("Checking entrypoint '%s' ('%s')", entry_point, filename)
             if not os.path.exists(filename):

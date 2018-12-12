@@ -220,9 +220,6 @@ class SandboxService(Service, SandboxMixin):
             kinds = set(k.get_kindtype() for k in prop.get_kind())
             if ('execparam' not in kinds) and ('property' not in kinds):
                 continue
-            if 'property' in kinds:
-                if prop.get_commandline() != 'true':
-                    continue
             # Only include properties with values
             value = prop.get_value()
             if value is not None:

@@ -92,8 +92,9 @@ def _convertType(propType, val):
     Convert value from string form to the appropriate numeric type. 
     '''
      
+    val = val.valueOf_
     if propType in ['long', 'longlong', 'octet', 'short', 'ulong', 'ulonglong', 'ushort']: 
-        # If value contains an x, it is a hex value (base 16) 
+        # If value contains an x, it is a hex value (base 16)
         if val.find('x') != -1:
             newValue = int(val,16)
         else:
@@ -1142,9 +1143,9 @@ class QueryableBase(object):
 
         propType = prop.get_type()
 
-        complex = prop.get_complex()
-        if complex.lower() == "true":
-            propType = _properties.mapComplexType(propType)
+        #complex = prop.get_complex()
+        #if complex.lower() == "true":
+        #    propType = _properties.mapComplexType(propType)
         return propType
      
     def _getPropertySet(self, \
@@ -1176,7 +1177,7 @@ class QueryableBase(object):
                     continue
 
                 # Only command line if the attribute is explicitly set to true
-                isCommandline = prop.get_commandline() == 'true'
+                isCommandline = False
                 # If a preference was given, skip over properties that are/are
                 # not command line
                 if commandline is not None and commandline != isCommandline:

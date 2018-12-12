@@ -57,7 +57,7 @@ class SdrRoot(object):
 
     def _getObjectType(self, scd):
         if scd is not None:
-            componentType = scd.get_componenttype()
+            componentType = scd.get_componenttype().valueOf_
             if componentType in ('device', 'loadabledevice', 'executabledevice'):
                 return 'devices'
             elif componentType == 'resource':
@@ -229,7 +229,7 @@ class Sandbox(object):
             raise RuntimeError, 'Cannot launch softpkg with no SCD'
 
         # Check that we can launch the component.
-        comptype = scd.get_componenttype()
+        comptype = scd.get_componenttype().valueOf_
         if comptype == 'resource':
             clazz = SandboxComponent
         elif comptype in ('device', 'loadabledevice', 'executabledevice'):
@@ -344,8 +344,7 @@ class Sandbox(object):
         # Helper method to turn all of the PRF properties into an iterable sequence
         # of (property, stage) pairs.
         for prop in prf.get_simple():
-            isCommandline = prop.get_commandline() == 'true'
-            yield prop, self._getInitializationStage(prop, prop.get_kind(), isCommandline)
+            yield prop, self._getInitializationStage(prop, prop.get_kind())
         for prop in prf.get_simplesequence():
             yield prop, self._getInitializationStage(prop, prop.get_kind())
         for prop in prf.get_struct():
