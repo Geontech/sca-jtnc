@@ -798,7 +798,7 @@ class softwarecomponent(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='softwarecomponent')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='softwarecomponent', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='softwarecomponent', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
@@ -811,13 +811,13 @@ class softwarecomponent(GeneratedsSuper):
         else:
             eol_ = ''
         if self.componentrepid is not None:
-            self.componentrepid.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='componentrepid', pretty_print=pretty_print)
+            self.componentrepid.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='componentrepid', pretty_print=pretty_print)
         if self.componenttype is not None:
-            self.componenttype.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='componenttype', pretty_print=pretty_print)
+            self.componenttype.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='componenttype', pretty_print=pretty_print)
         if self.componentfeatures is not None:
-            self.componentfeatures.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='componentfeatures', pretty_print=pretty_print)
+            self.componentfeatures.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='componentfeatures', pretty_print=pretty_print)
         if self.interfaces is not None:
-            self.interfaces.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='interfaces', pretty_print=pretty_print)
+            self.interfaces.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='interfaces', pretty_print=pretty_print)
         if self.propertyfile is not None:
             self.propertyfile.export(outfile, level, namespaceprefix_='t:', name_='propertyfile', pretty_print=pretty_print)
     def build(self, node):
@@ -904,7 +904,7 @@ class componentrepid(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='componentrepid')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='componentrepid', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='componentrepid', pretty_print=pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
             outfile.write('/>%s' % (eol_, ))
@@ -1076,7 +1076,7 @@ class componentfeatures(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='componentfeatures')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='componentfeatures', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='componentfeatures', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
@@ -1091,7 +1091,7 @@ class componentfeatures(GeneratedsSuper):
         for supportsinterface_ in self.supportsinterface:
             supportsinterface_.export(outfile, level, namespaceprefix_='t:', name_='supportsinterface', pretty_print=pretty_print)
         if self.ports is not None:
-            self.ports.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='ports', pretty_print=pretty_print)
+            self.ports.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='ports', pretty_print=pretty_print)
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -1167,7 +1167,7 @@ class supportsinterface(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='supportsinterface')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='supportsinterface', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='supportsinterface', pretty_print=pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
             outfile.write('/>%s' % (eol_, ))
@@ -1276,7 +1276,7 @@ class ports(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='ports')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='ports', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='ports', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
@@ -1390,7 +1390,7 @@ class provides(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='provides')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='provides', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='provides', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
@@ -1516,7 +1516,7 @@ class uses(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='uses')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='uses', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='uses', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
@@ -1613,7 +1613,7 @@ class porttype(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='porttype')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='porttype', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='porttype', pretty_print=pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
             outfile.write('/>%s' % (eol_, ))
@@ -1697,7 +1697,7 @@ class interfaces(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='interfaces')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='interfaces', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='interfaces', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
@@ -1798,7 +1798,7 @@ class interface(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='interface')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='interface', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='interface', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
@@ -1888,7 +1888,7 @@ class inheritsinterface(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='inheritsinterface')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='inheritsinterface', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='inheritsinterface', pretty_print=pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
             outfile.write('/>%s' % (eol_, ))
@@ -1967,7 +1967,7 @@ class propertyfile(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='propertyfile')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='propertyfile', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='propertyfile', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
@@ -1982,7 +1982,7 @@ class propertyfile(GeneratedsSuper):
         else:
             eol_ = ''
         if self.localfile is not None:
-            self.localfile.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='localfile', pretty_print=pretty_print)
+            self.localfile.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='localfile', pretty_print=pretty_print)
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -2050,7 +2050,7 @@ class localfile(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='localfile')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='localfile', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='localfile', pretty_print=pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
             outfile.write('/>%s' % (eol_, ))

@@ -837,7 +837,7 @@ class softwareassembly(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='softwareassembly')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='softwareassembly', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='softwareassembly', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
@@ -860,13 +860,13 @@ class softwareassembly(GeneratedsSuper):
         if self.description is not None:
             self.description.export(outfile, level, namespaceprefix_='t:', name_='description', pretty_print=pretty_print)
         if self.componentfiles is not None:
-            self.componentfiles.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='componentfiles', pretty_print=pretty_print)
+            self.componentfiles.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='componentfiles', pretty_print=pretty_print)
         if self.partitioning is not None:
-            self.partitioning.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='partitioning', pretty_print=pretty_print)
+            self.partitioning.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='partitioning', pretty_print=pretty_print)
         if self.deploymentdependencies is not None:
             self.deploymentdependencies.export(outfile, level, namespaceprefix_='t:', name_='deploymentdependencies', pretty_print=pretty_print)
         if self.assemblycontroller is not None:
-            self.assemblycontroller.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='assemblycontroller', pretty_print=pretty_print)
+            self.assemblycontroller.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='assemblycontroller', pretty_print=pretty_print)
         if self.connections is not None:
             self.connections.export(outfile, level, namespaceprefix_='t:', name_='connections', pretty_print=pretty_print)
         if self.externalports is not None:
@@ -1075,7 +1075,7 @@ class componentfiles(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='componentfiles')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='componentfiles', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='componentfiles', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
@@ -1165,7 +1165,7 @@ class componentfile(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='componentfile')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='componentfile', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='componentfile', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
@@ -1183,7 +1183,7 @@ class componentfile(GeneratedsSuper):
         else:
             eol_ = ''
         if self.localfile is not None:
-            self.localfile.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='localfile', pretty_print=pretty_print)
+            self.localfile.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='localfile', pretty_print=pretty_print)
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -1255,7 +1255,7 @@ class localfile(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='localfile')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='localfile', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='localfile', pretty_print=pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
             outfile.write('/>%s' % (eol_, ))
@@ -1375,7 +1375,7 @@ class partitioning(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='partitioning')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='partitioning', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='partitioning', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
@@ -1485,7 +1485,7 @@ class componentplacement(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='componentplacement')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='componentplacement', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='componentplacement', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
@@ -1498,7 +1498,7 @@ class componentplacement(GeneratedsSuper):
         else:
             eol_ = ''
         if self.componentfileref is not None:
-            self.componentfileref.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='componentfileref', pretty_print=pretty_print)
+            self.componentfileref.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='componentfileref', pretty_print=pretty_print)
         for componentinstantiation_ in self.componentinstantiation:
             componentinstantiation_.export(outfile, level, namespaceprefix_='t:', name_='componentinstantiation', pretty_print=pretty_print)
     def build(self, node):
@@ -1570,7 +1570,7 @@ class componentfileref(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='componentfileref')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='componentfileref', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='componentfileref', pretty_print=pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
             outfile.write('/>%s' % (eol_, ))
@@ -1693,7 +1693,7 @@ class componentinstantiation(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='componentinstantiation')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='componentinstantiation', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='componentinstantiation', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
@@ -1898,7 +1898,7 @@ class componentfactoryref(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='componentfactoryref')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='componentfactoryref', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='componentfactoryref', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
@@ -2046,7 +2046,7 @@ class componentfactoryproperties(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='componentfactoryproperties')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='componentfactoryproperties', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='componentfactoryproperties', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
@@ -2151,7 +2151,7 @@ class simpleref(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='simpleref')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='simpleref', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='simpleref', pretty_print=pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
             outfile.write('/>%s' % (eol_, ))
@@ -2237,7 +2237,7 @@ class simplesequenceref(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='simplesequenceref')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='simplesequenceref', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='simplesequenceref', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
@@ -2252,7 +2252,7 @@ class simplesequenceref(GeneratedsSuper):
         else:
             eol_ = ''
         if self.values is not None:
-            self.values.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='values', pretty_print=pretty_print)
+            self.values.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='values', pretty_print=pretty_print)
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -2337,7 +2337,7 @@ class structref(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='structref')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='structref', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='structref', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
@@ -2437,7 +2437,7 @@ class structsequenceref(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='structsequenceref')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='structsequenceref', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='structsequenceref', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
@@ -2531,7 +2531,7 @@ class structvalue(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='structvalue')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='structvalue', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='structvalue', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
@@ -2620,7 +2620,7 @@ class values(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='values')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='values', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='values', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
@@ -2802,7 +2802,7 @@ class hostcollocation(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='hostcollocation')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='hostcollocation', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='hostcollocation', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
@@ -2910,7 +2910,7 @@ class assemblyplacement(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='assemblyplacement')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='assemblyplacement', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='assemblyplacement', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
@@ -2923,7 +2923,7 @@ class assemblyplacement(GeneratedsSuper):
         else:
             eol_ = ''
         if self.componentfileref is not None:
-            self.componentfileref.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='componentfileref', pretty_print=pretty_print)
+            self.componentfileref.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='componentfileref', pretty_print=pretty_print)
         for assemblyinstantiation_ in self.assemblyinstantiation:
             assemblyinstantiation_.export(outfile, level, namespaceprefix_='t:', name_='assemblyinstantiation', pretty_print=pretty_print)
     def build(self, node):
@@ -3022,7 +3022,7 @@ class assemblyinstantiation(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='assemblyinstantiation')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='assemblyinstantiation', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='assemblyinstantiation', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
@@ -3191,7 +3191,7 @@ class componentproperties(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='componentproperties')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='componentproperties', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='componentproperties', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
@@ -3301,7 +3301,7 @@ class deviceassignments(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='deviceassignments')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='deviceassignments', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='deviceassignments', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
@@ -3385,7 +3385,7 @@ class deviceassignment(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='deviceassignment')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='deviceassignment', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='deviceassignment', pretty_print=pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
             outfile.write('/>%s' % (eol_, ))
@@ -3476,7 +3476,7 @@ class deploymentdependencies(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='deploymentdependencies')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='deploymentdependencies', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='deploymentdependencies', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
@@ -3565,7 +3565,7 @@ class executionaffinityassignments(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='executionaffinityassignments')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='executionaffinityassignments', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='executionaffinityassignments', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
@@ -3666,7 +3666,7 @@ class executionaffinityassignment(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='executionaffinityassignment')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='executionaffinityassignment', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='executionaffinityassignment', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
@@ -3762,7 +3762,7 @@ class propertyref(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='propertyref')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='propertyref', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='propertyref', pretty_print=pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
             outfile.write('/>%s' % (eol_, ))
@@ -3860,7 +3860,7 @@ class assemblycontroller(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='assemblycontroller')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='assemblycontroller', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='assemblycontroller', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
@@ -3873,7 +3873,7 @@ class assemblycontroller(GeneratedsSuper):
         else:
             eol_ = ''
         if self.componentinstantiationref is not None:
-            self.componentinstantiationref.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='componentinstantiationref', pretty_print=pretty_print)
+            self.componentinstantiationref.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='componentinstantiationref', pretty_print=pretty_print)
         for assemblyinstantiationref_ in self.assemblyinstantiationref:
             assemblyinstantiationref_.export(outfile, level, namespaceprefix_='t:', name_='assemblyinstantiationref', pretty_print=pretty_print)
     def build(self, node):
@@ -3956,7 +3956,7 @@ class connections(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='connections')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='connections', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='connections', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
@@ -4054,7 +4054,7 @@ class connectinterface(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='connectinterface')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='connectinterface', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='connectinterface', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
@@ -4069,11 +4069,11 @@ class connectinterface(GeneratedsSuper):
         else:
             eol_ = ''
         if self.usesport is not None:
-            self.usesport.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='usesport', pretty_print=pretty_print)
+            self.usesport.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='usesport', pretty_print=pretty_print)
         if self.providesport is not None:
-            self.providesport.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='providesport', pretty_print=pretty_print)
+            self.providesport.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='providesport', pretty_print=pretty_print)
         if self.componentsupportedinterface is not None:
-            self.componentsupportedinterface.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='componentsupportedinterface', pretty_print=pretty_print)
+            self.componentsupportedinterface.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='componentsupportedinterface', pretty_print=pretty_print)
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -4186,7 +4186,7 @@ class usesport(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='usesport')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='usesport', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='usesport', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
@@ -4199,17 +4199,17 @@ class usesport(GeneratedsSuper):
         else:
             eol_ = ''
         if self.identifier is not None:
-            self.identifier.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='identifier', pretty_print=pretty_print)
+            self.identifier.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='identifier', pretty_print=pretty_print)
         if self.componentinstantiationref is not None:
-            self.componentinstantiationref.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='componentinstantiationref', pretty_print=pretty_print)
+            self.componentinstantiationref.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='componentinstantiationref', pretty_print=pretty_print)
         if self.assemblyinstantiationref is not None:
-            self.assemblyinstantiationref.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='assemblyinstantiationref', pretty_print=pretty_print)
+            self.assemblyinstantiationref.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='assemblyinstantiationref', pretty_print=pretty_print)
         if self.devicethatloadedthiscomponentref is not None:
-            self.devicethatloadedthiscomponentref.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='devicethatloadedthiscomponentref', pretty_print=pretty_print)
+            self.devicethatloadedthiscomponentref.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='devicethatloadedthiscomponentref', pretty_print=pretty_print)
         if self.deviceusedbythiscomponentref is not None:
-            self.deviceusedbythiscomponentref.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='deviceusedbythiscomponentref', pretty_print=pretty_print)
+            self.deviceusedbythiscomponentref.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='deviceusedbythiscomponentref', pretty_print=pretty_print)
         if self.domainfinder is not None:
-            self.domainfinder.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='domainfinder', pretty_print=pretty_print)
+            self.domainfinder.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='domainfinder', pretty_print=pretty_print)
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -4380,7 +4380,7 @@ class componentinstantiationref(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='componentinstantiationref')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='componentinstantiationref', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='componentinstantiationref', pretty_print=pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
             outfile.write('/>%s' % (eol_, ))
@@ -4453,7 +4453,7 @@ class assemblyinstantiationref(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='assemblyinstantiationref')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='assemblyinstantiationref', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='assemblyinstantiationref', pretty_print=pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
             outfile.write('/>%s' % (eol_, ))
@@ -4526,7 +4526,7 @@ class devicethatloadedthiscomponentref(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='devicethatloadedthiscomponentref')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='devicethatloadedthiscomponentref', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='devicethatloadedthiscomponentref', pretty_print=pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
             outfile.write('/>%s' % (eol_, ))
@@ -4605,7 +4605,7 @@ class deviceusedbythiscomponentref(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='deviceusedbythiscomponentref')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='deviceusedbythiscomponentref', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='deviceusedbythiscomponentref', pretty_print=pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
             outfile.write('/>%s' % (eol_, ))
@@ -4691,7 +4691,7 @@ class domainfinder(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='domainfinder')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='domainfinder', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='domainfinder', pretty_print=pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
             outfile.write('/>%s' % (eol_, ))
@@ -4812,7 +4812,7 @@ class providesport(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='providesport')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='providesport', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='providesport', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
@@ -4827,17 +4827,17 @@ class providesport(GeneratedsSuper):
         else:
             eol_ = ''
         if self.identifier is not None:
-            self.identifier.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='identifier', pretty_print=pretty_print)
+            self.identifier.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='identifier', pretty_print=pretty_print)
         if self.componentinstantiationref is not None:
-            self.componentinstantiationref.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='componentinstantiationref', pretty_print=pretty_print)
+            self.componentinstantiationref.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='componentinstantiationref', pretty_print=pretty_print)
         if self.assemblyinstantiationref is not None:
-            self.assemblyinstantiationref.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='assemblyinstantiationref', pretty_print=pretty_print)
+            self.assemblyinstantiationref.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='assemblyinstantiationref', pretty_print=pretty_print)
         if self.devicethatloadedthiscomponentref is not None:
-            self.devicethatloadedthiscomponentref.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='devicethatloadedthiscomponentref', pretty_print=pretty_print)
+            self.devicethatloadedthiscomponentref.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='devicethatloadedthiscomponentref', pretty_print=pretty_print)
         if self.deviceusedbythiscomponentref is not None:
-            self.deviceusedbythiscomponentref.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='deviceusedbythiscomponentref', pretty_print=pretty_print)
+            self.deviceusedbythiscomponentref.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='deviceusedbythiscomponentref', pretty_print=pretty_print)
         if self.domainfinder is not None:
-            self.domainfinder.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='domainfinder', pretty_print=pretty_print)
+            self.domainfinder.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='domainfinder', pretty_print=pretty_print)
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -4958,7 +4958,7 @@ class componentsupportedinterface(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='componentsupportedinterface')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='componentsupportedinterface', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='componentsupportedinterface', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
@@ -4971,15 +4971,15 @@ class componentsupportedinterface(GeneratedsSuper):
         else:
             eol_ = ''
         if self.identifier is not None:
-            self.identifier.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='identifier', pretty_print=pretty_print)
+            self.identifier.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='identifier', pretty_print=pretty_print)
         if self.componentinstantiationref is not None:
-            self.componentinstantiationref.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='componentinstantiationref', pretty_print=pretty_print)
+            self.componentinstantiationref.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='componentinstantiationref', pretty_print=pretty_print)
         if self.devicethatloadedthiscomponentref is not None:
-            self.devicethatloadedthiscomponentref.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='devicethatloadedthiscomponentref', pretty_print=pretty_print)
+            self.devicethatloadedthiscomponentref.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='devicethatloadedthiscomponentref', pretty_print=pretty_print)
         if self.deviceusedbythiscomponentref is not None:
-            self.deviceusedbythiscomponentref.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='deviceusedbythiscomponentref', pretty_print=pretty_print)
+            self.deviceusedbythiscomponentref.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='deviceusedbythiscomponentref', pretty_print=pretty_print)
         if self.domainfinder is not None:
-            self.domainfinder.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='domainfinder', pretty_print=pretty_print)
+            self.domainfinder.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='domainfinder', pretty_print=pretty_print)
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -5075,7 +5075,7 @@ class externalports(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='externalports')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='externalports', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='externalports', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
@@ -5188,7 +5188,7 @@ class port(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='port')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='port', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='port', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
@@ -5203,15 +5203,15 @@ class port(GeneratedsSuper):
         if self.description is not None:
             self.description.export(outfile, level, namespaceprefix_='t:', name_='description', pretty_print=pretty_print)
         if self.usesidentifier is not None:
-            self.usesidentifier.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='usesidentifier', pretty_print=pretty_print)
+            self.usesidentifier.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='usesidentifier', pretty_print=pretty_print)
         if self.providesidentifier is not None:
-            self.providesidentifier.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='providesidentifier', pretty_print=pretty_print)
+            self.providesidentifier.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='providesidentifier', pretty_print=pretty_print)
         if self.supportedidentifier is not None:
-            self.supportedidentifier.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='supportedidentifier', pretty_print=pretty_print)
+            self.supportedidentifier.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='supportedidentifier', pretty_print=pretty_print)
         if self.componentinstantiationref is not None:
-            self.componentinstantiationref.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='componentinstantiationref', pretty_print=pretty_print)
+            self.componentinstantiationref.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='componentinstantiationref', pretty_print=pretty_print)
         if self.assemblyinstantiationref is not None:
-            self.assemblyinstantiationref.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='assemblyinstantiationref', pretty_print=pretty_print)
+            self.assemblyinstantiationref.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='assemblyinstantiationref', pretty_print=pretty_print)
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -5544,7 +5544,7 @@ class deploymentprefs(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='deploymentprefs')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='deploymentprefs', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='deploymentprefs', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
@@ -5557,7 +5557,7 @@ class deploymentprefs(GeneratedsSuper):
         else:
             eol_ = ''
         if self.localfile is not None:
-            self.localfile.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='localfile', pretty_print=pretty_print)
+            self.localfile.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='localfile', pretty_print=pretty_print)
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)

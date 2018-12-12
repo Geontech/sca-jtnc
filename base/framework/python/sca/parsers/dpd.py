@@ -820,7 +820,7 @@ class devicepkg(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='devicepkg')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='devicepkg', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='devicepkg', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
@@ -847,7 +847,7 @@ class devicepkg(GeneratedsSuper):
         if self.description is not None:
             self.description.export(outfile, level, namespaceprefix_='t:', name_='description', pretty_print=pretty_print)
         if self.hwdeviceregistration is not None:
-            self.hwdeviceregistration.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='hwdeviceregistration', pretty_print=pretty_print)
+            self.hwdeviceregistration.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='hwdeviceregistration', pretty_print=pretty_print)
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -1044,7 +1044,7 @@ class author(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='author')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='author', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='author', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
@@ -1524,7 +1524,7 @@ class hwdeviceregistration(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='hwdeviceregistration')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='hwdeviceregistration', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='hwdeviceregistration', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
@@ -1547,13 +1547,13 @@ class hwdeviceregistration(GeneratedsSuper):
         if self.propertyfile is not None:
             self.propertyfile.export(outfile, level, namespaceprefix_='t:', name_='propertyfile', pretty_print=pretty_print)
         if self.description is not None:
-            self.description.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='description', pretty_print=pretty_print)
+            self.description.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='description', pretty_print=pretty_print)
         if self.manufacturer is not None:
-            self.manufacturer.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='manufacturer', pretty_print=pretty_print)
+            self.manufacturer.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='manufacturer', pretty_print=pretty_print)
         if self.modelnumber is not None:
-            self.modelnumber.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='modelnumber', pretty_print=pretty_print)
+            self.modelnumber.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='modelnumber', pretty_print=pretty_print)
         if self.deviceclass is not None:
-            self.deviceclass.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='deviceclass', pretty_print=pretty_print)
+            self.deviceclass.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='deviceclass', pretty_print=pretty_print)
         for childhwdevice_ in self.childhwdevice:
             childhwdevice_.export(outfile, level, namespaceprefix_='t:', name_='childhwdevice', pretty_print=pretty_print)
     def build(self, node):
@@ -1662,7 +1662,7 @@ class propertyfile(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='propertyfile')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='propertyfile', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='propertyfile', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
@@ -1677,7 +1677,7 @@ class propertyfile(GeneratedsSuper):
         else:
             eol_ = ''
         if self.localfile is not None:
-            self.localfile.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='localfile', pretty_print=pretty_print)
+            self.localfile.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='localfile', pretty_print=pretty_print)
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -1745,7 +1745,7 @@ class localfile(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='localfile')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='localfile', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='localfile', pretty_print=pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
             outfile.write('/>%s' % (eol_, ))
@@ -1991,7 +1991,7 @@ class deviceclass(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='deviceclass')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='deviceclass', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='deviceclass', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
@@ -2157,7 +2157,7 @@ class childhwdevice(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='childhwdevice')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='childhwdevice', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='childhwdevice', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
@@ -2170,9 +2170,9 @@ class childhwdevice(GeneratedsSuper):
         else:
             eol_ = ''
         if self.hwdeviceregistration is not None:
-            self.hwdeviceregistration.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='hwdeviceregistration', pretty_print=pretty_print)
+            self.hwdeviceregistration.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='hwdeviceregistration', pretty_print=pretty_print)
         if self.devicepkgref is not None:
-            self.devicepkgref.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='devicepkgref', pretty_print=pretty_print)
+            self.devicepkgref.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='devicepkgref', pretty_print=pretty_print)
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
@@ -2248,7 +2248,7 @@ class devicepkgref(GeneratedsSuper):
         self.exportAttributes(outfile, level, already_processed, namespaceprefix_, name_='devicepkgref')
         if self.hasContent_():
             outfile.write('>%s' % (eol_, ))
-            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_, name_='devicepkgref', pretty_print=pretty_print)
+            self.exportChildren(outfile, level + 1, namespaceprefix_, namespacedef_=namespacedef_, name_='devicepkgref', pretty_print=pretty_print)
             showIndent(outfile, level, pretty_print)
             outfile.write('</%s%s>%s' % (namespaceprefix_, name_, eol_))
         else:
@@ -2263,7 +2263,7 @@ class devicepkgref(GeneratedsSuper):
         else:
             eol_ = ''
         if self.localfile is not None:
-            self.localfile.export(outfile, level, namespaceprefix_='t:', namespacedef_, name_='localfile', pretty_print=pretty_print)
+            self.localfile.export(outfile, level, namespaceprefix_='t:', namespacedef_=namespacedef_, name_='localfile', pretty_print=pretty_print)
     def build(self, node):
         already_processed = set()
         self.buildAttributes(node, node.attrib, already_processed)
