@@ -420,25 +420,30 @@ class PortSupplier(object):
         # Make the actual connection from the endpoints
         log.trace("Uses endpoint '%s' has interface '%s'", usesEndpoint.getName(), usesEndpoint.getInterface())
         log.trace("Provides endpoint '%s' has interface '%s'", providesEndpoint.getName(), providesEndpoint.getInterface())
-        usesPortRef = usesEndpoint.getReference()
+        #usesPortRef = usesEndpoint.getReference()
         providesPortRef = providesEndpoint.getReference()
-        if ':BULKIO/' in usesEndpoint.getInterface():
-            if len(valid_tuners) == 1:
-                allocation_id = tuner_status[valid_tuners[0]].allocation_id_csv.split(',')[0]
-                while True:
-                    connectionId = str(_uuidgen())
-                    if not self._listener_allocations.has_key(connectionId):
-                        break
-                import frontend
-                listen_alloc = frontend.createTunerListenerAllocation(allocation_id, connectionId)
-                retalloc = self.allocateCapacity(listen_alloc)
-                if not retalloc:
-                    raise RuntimeError, "Unable to create a listener for allocation "+allocation_id+" on device "+usesEndpoint.getName()
-                self._listener_allocations[connectionId] = listen_alloc
-            elif len(valid_tuners) > 1:
-                raise RuntimeError, "More than one valid tuner allocation exists on the frontend interfaces device, so the ambiguity cannot be resolved. Please provide the connection id for the desired allocation"
+        #if ':BULKIO/' in usesEndpoint.getInterface():
+            #if len(valid_tuners) == 1:
+                #allocation_id = tuner_status[valid_tuners[0]].allocation_id_csv.split(',')[0]
+                #while True:
+                    #connectionId = str(_uuidgen())
+                    #if not self._listener_allocations.has_key(connectionId):
+                        #break
+                #import frontend
+                #listen_alloc = frontend.createTunerListenerAllocation(allocation_id, connectionId)
+                #retalloc = self.allocateCapacity(listen_alloc)
+                #if not retalloc:
+                    #raise RuntimeError, "Unable to create a listener for allocation "+allocation_id+" on device "+usesEndpoint.getName()
+                #self._listener_allocations[connectionId] = listen_alloc
+            #elif len(valid_tuners) > 1:
+                #raise RuntimeError, "More than one valid tuner allocation exists on the frontend interfaces device, so the ambiguity cannot be resolved. Please provide the connection id for the desired allocation"
 
-        usesPortRef.connectPort(providesPortRef, connectionId)
+        #usesPortRef.connectPort(providesPortRef, connectionId)
+        
+        connectionid = _CF.PortAccessor.ConnectionIdType(connectionId, usesEndpoint.port['Port Name'])
+        connection = _CF.PortAccessor.ConnectionType(connectionid, providesPortRef)
+        self.ref.connectUsesPorts([connection])
+        #providesPortRef, connectionId)
         ConnectionManager.instance().registerConnection(connectionId, usesEndpoint, providesEndpoint)
 
     def _disconnected(self, connectionId):

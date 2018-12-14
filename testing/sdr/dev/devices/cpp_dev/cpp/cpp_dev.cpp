@@ -217,7 +217,26 @@ void cpp_dev_i::updateUsageState()
 int cpp_dev_i::serviceFunction()
 {
     LOG_DEBUG(cpp_dev_i, "serviceFunction() example log message");
-    
+    std::string stream_id = "hello";
+    bulkio::OutFloatStream outputStream = dataFloatOut->getStream("hello");
+    if (!outputStream) {
+        BULKIO::StreamSRI sri = bulkio::sri::create(stream_id);
+        outputStream = dataFloatOut->createStream(sri);
+    }
+
+    size_t data_length = 1000;
+    // Acquire a new buffer to hold the output data
+    sca::buffer<float> outputData(data_length);
+
+    // Transform input data into output data
+    for (size_t index = 0; index < data_length; ++index) {
+        outputData[index] = (float) index;
+    }
+
+    // Write to the output stream; outputData must not be modified after
+    // this method call
+    outputStream.write(outputData, bulkio::time::utils::now());
+
     return NOOP;
 }
 

@@ -19,8 +19,8 @@
 #
 
 try:
-    from bulkio.bulkioInterfaces import BULKIO as _BULKIO
-    from bulkio.bulkioInterfaces import BULKIO__POA as _BULKIO__POA
+    from sca.bulkio import BULKIO as _BULKIO
+    from sca.bulkio import BULKIO__POA as _BULKIO__POA
     SDDS_SB = _BULKIO.SDDS_SB
 except:
     # Handle case where bulkioInterface may not be installed

@@ -45,6 +45,8 @@ from sca.utils.bulkio import bulkio_data_helpers
 from _unitTestHelpers import scatest, runtestHelpers
 import traceback
 
+import time
+
 from sca.bulkio import BULKIO
 from sca.cf import CF
 from omniORB import any as _any
@@ -72,10 +74,13 @@ class SBTestTest(scatest.CorbaTestCase):
         #print 'cpp_dev', comp.query([])
         retval = comp.query([teststring])
         self.assertEquals(retval[0].value._v, 'foo')
-        print comp.teststring
         comp.teststring = 'hello'
-        print comp.teststring
+        retval = comp.query([teststring])
+        self.assertEquals(retval[0].value._v, 'hello')
         snk=sb.DataSink()
         comp.connect(snk)
+        sb.start()
+        time.sleep(2)
+        print len(snk.getData())
         #print 'cpp_dev', comp._get_identifier()
 

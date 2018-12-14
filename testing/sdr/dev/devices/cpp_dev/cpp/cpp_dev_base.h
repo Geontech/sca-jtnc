@@ -50,7 +50,7 @@ class cpp_dev_base : public DeviceComponent, protected ThreadedComponent
         std::string devmgr_id;
         std::string dom_id;
         bulkio::InFloatPort *dataFloatIn;
-        //bulkio::OutFloatPort *dataFloatOut;
+        bulkio::OutFloatPort *dataFloatOut;
 
     private:
         void construct();

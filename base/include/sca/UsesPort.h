@@ -173,10 +173,7 @@ namespace sca {
         sca::notification<void (const std::string&)> _portDisconnected;
     };
 
-    class NegotiableUsesPort : public UsesPort
-#ifdef BEGIN_AUTOCOMPLETE_IGNORE
-                             , public virtual POA_ExtendedCF::NegotiableUsesPort
-#endif
+    class NegotiableUsesPort : public UsesPort, public virtual POA_ExtendedCF::NegotiableUsesPort
     {
     public:
         NegotiableUsesPort(const std::string& name);
