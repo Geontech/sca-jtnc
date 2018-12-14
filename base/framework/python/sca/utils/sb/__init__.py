@@ -122,7 +122,7 @@ from prop_change_helpers import *
 from block_process import *
 
 try:
-    from bulkio.bulkioInterfaces import BULKIO
+    from sca.bulkio import BULKIO
 except:
     # BULKIO is not installed
     pass

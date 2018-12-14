@@ -66,6 +66,7 @@ class SBTestTest(scatest.CorbaTestCase):
         print 'BasicTestDevice_cpp', comp._get_identifier()
 
     def test_runtime(self):
+        print dir(sb)
         comp = sb.launch('cpp_dev')
         #print 'cpp_dev', comp.query([])
         teststring = CF.DataType(id='teststring', value=_any.to_any('foo'))
@@ -77,6 +78,7 @@ class SBTestTest(scatest.CorbaTestCase):
         comp.teststring = 'hello'
         retval = comp.query([teststring])
         self.assertEquals(retval[0].value._v, 'hello')
+        #snk=sb.DataSink()
         snk=sb.DataSink()
         comp.connect(snk)
         sb.start()

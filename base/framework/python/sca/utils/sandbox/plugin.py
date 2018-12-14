@@ -30,7 +30,7 @@ def _load_plugins():
 
     _plugins = []
     import pkg_resources
-    for entry_point in pkg_resources.iter_entry_points('redhawk.sandbox.helpers'):
+    for entry_point in pkg_resources.iter_entry_points('sca.sandbox.helpers'):
         _log.trace("Loading plugin '%s'", entry_point.name)
         try:
             plugin = entry_point.load()
