@@ -19,12 +19,12 @@
 #
 
 # vim: noet: softtabstop=0
-domdir = $(SDR_ROOT)/dom
+domdir = $(SCA_ROOT)/dom
 depsdir = $(domdir)/deps
 domaindir = $(domdir)/domain
 componentsdir = $(domdir)/components
 waveformsdir = $(domdir)/waveforms
-devdir = $(SDR_ROOT)/dev
+devdir = $(SCA_ROOT)/dev
 devicesdir = $(devdir)/devices
 nodesdir = $(devdir)/nodes
 servicesdir = $(devdir)/services

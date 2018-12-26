@@ -21,8 +21,8 @@
 import os
 
 def sdrRoot():
-    if 'SDRROOT' in os.environ and os.path.exists(os.environ['SDRROOT']):
-        sdrroot = os.path.normpath(os.environ['SDRROOT'])
+    if 'SCAROOT' in os.environ and os.path.exists(os.environ['SCAROOT']):
+        sdrroot = os.path.normpath(os.environ['SCAROOT'])
     elif os.path.exists('/sdr/sca'):
         sdrroot = '/sdr/sca'
     elif os.path.exists('/sdr'):
@@ -34,8 +34,8 @@ def sdrRoot():
     return sdrroot
 
 def scaRoot():
-    if 'OSSIEHOME' in os.environ and os.path.exists(os.environ['OSSIEHOME']):
-        scaroot = os.path.normpath(os.environ['OSSIEHOME'])
+    if 'SCAHOME' in os.environ and os.path.exists(os.environ['SCAHOME']):
+        scaroot = os.path.normpath(os.environ['SCAHOME'])
     elif os.path.exists('/usr/local/include/sca') and os.path.exists('/usr/local/share/sca'):
         scaroot = '/usr/local'
     elif os.path.exists('/usr/include/sca') and os.path.exists('/usr/share/sca'):

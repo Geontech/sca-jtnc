@@ -28,10 +28,10 @@ Sandbox functions:
      Generate an xml string describing the current graph
  - loadSADFile():
      Load and interconnect the components described in the file
- - setSDRROOT():
-     Set a new SDRROOT for the current sandbox session
+ - setSCAROOT():
+     Set a new SCAROOT for the current sandbox session
  - catalog():
-     Search SDRROOT (or the given argument) for components that can be launched
+     Search SCAROOT (or the given argument) for components that can be launched
  - setDEBUG():
      Enable debug output
  - reset():
@@ -45,7 +45,7 @@ Sandbox functions:
 
 Component, Device and Service proxy classes are used to manage executable softpackages:
   - The launch() function will kick off the executable and return the appropriate object type.
-    - It can take an SPD XML file or a component name found in the defined SDRROOT.
+    - It can take an SPD XML file or a component name found in the defined SCAROOT.
   - SCD (XML) describes the interfaces for the instantiated component.
   - The destructor cleans up the launched component process.
   - releaseObject removes the object (and destroys the component instance)

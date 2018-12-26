@@ -220,7 +220,7 @@ int main(int argc, char* argv[])
 
         if (param == "DCD_FILE") {
             dcdFile = argv[ii];
-        } else if (param == "SDRROOT") {
+        } else if (param == "SCAROOT") {
             sdrRoot = argv[ii];
         } else if (param == "SPD") {
             spdFile = argv[ii];
@@ -251,12 +251,12 @@ int main(int argc, char* argv[])
         exit(EXIT_FAILURE);
     }
 
-    // We have to have a real SDRROOT
+    // We have to have a real SCAROOT
     fs::path sdrRootPath;
     if (!sdrRoot.empty()) {
         sdrRootPath = sdrRoot;
-    } else if (getenv("SDRROOT") != NULL) {
-        sdrRootPath = getenv("SDRROOT");
+    } else if (getenv("SCAROOT") != NULL) {
+        sdrRootPath = getenv("SCAROOT");
     } else {
         // Fall back to CWD
         sdrRootPath = fs::initial_path();
@@ -264,7 +264,7 @@ int main(int argc, char* argv[])
 
     // Verify the path exists
     if (!fs::is_directory(sdrRootPath)) {
-        std::cerr << "ERROR: Invalid SDRROOT " << sdrRootPath << std::endl;
+        std::cerr << "ERROR: Invalid SCAROOT " << sdrRootPath << std::endl;
         exit(EXIT_FAILURE);
     }
 

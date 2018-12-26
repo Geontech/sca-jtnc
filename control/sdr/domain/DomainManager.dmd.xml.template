@@ -21,7 +21,7 @@ with this program.  If not, see http://www.gnu.org/licenses/.
 
 <!DOCTYPE domainmanagerconfiguration PUBLIC "-//JTRS//DTD SCA V2.2.2 DMD//EN" "domainmanagerconfiguration.dtd">
 <!--
-  To configure your own domain, copy this file to $SDRROOT/dom/domain/DomainManager.dmd.xml
+  To configure your own domain, copy this file to $SCAROOT/dom/domain/DomainManager.dmd.xml
   and make the following changes:
 
     Replace @UUID@ with a the output from the uuidgen command.

@@ -103,7 +103,7 @@ DeviceManager_impl::DeviceManager_impl(
         _local_sdrroot  = tsdr.parent_path().string();
     }
     else {
-        _local_sdrroot = getenv("SDRROOT");
+        _local_sdrroot = getenv("SCAROOT");
     }
     _local_domroot = _local_sdrroot + "/dom";
 

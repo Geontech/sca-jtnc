@@ -161,7 +161,7 @@ class ScaComponentTestCase(unittest.TestCase):
         Arguments:
           execparams - Execparams to override on component execution.
           scahome  - Base location of REDHAWK installation for finding IDL files.
-                       Default location is determined from $OSSIEHOME environment
+                       Default location is determined from $SCAHOME environment
                        variable.
           configure  - If a dictionary, a set of key/value pairs to override the
                        initial configuration values of the component.

@@ -54,7 +54,7 @@ def appendClassPath(path):
 def configureTestPaths():
     # Point to the testing SDR folder
     testdir = os.path.abspath(os.path.dirname(__file__))
-    os.environ['SDRROOT'] = os.path.join(testdir, "sdr")
+    os.environ['SCAROOT'] = os.path.join(testdir, "sdr")
 
     # The top source directory is one levels up from this file
     topdir = os.path.abspath(os.path.join(testdir, '..'))
@@ -76,11 +76,11 @@ def configureTestPaths():
     model._idllib.addSearchPath(os.path.join(topdir, '../../bulkioInterfaces/idl'))
 
 # Set up the system paths (LD_LIBRARY_PATH, PYTHONPATH, CLASSPATH), IDL paths
-# and SDRROOT to allow testing against an uninstalled framework.
+# and SCAROOT to allow testing against an uninstalled framework.
 configureTestPaths()
 
 # Point the SDR cache to a different location so that it's easy to clean/ignore
-os.environ['SDRCACHE'] = os.path.join(os.environ['SDRROOT'], "cache")
+os.environ['SDRCACHE'] = os.path.join(os.environ['SCAROOT'], "cache")
 shutil.rmtree(os.environ['SDRCACHE'], ignore_errors=True)
 
 from _unitTestHelpers import runtestHelpers
@@ -217,7 +217,7 @@ if __name__ == "__main__":
 
     print ""
     print "R U N N I N G  T E S T S"
-    print "SDRROOT: ", scatest.getSdrPath(), " Start:", test_start_time.strftime("%m/%d/%Y %H:%M:%S")
+    print "SCAROOT: ", scatest.getSdrPath(), " Start:", test_start_time.strftime("%m/%d/%Y %H:%M:%S")
     print ""
 
     suite = TestCollector(files, testMethodPrefix=options.prefix, prompt=options.prompt)

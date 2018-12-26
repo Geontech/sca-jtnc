@@ -34,8 +34,8 @@ public:
 
 #ifdef DEBUG_TEST
     std::string sdrroot("");
-    if ( ::getenv("SDRROOT")){
-      sdrroot = ::getenv("SDRROOT");
+    if ( ::getenv("SCAROOT")){
+      sdrroot = ::getenv("SCAROOT");
     }
     if ( path.find("dev:") != std::string::npos ) {
       std::ostringstream os;

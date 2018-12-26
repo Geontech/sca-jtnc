@@ -45,10 +45,10 @@ II. Building and installing the Core Framework
 
 The installation of the Core Framework entails setting up environment variables, creating installation directories, and running the standard Autotools configuration and make commands:
 
-    $ export OSSIEHOME=${HOME}/redhawk
-    $ export SDRROOT=${OSSIEHOME}/sdr
-    $ mkdir -p $OSSIEHOME
-    $ mkdir -p $SDRROOT
+    $ export SCAHOME=${HOME}/redhawk
+    $ export SCAROOT=${SCAHOME}/sdr
+    $ mkdir -p $SCAHOME
+    $ mkdir -p $SCAROOT
     $ ./reconf
     $ ./configure
     $ make
@@ -67,10 +67,10 @@ SOLUTION: Try locating liblog4cxx.la.  If, for example, liblog4cxx.la is found i
 
 ERROR: "/bin/mkdir: cannot create directory `/usr/local/share': Permission denied"
 
-SOLUTION: The installation script is attempting to install to a directory for which you do not have write permissions.  Either update the OSSIEHOME/SDRROOT environment variables in order to install to a different location, or perform "make install" with root permissions.
+SOLUTION: The installation script is attempting to install to a directory for which you do not have write permissions.  Either update the SCAHOME/SCAROOT environment variables in order to install to a different location, or perform "make install" with root permissions.
 
 -----------------
 
 ERROR: "/usr/bin/install: cannot remove `/usr/local/share/aclocal/ossie/*"
 
-SOLUTION: The installation script may be attempting to install over an existing copy of the Core Framework that was installed with root permissions.  Either update the OSSIEHOME/SDRROOT environment variables in order to install to a different location, or perform "make install" with root permissions.
+SOLUTION: The installation script may be attempting to install over an existing copy of the Core Framework that was installed with root permissions.  Either update the SCAHOME/SCAROOT environment variables in order to install to a different location, or perform "make install" with root permissions.

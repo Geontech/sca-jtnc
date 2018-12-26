@@ -26,7 +26,7 @@ import getopt
 from ossie.parsers import SPDParser
 
 def sdrPath(filename):
-    return os.path.join(os.environ['SDRROOT'], 'dom') + filename
+    return os.path.join(os.environ['SCAROOT'], 'dom') + filename
 
 def findSpd(filename):
     if os.path.isfile(filename):
@@ -127,9 +127,9 @@ def main(args):
         raise ValueError('No SPD file given')
     
     try:
-        sdrroot = os.environ['SDRROOT']
+        sdrroot = os.environ['SCAROOT']
     except:
-        raise ValueError('SDRROOT is not set')
+        raise ValueError('SCAROOT is not set')
 
     # Check for implementation specifier (/path/to/file.spd.xml:XXXX)
     implId = None

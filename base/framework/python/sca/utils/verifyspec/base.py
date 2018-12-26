@@ -37,8 +37,8 @@ def uuidgen():
 
 # Finds SDR root directory
 def findSdrRoot():
-    if 'SDRROOT' in os.environ and os.path.exists(os.environ['SDRROOT']):
-        sdrroot = os.path.normpath(os.environ['SDRROOT'])
+    if 'SCAROOT' in os.environ and os.path.exists(os.environ['SCAROOT']):
+        sdrroot = os.path.normpath(os.environ['SCAROOT'])
     elif os.path.exists('/sdr/sca'):
         sdrroot = '/sdr/sca'
     elif os.path.exists('/sdr'):

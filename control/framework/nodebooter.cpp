@@ -499,9 +499,9 @@ void usage()
     std::cerr << "    nodeBooter -d DeviceManager.dcd.xml --daemon --pidfile /var/run/domain.pid --user domainuser" << std::endl;
     std::cerr << "    nodeBooter --help" << std::endl << std::endl;
 
-    std::cerr << "NOTE: When using the '-sdrroot' command line argument or the 'SDRROOT' environment variable, references to the dmd.xml or" << std::endl;
-    std::cerr << "      dcd.xml files must be relative to the OSSIE::FileSystem(s) - ${SDRROOT}/dom and ${SDRROOT}/dev" << std::endl << std::endl;
-    std::cerr << "      Ex: If $SDRROOT=/opt/sdr, then root for the DomainManager's FileSystem will be /opt/sdr/dom, so the reference to" << std::endl;
+    std::cerr << "NOTE: When using the '-sdrroot' command line argument or the 'SCAROOT' environment variable, references to the dmd.xml or" << std::endl;
+    std::cerr << "      dcd.xml files must be relative to the OSSIE::FileSystem(s) - ${SCAROOT}/dom and ${SCAROOT}/dev" << std::endl << std::endl;
+    std::cerr << "      Ex: If $SCAROOT=/opt/sdr, then root for the DomainManager's FileSystem will be /opt/sdr/dom, so the reference to" << std::endl;
     std::cerr << "      the DMD file will be /domain/DomainManager.dmd.xml (assuming that this exists at /opt/sdr/dom/domain/DomainManager.dmd.xml)." << std::endl;
     std::cerr << "      And similarly, the root for the DeviceManager's FileSystem will be /opt/sdr/dev, so the reference to the DCD file will" << std::endl;
     std::cerr << "      be /nodes/MyNode/DeviceManager.dcd.xml (assuming that this exists at /opt/sdr/dev/nodes/MyNode/DeviceManager.dcd.xml)." << std::endl;
@@ -578,7 +578,7 @@ void startDomainManager(
     ExecParams optionParams;
     execParams["DMD_FILE"] = dmdFile;
     execParams["DOMAIN_NAME"] = domainName;
-    execParams["SDRROOT"] = sdrRootPath.string();
+    execParams["SCAROOT"] = sdrRootPath.string();
     if (debugLevel != -1) {
         std::stringstream debugLevel_str;
         debugLevel_str << debugLevel;
@@ -707,7 +707,7 @@ void startDeviceManager(
     ExecParams optionParams;
     execParams["DCD_FILE"] = dcdFile;
     execParams["DOMAIN_NAME"] = domainName;
-    execParams["SDRROOT"] = sdrRootPath.string();
+    execParams["SCAROOT"] = sdrRootPath.string();
     execParams["SDRCACHE"] = devMgrCache;
     if (debugLevel != -1) {
         std::stringstream debugLevel_str;
@@ -1034,20 +1034,20 @@ int main(int argc, char* argv[])
     // fork to spawn each one.
     bool doFork = (startDomainManagerRequested && startDeviceManagerRequested);
 
-    // We have to have a real SDRROOT
+    // We have to have a real SCAROOT
     fs::path sdrRootPath;
     if (!sdrRoot.empty()) {
         sdrRootPath = sdrRoot;
     } else {
-        if (getenv("SDRROOT") != NULL) {
-            sdrRootPath = getenv("SDRROOT");
+        if (getenv("SCAROOT") != NULL) {
+            sdrRootPath = getenv("SCAROOT");
         } else {
             // Fall back to CWD
             sdrRootPath = fs::initial_path();
         }
     }
 
-    // Checks if dom path is available in SDRROOT
+    // Checks if dom path is available in SCAROOT
     // If not tries to use as a relative path
     const std::string DOM_FOLDER = "dom";
     fs::path domRootPath = sdrRootPath / DOM_FOLDER;
@@ -1056,7 +1056,7 @@ int main(int argc, char* argv[])
         // turn into an absolute path
         fs::path dmdPath = fs::system_complete(dmdFile);
 
-        // First, check if the DMD path is relative to $SDRROOT/dom
+        // First, check if the DMD path is relative to $SCAROOT/dom
         if (!fs::exists(domRootPath / dmdPath)) {
             // DMD path is absolute; check that it really exists
             if (!fs::exists(dmdPath)) {
@@ -1064,26 +1064,26 @@ int main(int argc, char* argv[])
                 exit(EXIT_FAILURE);
             }
 
-            // Check if the path is within $SDRROOT/dom
+            // Check if the path is within $SCAROOT/dom
             if (!isParentPath(domRootPath, dmdPath)) {
-                // If it's not in $SDRROOT/dom, try to determine the effective
-                // SDRROOT by backtracking in the path to find a directory
+                // If it's not in $SCAROOT/dom, try to determine the effective
+                // SCAROOT by backtracking in the path to find a directory
                 // named "dom"
                 domRootPath = findParentDir(dmdPath, DOM_FOLDER);
                 if (domRootPath.empty()) {
-                    std::cerr << "[nodeBooter] ERROR: can't determine domain SDRROOT" << std::endl;
+                    std::cerr << "[nodeBooter] ERROR: can't determine domain SCAROOT" << std::endl;
                     exit(EXIT_FAILURE);
                 }
                 sdrRootPath = domRootPath.parent_path();
             }
 
-            // Normalize the DMD path to be relative to $SDRROOT/dom
+            // Normalize the DMD path to be relative to $SCAROOT/dom
             dmdFile = relativePath(domRootPath, dmdPath).string();
         }
     }
 
 
-    // Checks if dev path is available in SDRROOT
+    // Checks if dev path is available in SCAROOT
     // If not tries to use as a relative path
     const std::string DEV_FOLDER = "dev";
     fs::path devRootPath = sdrRootPath / DEV_FOLDER;
@@ -1092,7 +1092,7 @@ int main(int argc, char* argv[])
         // turn into an absolute path
         fs::path dcdPath = fs::system_complete(dcdFile);
 
-        // First, check if the DCD path is relative to $SDRROOT/dev
+        // First, check if the DCD path is relative to $SCAROOT/dev
         if (!fs::exists(devRootPath / dcdPath)) {
             // DCD path is absolute; check that it really exists
             if (!fs::exists(dcdPath)) {
@@ -1100,27 +1100,27 @@ int main(int argc, char* argv[])
                 exit(EXIT_FAILURE);
             }
 
-            // Check if the path is in $SDRROOT/dev
+            // Check if the path is in $SCAROOT/dev
             if (!isParentPath(devRootPath, dcdPath)) {
-                // If it's not in $SDRROOT/dev, try to determine the effective
-                // SDRROOT by backtracking in the path to find a directory
+                // If it's not in $SCAROOT/dev, try to determine the effective
+                // SCAROOT by backtracking in the path to find a directory
                 // named "dev"
                 devRootPath = findParentDir(dcdPath, DEV_FOLDER);
                 if (devRootPath.empty()) {
-                    std::cerr << "[nodeBooter] ERROR: can't determine device SDRROOT" << std::endl;
+                    std::cerr << "[nodeBooter] ERROR: can't determine device SCAROOT" << std::endl;
                     exit(EXIT_FAILURE);
                 }
                 sdrRootPath = devRootPath.parent_path();
             }
 
-            // Normalize the DCD path to be relative to $SDRROOT/dev
+            // Normalize the DCD path to be relative to $SCAROOT/dev
             dcdFile = relativePath(devRootPath, dcdPath).string();
         }
     }
 
     // Verify the path exists
     if (!fs::is_directory(sdrRootPath)) {
-        std::cerr << "Invalid SDRROOT" << std::endl;
+        std::cerr << "Invalid SCAROOT" << std::endl;
         exit(EXIT_FAILURE);
     }
 

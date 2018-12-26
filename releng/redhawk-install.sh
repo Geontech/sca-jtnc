@@ -27,18 +27,18 @@ frontend=frontendInterfaces
 gpp=GPP
 
 set -e
-if [ "$OSSIEHOME" == "" ]; then
-    echo "ERROR:  OSSIEHOME has not been defined."
+if [ "$SCAHOME" == "" ]; then
+    echo "ERROR:  SCAHOME has not been defined."
     exit 2
 fi
 
-if [ "$SDRROOT" == "" ]; then
-    echo "ERROR:  SDRROOT has not been defined."
+if [ "$SCAROOT" == "" ]; then
+    echo "ERROR:  SCAROOT has not been defined."
     exit 2
 fi
 
-echo "Install location (OSSIEHOME) is currently set to $OSSIEHOME"
-echo "SDR location (SDRROOT) is currently set to $SDRROOT"
+echo "Install location (SCAHOME) is currently set to $SCAHOME"
+echo "SDR location (SCAROOT) is currently set to $SCAROOT"
 echo -n "Continue [Y]/N ? "
 read CONFIRM
 if [[ "$CONFIRM" = [nN] ]]; then
@@ -56,34 +56,34 @@ make install
 popd
 
 # Create a environment setup script
-cat > $OSSIEHOME/environment-setup << EOF
-export OSSIEHOME=${OSSIEHOME}
-export SDRROOT=${SDRROOT}
-export PATH=\${OSSIEHOME}/bin:\${PATH}
-export LD_LIBRARY_PATH=\${OSSIEHOME}/lib64:\${OSSIEHOME}/lib:\${LD_LIBRARY_PATH}
-export PYTHONPATH=\${OSSIEHOME}/lib64/python:\${OSSIEHOME}/lib/python:\${PYTHONPATH}
+cat > $SCAHOME/environment-setup << EOF
+export SCAHOME=${SCAHOME}
+export SCAROOT=${SCAROOT}
+export PATH=\${SCAHOME}/bin:\${PATH}
+export LD_LIBRARY_PATH=\${SCAHOME}/lib64:\${SCAHOME}/lib:\${LD_LIBRARY_PATH}
+export PYTHONPATH=\${SCAHOME}/lib64/python:\${SCAHOME}/lib/python:\${PYTHONPATH}
 EOF
 
-cat > $OSSIEHOME/environment-setup.csh << EOF
-setenv OSSIEHOME ${OSSIEHOME}
-setenv SDRROOT ${SDRROOT}
-setenv PATH \${OSSIEHOME}/bin:\${PATH}
+cat > $SCAHOME/environment-setup.csh << EOF
+setenv SCAHOME ${SCAHOME}
+setenv SCAROOT ${SCAROOT}
+setenv PATH \${SCAHOME}/bin:\${PATH}
 if (! \$?LD_LIBRARY_PATH) then
     setenv LD_LIBRARY_PATH
 endif
-setenv LD_LIBRARY_PATH \${OSSIEHOME}/lib64:\${OSSIEHOME}/lib:\${LD_LIBRARY_PATH}
+setenv LD_LIBRARY_PATH \${SCAHOME}/lib64:\${SCAHOME}/lib:\${LD_LIBRARY_PATH}
 if (! \$?PYTHONPATH) then
     setenv PYTHONPATH
 endif
-setenv PYTHONPATH \${OSSIEHOME}/lib64/python:\${OSSIEHOME}/lib/python:\${PYTHONPATH}
+setenv PYTHONPATH \${SCAHOME}/lib64/python:\${SCAHOME}/lib/python:\${PYTHONPATH}
 EOF
 
 # Setup the environment for compilation steps below that need it
-. $OSSIEHOME/environment-setup
+. $SCAHOME/environment-setup
 
 pushd $codegen
 python setup.py build
-python setup.py install --home=${OSSIEHOME} --old-and-unmanageable
+python setup.py install --home=${SCAHOME} --old-and-unmanageable
 popd
 
 pushd $bulkio
@@ -121,8 +121,8 @@ popd
 echo
 echo "REDHAWK is now installed."
 echo "Prior to running REDHAWK, you must setup your environment"
-echo "  In bash: . \$OSSIEHOME/environment-setup"
-echo "  In tcsh: source \$OSSIEHOME/environment-setup"
+echo "  In bash: . \$SCAHOME/environment-setup"
+echo "  In tcsh: source \$SCAHOME/environment-setup"
 echo
 echo "Would you like to setup a domain?"
 echo -n "Continue [Y]/N ? "
@@ -131,16 +131,16 @@ if [[ "$CONFIRM" = [nN] ]]; then
     exit 0
 fi
 
-cd $SDRROOT/dom/domain
+cd $SCAROOT/dom/domain
 cp DomainManager.dmd.xml.template DomainManager.dmd.xml
 sed -i s/@UUID@/`uuidgen`/g DomainManager.dmd.xml
 sed -i s/@NAME@/REDHAWK_${USER}/g DomainManager.dmd.xml
 sed -i "s/@DESCRIPTION@/A REDHAWK Domain for ${USER}/g" DomainManager.dmd.xml
 
-. $OSSIEHOME/environment-setup
-$SDRROOT/dev/devices/GPP/cpp/gpp_setup -v  \
+. $SCAHOME/environment-setup
+$SCAROOT/dev/devices/GPP/cpp/gpp_setup -v  \
     --nodecfg \
-    --sdrroot=$SDRROOT \
+    --sdrroot=$SCAROOT \
     --gpppath=/devices/GPP \
     --domainname=REDHAWK_${USER} \
     --inplace \

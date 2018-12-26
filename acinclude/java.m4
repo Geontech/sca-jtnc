@@ -203,20 +203,20 @@ AC_DEFUN([RH_JARFILE_RULES],
 
   dnl Set a variable to point to the makefile fragment, which can then be used
   dnl in place of the actual path
-  AC_SUBST([rh_jarfile_rules], 'include $(OSSIE_HOME)/share/aminclude/redhawk/jarfile.am')
+  AC_SUBST([rh_jarfile_rules], 'include $(SCA_HOME)/share/aminclude/redhawk/jarfile.am')
 ])
 
 dnl _RH_PROG_IDLJNI (for internal use only)
 AC_DEFUN([_RH_PROG_IDLJNI],
 [
-  AC_SUBST([IDLJNI], '$(IDL) -p $(OSSIE_HOME)/lib/python -b ossie.omnijni.idljava')
+  AC_SUBST([IDLJNI], '$(IDL) -p $(SCA_HOME)/lib/python -b ossie.omnijni.idljava')
   _RH_SILENT_COMMAND([IDLJNI], '@echo "  IDLJNI" $<;')
 ])
 
 dnl _RH_PROG_IDLJNICXX (for internal use only)
 AC_DEFUN([_RH_PROG_IDLJNICXX],
 [
-  AC_SUBST([IDLJNICXX], '$(IDL) -p $(OSSIE_HOME)/lib/python -b ossie.omnijni.idljni')
+  AC_SUBST([IDLJNICXX], '$(IDL) -p $(SCA_HOME)/lib/python -b ossie.omnijni.idljni')
 ])
 
 dnl RH_IDLJ_RULES
@@ -230,5 +230,5 @@ AC_DEFUN([RH_IDLJ_RULES],
 
   dnl Set a variable to point to the makefile fragment, which can then be used
   dnl in place of the actual path
-  AC_SUBST([rh_idlj_rules], 'include $(OSSIE_HOME)/share/aminclude/redhawk/idlj.am')
+  AC_SUBST([rh_idlj_rules], 'include $(SCA_HOME)/share/aminclude/redhawk/idlj.am')
 ])

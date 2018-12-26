@@ -369,7 +369,7 @@ class BrowseWindow(BrowseWindowBase):
             QMessageBox.critical(self, 'Creation of waveform failed', str(sys.exc_info()[1]), QMessageBox.Ok)
             return
         if app_inst == None:
-            QMessageBox.critical(self, 'Creation of waveform failed.', 'Unable to create Application instance for $SDRROOT'+app, QMessageBox.Ok)
+            QMessageBox.critical(self, 'Creation of waveform failed.', 'Unable to create Application instance for $SCAROOT'+app, QMessageBox.Ok)
 
         self._requests.put('clearappsItem')
         self._requests.put('parseApplications')
@@ -384,7 +384,7 @@ class BrowseWindow(BrowseWindowBase):
             QMessageBox.critical(self, 'Creation of waveform failed.', e.msg, QMessageBox.Ok)
             return
         if app_inst == None:
-            QMessageBox.critical(self, 'Creation of waveform failed.', 'Unable to create Application instance for $SDRROOT'+app, QMessageBox.Ok)
+            QMessageBox.critical(self, 'Creation of waveform failed.', 'Unable to create Application instance for $SCAROOT'+app, QMessageBox.Ok)
 
         self._requests.put('clearappsItem')
         self._requests.put('parseApplications')

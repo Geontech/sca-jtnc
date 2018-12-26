@@ -18,10 +18,10 @@
 # along with this program.  If not, see http://www.gnu.org/licenses/.
 #
 
-bindir = $(SDR_ROOT)/dom/mgr/rh/ComponentHost
+bindir = $(SCA_ROOT)/dom/mgr/rh/ComponentHost
 bin_PROGRAMS = ComponentHost
 
-xmldir = $(SDR_ROOT)/dom/mgr/rh/ComponentHost
+xmldir = $(SCA_ROOT)/dom/mgr/rh/ComponentHost
 dist_xml_DATA = ComponentHost.scd.xml ComponentHost.prf.xml ComponentHost.spd.xml
 
 ComponentHost_SOURCES = ComponentHost.cpp ModuleLoader.cpp main.cpp

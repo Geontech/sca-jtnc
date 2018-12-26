@@ -266,7 +266,7 @@ if __name__ == '__main__':
     endPointsChecked = False
 
     parser = OptionParser(usage=USAGE)
-    parser.add_option("--disk", action="store_true", dest="disk", help="Check $SDRROOT, $OSSIEHOME, and system configuration for minimum read/write access")
+    parser.add_option("--disk", action="store_true", dest="disk", help="Check $SCAROOT, $SCAHOME, and system configuration for minimum read/write access")
     parser.add_option("--ns", action="store_true", dest="namingService", help="Whether or not omniNames is expected to be running on this host")
     parser.add_option("--dom", action="store_true", dest="domain", help="Whether or not the Domain Manager is expected to be running on this host")
     parser.add_option("--dev", action="store_true", dest="device", help="Whether or not the Device Manager is expected to be running on this host")
@@ -290,24 +290,24 @@ if __name__ == '__main__':
         print "hostname running this script: " + hostname
         print "=========================================================================="
 
-    # Make sure OSSIEHOME, SDRROOT, and /etc/omniORB.cfg are readable
-    ossiehome_set = False
-    if os.environ.has_key('OSSIEHOME'):
-        ossiehome_set = True
-        if not is_readable(os.environ['OSSIEHOME']):
-            print "WARNING: $OSSIEHOME is not readable by this user."
+    # Make sure SCAHOME, SCAROOT, and /etc/omniORB.cfg are readable
+    SCAHOME_set = False
+    if os.environ.has_key('SCAHOME'):
+        SCAHOME_set = True
+        if not is_readable(os.environ['SCAHOME']):
+            print "WARNING: $SCAHOME is not readable by this user."
             print "=========================================================================="
     else:
-        print "ERROR: $OSSIEHOME is not set"
+        print "ERROR: $SCAHOME is not set"
         print "=========================================================================="
     sdrroot_set = False
-    if os.environ.has_key('SDRROOT'):
+    if os.environ.has_key('SCAROOT'):
         sdrroot_set = True
-        if not is_readable(os.environ['SDRROOT']):
-            print "WARNING: $SDRROOT is not readable by this user."
+        if not is_readable(os.environ['SCAROOT']):
+            print "WARNING: $SCAROOT is not readable by this user."
             print "=========================================================================="
     else:
-        print "ERROR: $SDRROOT is not set"
+        print "ERROR: $SCAROOT is not set"
         print "=========================================================================="
     if not is_readable('/etc/omniORB.cfg'):
         print "ERROR: /etc/omniORB.cfg is not readable by this user.  This will cause nameclt to fail."
@@ -327,44 +327,44 @@ if __name__ == '__main__':
 
     # If this script is running on the omniNames host, run the following diagnostics:
     errorFound = False
-    if options.disk and ossiehome_set and sdrroot_set:
-        if not directoriesReadAccess(os.getenv('SDRROOT')):
+    if options.disk and SCAHOME_set and sdrroot_set:
+        if not directoriesReadAccess(os.getenv('SCAROOT')):
             errorFound = True
-            print "ERROR: One or more directories in SDRROOT are not readable by this user. This may lead to deployment errors."
-            print "SOLUTION: Set directory access permissions on SDRROOT to make it accessible to this user."
+            print "ERROR: One or more directories in SCAROOT are not readable by this user. This may lead to deployment errors."
+            print "SOLUTION: Set directory access permissions on SCAROOT to make it accessible to this user."
             print "=========================================================================="
-        if not directoriesWriteAccess(os.getenv('SDRROOT')):
+        if not directoriesWriteAccess(os.getenv('SCAROOT')):
             errorFound = True
-            print "WARNING: One or more directories in SDRROOT are not writable by this user. This may lead to component or device installation errors."
-            print "SOLUTION: Set directory access permissions on SDRROOT to make it writable to this user."
+            print "WARNING: One or more directories in SCAROOT are not writable by this user. This may lead to component or device installation errors."
+            print "SOLUTION: Set directory access permissions on SCAROOT to make it writable to this user."
             print "=========================================================================="
-        if not directoriesExecuteAccess(os.getenv('SDRROOT')):
+        if not directoriesExecuteAccess(os.getenv('SCAROOT')):
             errorFound = True
-            print "ERROR: One or more directories in SDRROOT are not executable by this user. This may lead to deployment errors."
-            print "SOLUTION: Set directory access permissions on SDRROOT to make it accessible to this user."
+            print "ERROR: One or more directories in SCAROOT are not executable by this user. This may lead to deployment errors."
+            print "SOLUTION: Set directory access permissions on SCAROOT to make it accessible to this user."
             print "=========================================================================="
-        if not is_writable(os.getenv('SDRROOT')+'/dev'):
+        if not is_writable(os.getenv('SCAROOT')+'/dev'):
             errorFound = True
-            print "ERROR: SDRROOT/dev is not writable by this user. This will lead to deployment errors."
-            print "SOLUTION: Set directory write permissions on SDRROOT/dev to make it writable to this user."
+            print "ERROR: SCAROOT/dev is not writable by this user. This will lead to deployment errors."
+            print "SOLUTION: Set directory write permissions on SCAROOT/dev to make it writable to this user."
             print "=========================================================================="
-        if not directoriesReadAccess(os.getenv('OSSIEHOME')):
+        if not directoriesReadAccess(os.getenv('SCAHOME')):
             errorFound = True
-            print "ERROR: One or more directories in SDRROOT are not readable by this user. This may lead to deployment errors."
-            print "SOLUTION: Set directory access permissions on SDRROOT to make it accessible to this user."
+            print "ERROR: One or more directories in SCAROOT are not readable by this user. This may lead to deployment errors."
+            print "SOLUTION: Set directory access permissions on SCAROOT to make it accessible to this user."
             print "=========================================================================="
-        if not directoriesWriteAccess(os.getenv('OSSIEHOME')):
+        if not directoriesWriteAccess(os.getenv('SCAHOME')):
             errorFound = True
-            print "WARNING: One or more directories in OSSIEHOME are not writable by this user. This may lead to IDL project installation errors."
-            print "SOLUTION: Set directory access permissions on OSSIEHOME to make it writable to this user."
+            print "WARNING: One or more directories in SCAHOME are not writable by this user. This may lead to IDL project installation errors."
+            print "SOLUTION: Set directory access permissions on SCAHOME to make it writable to this user."
             print "=========================================================================="
-        if not directoriesExecuteAccess(os.getenv('OSSIEHOME')):
+        if not directoriesExecuteAccess(os.getenv('SCAHOME')):
             errorFound = True
-            print "ERROR: One or more directories in SDRROOT are not executable by this user. This may lead to deployment errors."
-            print "SOLUTION: Set directory access permissions on SDRROOT to make it accessible to this user."
+            print "ERROR: One or more directories in SCAROOT are not executable by this user. This may lead to deployment errors."
+            print "SOLUTION: Set directory access permissions on SCAROOT to make it accessible to this user."
             print "=========================================================================="
         if not errorFound:
-            print "No errors detected with $SDRROOT, $OSSIEHOME, or system configuration permissions"
+            print "No errors detected with $SCAROOT, $SCAHOME, or system configuration permissions"
             print "=========================================================================="
 
     errorFound = False
@@ -415,10 +415,10 @@ if __name__ == '__main__':
                    expectedNameServiceHost != "127.0.0.1" and \
                    expectedNameServiceHost != hostname:
                     print "ERROR(Naming Service): InitRef in /etc/omniORB.cfg is looking for host " + expectedNameServiceHost + " which is not equal to \"localhost\", \"127.0.0.1\", or " + hostname
-                    print "SOLUTION: Modify the host used in the InitRef for the Naming Service in /etc/omniORB.cfg and then restart omniNames and omniEvents.  If omniNames and omniEvents are running on the same host,this can be done with the command \"sudo $OSSIEHOME/bin/cleanomni\""
+                    print "SOLUTION: Modify the host used in the InitRef for the Naming Service in /etc/omniORB.cfg and then restart omniNames and omniEvents.  If omniNames and omniEvents are running on the same host,this can be done with the command \"sudo $SCAHOME/bin/cleanomni\""
                     print "=========================================================================="
                 # Stop omniNames and omniEvents, clean out logs for both, and restart them
-                print "POSSIBLE SOLUTION: If there are no other obvious problems, stop omniNames and omniEvents, clean out their logs, and restart them.  If omniNames and omniEvents are running on the same host, this can be done with the command \"sudo $OSSIEHOME/bin/cleanomni\""
+                print "POSSIBLE SOLUTION: If there are no other obvious problems, stop omniNames and omniEvents, clean out their logs, and restart them.  If omniNames and omniEvents are running on the same host, this can be done with the command \"sudo $SCAHOME/bin/cleanomni\""
                 print "=========================================================================="
             errorFound = True
         # 4. Check to see if endPoints are defined properly 

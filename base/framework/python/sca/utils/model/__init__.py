@@ -53,8 +53,8 @@ _DEBUG = False
 _trackLaunchedApps = False
 
 _idllib = idllib.IDLLibrary()
-if 'OSSIEHOME' in _os.environ:
-    _idllib.addSearchPath(_os.path.join(_os.environ['OSSIEHOME'], 'share/idl'))
+if 'SCAHOME' in _os.environ:
+    _idllib.addSearchPath(_os.path.join(_os.environ['SCAHOME'], 'share/idl'))
 
 __MIDAS_TYPE_MAP = {'char'  : ('/SB/8t'),
                     'octet' : ('/SO/8o'),
@@ -1528,7 +1528,7 @@ class ComponentBase(QueryableBase):
                     except ImportError, msg:
                         pass
                 if not success:
-                    std_idl_path = _os.path.join(_os.environ['OSSIEHOME'], 'lib/python')
+                    std_idl_path = _os.path.join(_os.environ['SCAHOME'], 'lib/python')
                     for dirpath, dirs, files in _os.walk(std_idl_path):
                         if len(dirs) == 0:
                             continue

@@ -16,8 +16,8 @@
 #   <http://randspringer.de/boost/index.html>.
 #
 #   If no path is given the macro has also been augmented to check for the
-#   EPEL 5 version of boost. If OSSIE_OSSIEHOME has been called, then
-#   $OSSIEHOME is checked for a copy of Boost before any of the other paths.
+#   EPEL 5 version of boost. If OSSIE_SCAHOME has been called, then
+#   $SCAHOME is checked for a copy of Boost before any of the other paths.
 #
 #   This macro calls:
 #
@@ -163,7 +163,7 @@ if test "x$want_boost" = "xyes"; then
         done
         try_compile_boost
     elif test "$cross_compiling" != yes; then
-        dnl check OSSIEHOME (if available), then standard paths
+        dnl check SCAHOME (if available), then standard paths
         for ac_boost_path_tmp in $ossie_cv_ossie_home /usr /usr/local /opt /opt/local; do
             if test -d "$ac_boost_path_tmp/include/boost" && test -r "$ac_boost_path_tmp/include/boost"; then
                 for libsubdir in $libsubdirs ; do

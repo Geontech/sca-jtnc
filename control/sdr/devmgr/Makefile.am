@@ -18,7 +18,7 @@
 # along with this program.  If not, see http://www.gnu.org/licenses/.
 #
 
-devmgrdir = $(SDR_ROOT)/dev/mgr
+devmgrdir = $(SCA_ROOT)/dev/mgr
 dist_devmgr_DATA = DeviceManager.spd.xml DeviceManager.scd.xml DeviceManager.prf.xml DeviceManager.Linux.x86.prf.xml DeviceManager.Linux.x86_64.prf.xml DeviceManager.Linux.armv7l.prf.xml
 devmgr_PROGRAMS = DeviceManager
 

@@ -18,19 +18,19 @@ dnl You should have received a copy of the GNU Lesser General Public License
 dnl along with this program.  If not, see http://www.gnu.org/licenses/.
 dnl
 
-dnl Let the user specify OSSIEHOME.  The priority is
+dnl Let the user specify SCAHOME.  The priority is
 dnl 1. the --with-ossie argument
-dnl 2. the OSSIEHOME environment variable
+dnl 2. the SCAHOME environment variable
 dnl 3. the --prefix argument
-AC_DEFUN([OSSIE_OSSIEHOME],
+AC_DEFUN([OSSIE_SCAHOME],
 [
   AC_CACHE_CHECK([for ossie home], ossie_cv_ossie_home,
   [
     AC_ARG_WITH(ossie,
-      AC_HELP_STRING([--with-ossie], [ossie root directory (default from environment variable 'OSSIEHOME', otherwise from prefix)]),
+      AC_HELP_STRING([--with-ossie], [ossie root directory (default from environment variable 'SCAHOME', otherwise from prefix)]),
       ossie_cv_ossie_home=$withval,
-      if test "x${OSSIEHOME}" != "x"; then
-        ossie_cv_ossie_home=${OSSIEHOME}
+      if test "x${SCAHOME}" != "x"; then
+        ossie_cv_ossie_home=${SCAHOME}
       elif test "x${prefix}" != "xNONE"; then
         ossie_cv_ossie_home=${prefix}
       else
@@ -44,13 +44,13 @@ AC_DEFUN([OSSIE_OSSIEHOME],
       ossie_cv_ossie_home=${CROSS_SYSROOT}${ossie_cv_ossie_home}
     ])
   ])
-  AC_SUBST(OSSIE_HOME, $ossie_cv_ossie_home)
+  AC_SUBST(SCA_HOME, $ossie_cv_ossie_home)
 ])
 
 dnl Check that OSSIE is installed so we can compile against it
 AC_DEFUN([OSSIE_CHECK_OSSIE],
 [
-AC_REQUIRE([OSSIE_OSSIEHOME])
+AC_REQUIRE([OSSIE_SCAHOME])
 AC_MSG_CHECKING([to see ossie is installed])
 if test -e $ossie_cv_ossie_home/lib64; then
   PKG_CONFIG_PATH="${ossie_cv_ossie_home}/lib${gr_libdir_suffix}/pkgconfig:${ossie_cv_ossie_home}/lib64${gr_libdir_suffix}/pkgconfig:${PKG_CONFIG_PATH}"
@@ -60,12 +60,12 @@ fi
 export PKG_CONFIG_PATH
 ])
 
-dnl use OSSIEHOME as the default prefix unless --prefix is provided
-AC_DEFUN([OSSIE_OSSIEHOME_AS_PREFIX],
+dnl use SCAHOME as the default prefix unless --prefix is provided
+AC_DEFUN([OSSIE_SCAHOME_AS_PREFIX],
 [
   AS_IF([test "x${prefix}" = "xNONE"], [
     dnl Prefix wasn't provided, we need to use ossie home
-    AC_REQUIRE([OSSIE_OSSIEHOME])
+    AC_REQUIRE([OSSIE_SCAHOME])
     AS_IF([test "x${ossie_cv_ossie_home}" = "xNONE"], [
       AC_MSG_ERROR([ossie root directory is not set; this is not expected])
     ])
@@ -76,36 +76,36 @@ AC_DEFUN([OSSIE_OSSIEHOME_AS_PREFIX],
   ])
 ])
 
-dnl A variant on OSSIE_SDRROOT for use *only* when OSSIE_OSSIEHOME_AS_PREFIX is being used. Priorities:
+dnl A variant on OSSIE_SCAROOT for use *only* when OSSIE_SCAHOME_AS_PREFIX is being used. Priorities:
 dnl 1. the --with-sdr argument
-dnl 2. the SDRROOT environment variable
-dnl 3. the default SDRROOT directory (/var/redhawk/sdr)
-AC_DEFUN([OSSIE_SDRROOT_IGNORE_PREFIX],
+dnl 2. the SCAROOT environment variable
+dnl 3. the default SCAROOT directory (/var/redhawk/sdr)
+AC_DEFUN([OSSIE_SCAROOT_IGNORE_PREFIX],
 [
   AC_CACHE_CHECK([for sdr root], ossie_cv_sdr_root,
   [
     AC_ARG_WITH(sdr,
-      AC_HELP_STRING([--with-sdr], [sdr root directory (default from environment variable 'SDRROOT', otherwise /var/redhawk/sdr)]),
+      AC_HELP_STRING([--with-sdr], [sdr root directory (default from environment variable 'SCAROOT', otherwise /var/redhawk/sdr)]),
       ossie_cv_sdr_root=$withval,
-      AS_IF([test "x${SDRROOT}" != "x"], [ossie_cv_sdr_root=${SDRROOT}],
+      AS_IF([test "x${SCAROOT}" != "x"], [ossie_cv_sdr_root=${SCAROOT}],
             [ossie_cv_sdr_root=/var/redhawk/sdr]))
   ])
-  AC_SUBST(SDR_ROOT, $ossie_cv_sdr_root)
+  AC_SUBST(SCA_ROOT, $ossie_cv_sdr_root)
 ])
 
-dnl Let the user specify SDRROOT.  The priority is
+dnl Let the user specify SCAROOT.  The priority is
 dnl 1. the --with-sdr argument
-dnl 2. the SDRROOT environment variable
+dnl 2. the SCAROOT environment variable
 dnl 3. the --prefix argument
-AC_DEFUN([OSSIE_SDRROOT],
+AC_DEFUN([OSSIE_SCAROOT],
 [
   AC_CACHE_CHECK([for sdr root], ossie_cv_sdr_root,
   [
     AC_ARG_WITH(sdr,
-      AC_HELP_STRING([--with-sdr], [sdr root directory (default from environment variable 'SDRROOT', otherwise from prefix)]),
+      AC_HELP_STRING([--with-sdr], [sdr root directory (default from environment variable 'SCAROOT', otherwise from prefix)]),
       ossie_cv_sdr_root=$withval,
-      if test "x${SDRROOT}" != "x"; then
-        ossie_cv_sdr_root=${SDRROOT}
+      if test "x${SCAROOT}" != "x"; then
+        ossie_cv_sdr_root=${SCAROOT}
       elif test "x${prefix}" != "xNONE"; then
         ossie_cv_sdr_root=${prefix}
       else
@@ -113,16 +113,16 @@ AC_DEFUN([OSSIE_SDRROOT],
       fi
     )
   ])
-  AC_SUBST(SDR_ROOT, $ossie_cv_sdr_root)
+  AC_SUBST(SCA_ROOT, $ossie_cv_sdr_root)
 ])
 
-dnl use SDRROOT as the default prefix unless --prefix is provided
-AC_DEFUN([OSSIE_SDRROOT_AS_PREFIX],
+dnl use SCAROOT as the default prefix unless --prefix is provided
+AC_DEFUN([OSSIE_SCAROOT_AS_PREFIX],
 [
   AS_IF([test "x${prefix}" = "xNONE"],
   [
     dnl Prefix wasn't provided, we need to use sdr root
-    AC_REQUIRE([OSSIE_SDRROOT])
+    AC_REQUIRE([OSSIE_SCAROOT])
     AS_IF([test "x${ossie_cv_sdr_root}" = "xNONE"], [
       AC_MSG_ERROR([sdr root directory is not set; this is not expected])
     ])

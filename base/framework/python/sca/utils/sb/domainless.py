@@ -23,7 +23,7 @@ Python command line environment where Redhawk components can be launched, connec
 
 Component, Device and Service proxy classes are used to manage executable softpackages:
   - The launch() function will kick off the executable and return the appropriate object type.
-    - It can take an SPD XML file or a component name found in the defined SDRROOT.
+    - It can take an SPD XML file or a component name found in the defined SCAROOT.
   - SCD (XML) describes the interfaces for the instantiated component.
   - The destructor cleans up the launched component process.
   - releaseObject removes the object (and destroys the component instance)
@@ -60,7 +60,7 @@ Plotting (REDHAWK IDE-based)
 
 Examples of use:
 
-    # List available components in SDRROOT
+    # List available components in SCAROOT
     catalog()
 
     # Show current list of components running and component connections
@@ -124,7 +124,7 @@ warnings.filterwarnings('once',category=DeprecationWarning)
 
 # Limit exported symbols
 __all__ = ('show', 'loadSADFile', 'IDELocation', 'connectedIDE', 'getIDE_REF',
-           'start', 'getSDRROOT', 'setSDRROOT', 'Component', 'generateSADXML',
+           'start', 'getSCAROOT', 'setSCAROOT', 'Component', 'generateSADXML',
            'getDEBUG', 'setDEBUG', 'getComponent', 'IDE_REF', 'setIDE_REF',
            'stop', 'catalog', 'redirectSTDOUT', 'orb', 'reset', 'launch', 'api',
            'createEventChannel', 'getEventChannel', 'getService', 'browse',
@@ -196,8 +196,8 @@ def _getSandbox():
             log.trace('Creating IDE sandbox')
             _sandbox = IDESandbox(IDE_REF)
         else:
-            sdrRoot = os.environ.get('SDRROOT', None)
-            log.trace("Creating local sandbox with SDRROOT '%s'", sdrRoot)
+            sdrRoot = os.environ.get('SCAROOT', None)
+            log.trace("Creating local sandbox with SCAROOT '%s'", sdrRoot)
             if sdrRoot is None:
                 sdrRoot = os.getcwd()
             _sandbox = LocalSandbox(sdrRoot)
@@ -330,7 +330,7 @@ def show():
                                                        channel.consumer_count)
     print "\n"
 
-    print "SDRROOT:"
+    print "SCAROOT:"
     print "-------"
     print sandbox.getSdrRoot().getLocation()
     print "\n"
@@ -1055,25 +1055,25 @@ def loadSADFile(filename, props={}):
     return True
 
 
-def getSDRROOT():
+def getSCAROOT():
     '''
-    Get the current SDRROOT location in use by the sandbox.
+    Get the current SCAROOT location in use by the sandbox.
     '''
     return _getSandbox().getSdrRoot().getLocation()
 
-def setSDRROOT(newRoot):
+def setSCAROOT(newRoot):
     '''
-    Change the SDRROOT location where sandbox looks for components and devices
+    Change the SCAROOT location where sandbox looks for components and devices
     '''
     try:
         _getSandbox().setSdrRoot(newRoot)
     except RuntimeError, e:
         # Turn RuntimeErrors into AssertionErrors to match legacy expectation.
-        raise AssertionError, "Cannot set SDRROOT: '%s'" % e
+        raise AssertionError, "Cannot set SCAROOT: '%s'" % e
 
 def catalog(searchPath=None, printResults=False, returnSPDs=False, objType="components"):
     '''
-    Lists all available types in $SDRROOT
+    Lists all available types in $SCAROOT
     Arguments
      searchPath     - specify the directory to search
      printResults   - prints results on seperate lines
@@ -1238,7 +1238,7 @@ def launch(descriptor, instanceName=None, refid=None, impl=None,
 
     Arguments:
       descriptor   - An absolute path to an SPD file, or the name of a softpkg
-                     in SDRROOT.
+                     in SCAROOT.
       instanceName - Unique name of this softpackage instance. If not given,
                      one will be generated based on the SPD name.
       refid        - Unique ID of this softpackage instance. If not given, a

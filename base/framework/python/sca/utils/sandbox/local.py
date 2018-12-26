@@ -60,7 +60,7 @@ class LocalSdrRoot(SdrRoot):
             # Convert to an absolute path, to avoid any problems with relative
             # paths when passed to other contexts
             return os.path.abspath(filename)
-        # Assume the filename points to somewhere in SDRROOT
+        # Assume the filename points to somewhere in SCAROOT
         return os.path.join(self.__sdrroot, filename)
 
     def domPath(self, filename):
@@ -428,7 +428,7 @@ class LocalSandbox(Sandbox):
         self.__components = {}
         self.__services = {}
         if not sdrroot:
-            sdrroot = os.environ['SDRROOT']
+            sdrroot = os.environ['SCAROOT']
         self._sdrroot = LocalSdrRoot(sdrroot)
         self.__container = None
 
@@ -537,11 +537,11 @@ class LocalSandbox(Sandbox):
     def setSdrRoot(self, path):
         # Validate new root.
         if not os.path.isdir(path):
-            raise RuntimeError, 'invalid SDRROOT, directory does not exist'
+            raise RuntimeError, 'invalid SCAROOT, directory does not exist'
         if not os.path.isdir(os.path.join(path, 'dom')):
-            raise RuntimeError, 'invalid SDRROOT, dom directory does not exist'
+            raise RuntimeError, 'invalid SCAROOT, dom directory does not exist'
         if not os.path.isdir(os.path.join(path, 'dev')):
-            raise RuntimeError, 'invalid SDRROOT, dev directory does not exist'
+            raise RuntimeError, 'invalid SCAROOT, dev directory does not exist'
         self._sdrroot = LocalSdrRoot(path)
 
     def shutdown(self):
@@ -600,11 +600,11 @@ class LocalSandbox(Sandbox):
             path.rstrip("/")
             objType = path.split("/")[-1]
             if objType == "components":
-                pathPrefix = "$SDRROOT/dom/components"
+                pathPrefix = "$SCAROOT/dom/components"
             elif objType == "devices":
-                pathPrefix = "$SDRROOT/dev/devices"
+                pathPrefix = "$SCAROOT/dev/devices"
             elif objType == "services":
-                pathPrefix = "$SDRROOT/dev/services"
+                pathPrefix = "$SCAROOT/dev/services"
             else:
                 pathPrefix = path
 

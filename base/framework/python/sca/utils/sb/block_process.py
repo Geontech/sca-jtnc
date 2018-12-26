@@ -259,8 +259,8 @@ def proc(comp,source,sink=None,sourceFmt=None,sinkFmt=None,sampleRate=1.0,execpa
         # exiting timeout thread
         
     begin_time = _time.time()
-    sdrRoot = _os.environ.get('SDRROOT', None)
-    log.trace("Creating local sandbox with SDRROOT '%s'", sdrRoot)
+    sdrRoot = _os.environ.get('SCAROOT', None)
+    log.trace("Creating local sandbox with SCAROOT '%s'", sdrRoot)
     if sdrRoot is None:
         sdrRoot = _os.getcwd()
     _sandbox = _LocalSandbox(sdrRoot)
@@ -331,7 +331,7 @@ def proc(comp,source,sink=None,sourceFmt=None,sinkFmt=None,sampleRate=1.0,execpa
                 undo_all(undos)
                 if type(e).__name__ == "ValueError" and \
                    str(e) == "'rh.DataConverter' is not a valid softpkg name or SPD file":
-                    raise Exception("rh.DataConverter component is not installed in SDRROOT.")
+                    raise Exception("rh.DataConverter component is not installed in SCAROOT.")
                 else:
                     raise
             try:
@@ -379,7 +379,7 @@ def proc(comp,source,sink=None,sourceFmt=None,sinkFmt=None,sampleRate=1.0,execpa
             undo_all(undos)
             if type(e).__name__ == "ValueError" and \
                str(e) == "'rh.DataConverter' is not a valid softpkg name or SPD file":
-                raise Exception("rh.DataConverter component is not installed in SDRROOT.")
+                raise Exception("rh.DataConverter component is not installed in SCAROOT.")
             else:
                 raise
         try:

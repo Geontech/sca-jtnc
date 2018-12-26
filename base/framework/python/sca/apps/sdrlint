@@ -24,10 +24,10 @@
     is done.  
 """
 
-USAGE = """usage: %prog [options] [SDRROOT]
+USAGE = """usage: %prog [options] [SCAROOT]
 
-This program will check all SCA domain profile XML within a given SDRROOT.  If
-no SDRROOT is given, the environment variable $SDRROOT will be used.
+This program will check all SCA domain profile XML within a given SCAROOT.  If
+no SCAROOT is given, the environment variable $SCAROOT will be used.
 
 The following checks are performed:
     1. All XMLs are valid SCA XML (as defined by the SCA DTDs)
@@ -74,7 +74,7 @@ DocTypePubIdMap = {'softpkg': "-//JTRS//DTD SCA V2.2.2 SPD//EN",
 
 UUIDPAT = re.compile(r'\ADCE:([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})(:\d+)?\Z')
 
-SDRROOT = None
+SCAROOT = None
 SDR_FS_ROOT = None # Either 'dev' or 'dom'
 
 def check_msg(msg):
@@ -259,8 +259,8 @@ def localfileExists(fPath, referencedFiles):
                     return
 
                 if fName.startswith("/"):
-                    # the path is absolute to the SDRROOT
-                    fAbsPath = os.path.abspath(os.path.join(SDRROOT, SDR_FS_ROOT, fName[1:]))
+                    # the path is absolute to the SCAROOT
+                    fAbsPath = os.path.abspath(os.path.join(SCAROOT, SDR_FS_ROOT, fName[1:]))
                 else:
                     # the path is relative to fPath
                     fAbsPath = os.path.abspath(os.path.join(os.path.dirname(fPath), fName))
@@ -432,7 +432,7 @@ def checkFile(root, fPath, opts, referencedFiles, readonlyIds, localFileRefs=Tru
 
     if docType == None:
         return {fPath: 'ignored'}
-    dtdLocation = os.environ["OSSIEHOME"]+'/share/xml/sca/2.2.2/dtd/'
+    dtdLocation = os.environ["SCAHOME"]+'/share/xml/sca/2.2.2/dtd/'
     if 'SPD' in docType:
        dtdLocation += 'softpkg.dtd'
     if 'DPD' in docType:
@@ -476,7 +476,7 @@ def checkFile(root, fPath, opts, referencedFiles, readonlyIds, localFileRefs=Tru
     # Check that elements that are required to have UUIDS, do have UUIDS
     #checkUUIDs(fPath)
 
-    # Check that all localfile references exist in the SDRROOT
+    # Check that all localfile references exist in the SCAROOT
     if localFileRefs: 
         localfileExists(fPath, referencedFiles)
 
@@ -533,12 +533,12 @@ if __name__ == "__main__":
     opts, args = parser.parse_args()
     opts.modify = False
     try:
-        SDRROOT = args[0]
+        SCAROOT = args[0]
     except IndexError:
         try:
-	    SDRROOT = os.environ["SDRROOT"]
+	    SCAROOT = os.environ["SCAROOT"]
 	except KeyError:
-	    parser.error("SDRROOT not defined")
+	    parser.error("SCAROOT not defined")
 
     # Use the logging facility for internal messages
     # Output destinted for the user should use print, 
@@ -557,7 +557,7 @@ if __name__ == "__main__":
     checkedFiles = {}
     referencedFiles = {}
     flimit = 10000
-    readonlyIds = getReadonly(SDRROOT)
+    readonlyIds = getReadonly(SCAROOT)
     
     # disable localfile cross reference checking if checking specific profile
     if opts.profiles is None:
@@ -567,7 +567,7 @@ if __name__ == "__main__":
 
     for SDR_FS_ROOT in opts.profiles or ('dev', 'dom' ):
         if opts.profiles is None :
-            fGenerator = os.walk( os.path.join( SDRROOT, SDR_FS_ROOT ) )
+            fGenerator = os.walk( os.path.join( SCAROOT, SDR_FS_ROOT ) )
         else:
             fGenerator = os.walk( os.path.abspath( SDR_FS_ROOT ) )
         for root, dirs, files in fGenerator:

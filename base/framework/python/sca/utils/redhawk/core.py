@@ -94,7 +94,7 @@ class App:
        App overview:
        
        A waveform is defined by an XML file (<waveform name>.sad.xml) that resides in a waveform
-       directory, usually $SDRROOT/dom/waveforms. This XML file lists a series of
+       directory, usually $SCAROOT/dom/waveforms. This XML file lists a series of
        components, a variety of default values for each of these components, and a set of connections
        between different components' input and output ports. Input ports are referred to as 'Provides'
        and output ports are referred to as 'Uses'.
@@ -651,7 +651,7 @@ class App:
                 except ImportError, msg:
                     pass
                 if not success:
-                    std_idl_path = _os.path.join(_os.environ.get('OSSIEHOME', ''), 'lib/python')
+                    std_idl_path = _os.path.join(_os.environ.get('SCAHOME', ''), 'lib/python')
                     for dirpath, dirs, files in _os.walk(std_idl_path):
                         if len(dirs) == 0:
                             continue
@@ -1678,7 +1678,7 @@ class Domain:
             devMgrFileSys = deviceManager._get_fileSys()
             dcdFile = devMgrFileSys.open(dcdPath, True)
         except:
-            raise RuntimeError, "Unable to open $SDRROOT/dev"+dcdPath+". Unable to create proxy for Device Manager"
+            raise RuntimeError, "Unable to open $SCAROOT/dev"+dcdPath+". Unable to create proxy for Device Manager"
         dcdContents = dcdFile.read(dcdFile.sizeOf())
         dcdFile.close()
 

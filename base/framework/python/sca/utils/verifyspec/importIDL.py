@@ -399,13 +399,13 @@ def importStandardIdl(std_idl_path='/usr/local/share/idl/sca', std_idl_include_p
     if std_idl_path == '/usr/local/share/idl/sca' and std_idl_include_path == '/usr/local/share/idl':
 
         # find where sca is installed
-        if 'OSSIEHOME' in os.environ and os.path.exists(os.environ['OSSIEHOME']):
-            scahome_location = os.environ['OSSIEHOME']
+        if 'SCAHOME' in os.environ and os.path.exists(os.environ['SCAHOME']):
+            scahome_location = os.environ['SCAHOME']
             std_idl_path = os.path.join(scahome_location, 'share/idl')
             std_idl_include_path = os.path.join(scahome_location, 'share/idl')
             includePaths.append(std_idl_include_path)
 
-            #In a local installation, omniORB idls are placed in $OSSIEHOME/share/idl
+            #In a local installation, omniORB idls are placed in $SCAHOME/share/idl
             includePaths.append(os.path.join(scahome_location, 'share/idl/omniORB'))
             includePaths.append(os.path.join(scahome_location, 'share/idl/omniORB/COS'))
 

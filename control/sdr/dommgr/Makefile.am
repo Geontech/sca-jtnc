@@ -18,7 +18,7 @@
 # along with this program.  If not, see http://www.gnu.org/licenses/.
 #
 
-domainmgrdir = $(SDR_ROOT)/dom/mgr
+domainmgrdir = $(SCA_ROOT)/dom/mgr
 dist_domainmgr_DATA = DomainManager.spd.xml DomainManager.scd.xml DomainManager.prf.xml
 domainmgr_PROGRAMS = DomainManager
 

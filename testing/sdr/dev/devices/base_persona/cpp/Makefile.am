@@ -4,7 +4,7 @@ bindir = $(prefix)/dev/devices/base_persona/cpp/
 
 xmldir = $(prefix)/dev/devices/base_persona/
 dist_xml_DATA = ../base_persona.scd.xml ../base_persona.prf.xml ../base_persona.spd.xml
-ACLOCAL_AMFLAGS = -I m4 -I${OSSIEHOME}/share/aclocal/ossie
+ACLOCAL_AMFLAGS = -I m4 -I${SCAHOME}/share/aclocal/ossie
 AUTOMAKE_OPTIONS = subdir-objects
 
 distclean-local:

@@ -333,7 +333,7 @@ fi
 * Tue Jun 07 2011 - 1.7.0-0
 - Split sdrroot into -dev and dom
 - Attempt to fully capture Requires and BuildRequires
-- Stop packaging components into SDRROOT
+- Stop packaging components into SCAROOT
 
 * Tue Jan 11 2011 - 1.6.0-0
 - Initial spec file for redhawk and redhawk-sdrroot.

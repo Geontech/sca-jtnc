@@ -81,9 +81,9 @@ atexit.register(_cleanup_domain)
 
 def _getDCDFile(sdrroot, dcdFile):
     """
-    Try to find the DCD file, either as an absolute path or relative to SDRROOT
+    Try to find the DCD file, either as an absolute path or relative to SCAROOT
     """
-    # The DCD file may just be a directory name under $SDRROOT/dev/nodes
+    # The DCD file may just be a directory name under $SCAROOT/dev/nodes
     if not dcdFile.endswith('.dcd.xml'):
         # Path did not include a final DCD file
         node_path = _os.path.join(sdrroot, 'dev/nodes/') + dcdFile
@@ -109,9 +109,9 @@ def kickDomain(domain_name=None, kick_device_managers=True, device_managers=[], 
          domain_name: the name that should be used
          kick_device_managers: one or more Device Managers should be automatically started
          device_managers: if kick_device_managers set to True, list of Device Managers to start. If the list is empty, then start all Device Managers in
-                          $SDRROOT/dev/nodes.  List can be node names i.e. GPP_node or absolute path to DCD files
+                          $SCAROOT/dev/nodes.  List can be node names i.e. GPP_node or absolute path to DCD files
          detached: determine whether the life cycle of the started Domain and Device Managers should follow the lifecycle of the current Python session
-         sdrroot: use this sdr root. If set to None, then use $SDRROOT
+         sdrroot: use this sdr root. If set to None, then use $SCAROOT
          stdout: filename where stdout should be redirected. None sends stdout to /dev/null
          debug_level: debug level to pass on command line: FATAL, ERROR, WARN, INFO, DEBUG, TRACE
          device_managers_debug_levels = list of debug levels to pass on command line with corresponding device_managers
@@ -120,9 +120,9 @@ def kickDomain(domain_name=None, kick_device_managers=True, device_managers=[], 
         
     if sdrroot == None:
         try:
-            sdrroot = _os.getenv('SDRROOT')
+            sdrroot = _os.getenv('SCAROOT')
         except:
-            print "The environment variable SDRROOT must be set or an sdrroot value must be passed as an argument"
+            print "The environment variable SCAROOT must be set or an sdrroot value must be passed as an argument"
     
     args = ['nodeBooter']
     args.append('-D')

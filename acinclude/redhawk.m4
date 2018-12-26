@@ -51,9 +51,9 @@ AC_DEFUN([RH_SOFTPKG_PREFIX],
 [
   AS_IF([test "x${prefix}" = "xNONE"],
   [
-    AC_REQUIRE([OSSIE_SDRROOT])
+    AC_REQUIRE([OSSIE_SCAROOT])
     AS_IF([test "x${ossie_cv_ossie_home}" = "xNONE"], [
-      AC_MSG_ERROR([SDRROOT is not set; this is not expected])
+      AC_MSG_ERROR([SCAROOT is not set; this is not expected])
     ])
     AC_MSG_CHECKING([for softpkg prefix])
     rh_softpkg_path=`echo $1 | tr "." "/"`
@@ -94,9 +94,9 @@ AC_DEFUN([RH_SOFTPKG_CXX],
   AS_IF([test "x${ossie_cv_sdr_root}" = "x"], [
     export_sdrroot=true
   ])
-  AC_REQUIRE([OSSIE_SDRROOT_IGNORE_PREFIX])
+  AC_REQUIRE([OSSIE_SCAROOT_IGNORE_PREFIX])
   AS_IF([test "${export_sdrroot} != false"], [
-    export SDRROOT=${ossie_cv_sdr_root}
+    export SCAROOT=${ossie_cv_sdr_root}
   ])
 
   # Test for the existence of the SPD first
@@ -164,9 +164,9 @@ AC_DEFUN([RH_SOFTPKG_JAVA],
   AS_IF([test "x${ossie_cv_sdr_root}" = "x"], [
     export_sdrroot=true
   ])
-  AC_REQUIRE([OSSIE_SDRROOT_IGNORE_PREFIX])
+  AC_REQUIRE([OSSIE_SCAROOT_IGNORE_PREFIX])
   AS_IF([test "${export_sdrroot} != false"], [
-    export SDRROOT=${ossie_cv_sdr_root}
+    export SCAROOT=${ossie_cv_sdr_root}
   ])
   rh_softpkg_spd="$1"
   rh_softpkg_name=`redhawk-softpkg --name $rh_softpkg_spd`

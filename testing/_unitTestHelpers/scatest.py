@@ -52,7 +52,7 @@ def uuidgen():
 
 def getSdrPath():
     try:
-        return os.path.abspath(os.environ['SDRROOT'])
+        return os.path.abspath(os.environ['SCAROOT'])
     except KeyError:
         return os.path.abspath(os.path.join(os.path.dirname(__file__), "../sdr"))
 

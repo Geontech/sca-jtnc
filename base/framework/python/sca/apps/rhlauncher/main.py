@@ -25,9 +25,9 @@ from PyQt4 import QtGui
 from launcherwindow import LauncherWindow
 
 def main():
-    sdrroot = os.environ.get('SDRROOT', None)
+    sdrroot = os.environ.get('SCAROOT', None)
     if not sdrroot:
-        raise SystemExit('SDRROOT must be set')
+        raise SystemExit('SCAROOT must be set')
 
     app = QtGui.QApplication(sys.argv)
     mainwindow = LauncherWindow(sdrroot)

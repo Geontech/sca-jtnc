@@ -30,8 +30,8 @@ fi
 libtoolize --force --automake
 
 # Search in expected locations for the OSSIE acincludes
-if [ -n ${OSSIEHOME} ] && [ -d ${OSSIEHOME}/share/aclocal/ossie ]; then
-        OSSIE_AC_INCLUDE=${OSSIEHOME}/share/aclocal/ossie
+if [ -n ${SCAHOME} ] && [ -d ${SCAHOME}/share/aclocal/ossie ]; then
+        OSSIE_AC_INCLUDE=${SCAHOME}/share/aclocal/ossie
 else
     echo "Error: Cannot find the OSSIE aclocal files. This is not expected!"
 fi

@@ -32,7 +32,7 @@ if 'OSSIEUNITTESTSLOGCONFIG' not in os.environ:
 sys.path.append(testdir)
 
 # Set up the system paths (LD_LIBRARY_PATH, PYTHONPATH, CLASSPATH), IDL paths
-# and SDRROOT to allow testing against an uninstalled framework.
+# and SCAROOT to allow testing against an uninstalled framework.
 import runtests
 runtests.configureTestPaths()
 
