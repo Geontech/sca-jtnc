@@ -2,14 +2,14 @@ dnl
 dnl This file is protected by Copyright. Please refer to the COPYRIGHT file 
 dnl distributed with this source distribution.
 dnl 
-dnl This file is part of REDHAWK core.
+dnl This file is part of SCA-JTNC core.
 dnl 
-dnl REDHAWK core is free software: you can redistribute it and/or modify it under 
+dnl SCA-JTNC core is free software: you can redistribute it and/or modify it under 
 dnl the terms of the GNU Lesser General Public License as published by the Free 
 dnl Software Foundation, either version 3 of the License, or (at your option) any 
 dnl later version.
 dnl 
-dnl REDHAWK core is distributed in the hope that it will be useful, but WITHOUT 
+dnl SCA-JTNC core is distributed in the hope that it will be useful, but WITHOUT 
 dnl ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS 
 dnl FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
 dnl details.
