@@ -31,32 +31,32 @@
 ******************************************************************************************/
 
 ProgrammableDevice_base::ProgrammableDevice_base(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl) :
-    ExecutableDevice_impl(devMgr_ior, id, lbl, sftwrPrfl),
-    AggregateDevice_impl(),
+    AggregateExecutableDeviceComponent(devMgr_ior, id, lbl, sftwrPrfl),
+    //AggregateDevice_impl(),
     serviceThread(0)
 {
     construct();
 }
 
 ProgrammableDevice_base::ProgrammableDevice_base(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl, char *compDev) :
-    ExecutableDevice_impl(devMgr_ior, id, lbl, sftwrPrfl, compDev),
-    AggregateDevice_impl(),
+    AggregateExecutableDeviceComponent(devMgr_ior, id, lbl, sftwrPrfl, compDev),
+    //AggregateDevice_impl(),
     serviceThread(0)
 {
     construct();
 }
 
 ProgrammableDevice_base::ProgrammableDevice_base(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl, CF::Properties capacities) :
-    ExecutableDevice_impl(devMgr_ior, id, lbl, sftwrPrfl, capacities),
-    AggregateDevice_impl(),
+    AggregateExecutableDeviceComponent(devMgr_ior, id, lbl, sftwrPrfl, capacities),
+    //AggregateDevice_impl(),
     serviceThread(0)
 {
     construct();
 }
 
 ProgrammableDevice_base::ProgrammableDevice_base(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl, CF::Properties capacities, char *compDev) :
-    ExecutableDevice_impl(devMgr_ior, id, lbl, sftwrPrfl, capacities, compDev),
-    AggregateDevice_impl(),
+    AggregateExecutableDeviceComponent(devMgr_ior, id, lbl, sftwrPrfl, capacities, compDev),
+    //AggregateDevice_impl(),
     serviceThread(0)
 {
     construct();
@@ -64,7 +64,7 @@ ProgrammableDevice_base::ProgrammableDevice_base(char *devMgr_ior, char *id, cha
 
 void ProgrammableDevice_base::construct()
 {
-    Resource_impl::_started = false;
+    DeviceComponent::_started = false;
     loadProperties();
     serviceThread = 0;
     
@@ -79,7 +79,7 @@ void ProgrammableDevice_base::initialize() throw (CF::LifeCycle::InitializeError
 {
 }
 
-void ProgrammableDevice_base::start() throw (CORBA::SystemException, CF::Resource::StartError)
+void ProgrammableDevice_base::start() throw (CORBA::SystemException, CF::ControllableInterface::StartError)
 {
     boost::mutex::scoped_lock lock(serviceThreadLock);
     if (serviceThread == 0) {
@@ -87,24 +87,24 @@ void ProgrammableDevice_base::start() throw (CORBA::SystemException, CF::Resourc
         serviceThread->start();
     }
     
-    if (!Resource_impl::started()) {
-    	Resource_impl::start();
+    if (!DeviceComponent::started()) {
+    	DeviceComponent::start();
     }
 }
 
-void ProgrammableDevice_base::stop() throw (CORBA::SystemException, CF::Resource::StopError)
+void ProgrammableDevice_base::stop() throw (CORBA::SystemException, CF::ControllableInterface::StopError)
 {
     boost::mutex::scoped_lock lock(serviceThreadLock);
     // release the child thread (if it exists)
     if (serviceThread != 0) {
         if (!serviceThread->release(2)) {
-            throw CF::Resource::StopError(CF::CF_NOTSET, "Processing thread did not die");
+            throw CF::ControllableInterface::StopError(CF::CF_NOTSET, "Processing thread did not die");
         }
         serviceThread = 0;
     }
     
-    if (Resource_impl::started()) {
-    	Resource_impl::stop();
+    if (DeviceComponent::started()) {
+    	DeviceComponent::stop();
     }
 }
 
@@ -113,16 +113,16 @@ void ProgrammableDevice_base::releaseObject() throw (CORBA::SystemException, CF:
     // This function clears the device running condition so main shuts down everything
     try {
         stop();
-    } catch (CF::Resource::StopError& ex) {
+    } catch (CF::ControllableInterface::StopError& ex) {
         // TODO - this should probably be logged instead of ignored
     }
 
     // deactivate ports
-    releaseInPorts();
-    releaseOutPorts();
+    //releaseInPorts();
+    //releaseOutPorts();
 
 
-    ExecutableDevice_impl::releaseObject();
+    AggregateExecutableDeviceComponent::releaseObject();
 }
 
 void ProgrammableDevice_base::loadProperties()

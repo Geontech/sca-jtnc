@@ -66,7 +66,7 @@ class SBTestTest(scatest.CorbaTestCase):
         print 'BasicTestDevice_cpp', comp._get_identifier()
 
     def test_runtime(self):
-        print dir(sb)
+        #print dir(sb)
         comp = sb.launch('cpp_dev')
         #print 'cpp_dev', comp.query([])
         teststring = CF.DataType(id='teststring', value=_any.to_any('foo'))

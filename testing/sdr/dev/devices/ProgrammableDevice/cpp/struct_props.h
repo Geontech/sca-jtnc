@@ -26,7 +26,7 @@
 
 *******************************************************************************************/
 
-#include <ossie/CorbaUtils.h>
+#include <sca/CorbaUtils.h>
 
 struct hw_load_status_struct {
     hw_load_status_struct ()

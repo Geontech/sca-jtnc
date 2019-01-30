@@ -21,7 +21,7 @@
 #define PROGRAMMABLEDEVICE_IMPL_REPROG_H
 
 #include "ProgrammableDevice_base.h"
-#include "ossie/prop_helpers.h"
+#include "sca/prop_helpers.h"
 #include "entry_point.h"
 #include <dlfcn.h>
 
@@ -103,7 +103,7 @@ inline void operator<<= (CORBA::Any& a, const HW_LOAD::default_hw_load_request_s
 };
 
 typedef std::string PersonaId;
-typedef std::map<PersonaId, Device_impl*> PersonaMap;
+typedef std::map<PersonaId, DeviceComponent*> PersonaMap;
 typedef std::map<unsigned int, PersonaId> ProcessMap;
 typedef PersonaMap::iterator PersonaMapIter;
 typedef ProcessMap::iterator ProcessMapIter;
@@ -185,7 +185,7 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
         }
 
         void construct() {
-            setUsageState(CF::Device::BUSY);
+            setUsageState(CF::CapacityManagement::BUSY);
             _personaMap.clear();
             _processMap.clear();
             _processIdIncrement = 0;
@@ -200,73 +200,69 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
 
         void load ( CF::FileSystem_ptr           fs, 
                     const char*                  fileName, 
-                    CF::LoadableDevice::LoadType loadKind )
+                    CF::LoadableInterface::LoadType loadKind )
             throw ( 
-                CF::LoadableDevice::LoadFail, 
+                CF::LoadableInterface::LoadFail, 
                 CF::InvalidFileName, 
-                CF::LoadableDevice::InvalidLoadKind,
-                CF::Device::InvalidState, 
+                CF::LoadableInterface::InvalidLoadKind,
+                CF::InvalidState, 
                 CORBA::SystemException ) 
         {
-            bool isSharedLibrary = (loadKind == CF::LoadableDevice::SHARED_LIBRARY);
-            bool existsOnDevFS   = _deviceManager->fileSys()->exists(fileName);
+            //bool isSharedLibrary = (loadKind == CF::LoadableInterface::SHARED_LIBRARY);
+            //bool existsOnDevFS   = _deviceManager->fileSys()->exists(fileName);
             
             // For persona shared librariess that already reside on the dev file 
             // system, use the dev filesystem to copy into cache
-            if (isSharedLibrary && existsOnDevFS) { 
-                fs = _deviceManager->fileSys();;
-                LOG_DEBUG(ProgrammableDevice_prog_base, __FUNCTION__ << 
-                    ": File-system switched to dev");
-            }
+            /*if (isSharedLibrary && existsOnDevFS) { 
+                fs = _deviceManager->fileSys();
+            }*/
 
             ProgrammableDevice_base::load(fs, fileName, loadKind);
         }
         
-        CF::ExecutableDevice::ProcessID_Type execute (
+        CF::ExecutableInterface::ExecutionID_Type* execute (
                         const char*             name, 
                         const CF::Properties&   options, 
                         const CF::Properties&   parameters )
             throw (
-                CF::ExecutableDevice::ExecuteFail, 
+                CF::ExecutableInterface::ExecuteFail, 
                 CF::InvalidFileName, 
-                CF::ExecutableDevice::InvalidOptions, 
-                CF::ExecutableDevice::InvalidParameters,
-                CF::ExecutableDevice::InvalidFunction, 
-                CF::Device::InvalidState, 
+                CF::ExecutableInterface::InvalidOptions, 
+                CF::ExecutableInterface::InvalidParameters,
+                CF::ExecutableInterface::InvalidFunction, 
+                CF::InvalidState, 
                 CORBA::SystemException )
         {
-            LOG_DEBUG(ProgrammableDevice_prog_base, __FUNCTION__ << 
-                    ": Instantiating persona '" << name << "'... ");
-            
             // Initialize local variables
-            Device_impl* persona = NULL; 
+            DeviceComponent* persona = NULL; 
             std::string personaId;
 
             // Attempt to instantiate the object contained in the shared library
             persona = instantiatePersona(name, options, parameters);
             if (persona == NULL) {
-                LOG_FATAL(ProgrammableDevice_prog_base, __FUNCTION__ << 
-                    ": Unable to instantiate '" << name << "'");
-                throw (CF::ExecutableDevice::ExecuteFail());
+                throw (CF::ExecutableInterface::ExecuteFail());
             }
            
             // Grab the name from the instantiated object 
-            personaId = ossie::corba::returnString(persona->identifier());
+            personaId = sca::corba::returnString(persona->identifier());
             
             // Save off the name-pid and name-object mappings
             _personaMap[personaId] = persona;
             _processMap[++_processIdIncrement] = personaId;
 
-            LOG_DEBUG(ProgrammableDevice_prog_base, __FUNCTION__ <<
-                    ": Persona '" << personaId << "' has been successfully instantiated");
+            CF::ExecutableInterface::ExecutionID_Type_var retval = new CF::ExecutableInterface::ExecutionID_Type();
+            retval->threadId = 0;
+            retval->processId = _processIdIncrement;
+            //retval->processCollocation;
+            //retval->cores;
 
-            return _processIdIncrement;
+            return retval._retn();
         }
         
-        void terminate (CF::ExecutableDevice::ProcessID_Type processId) 
+        void terminate (CF::ExecutableInterface::ExecutionID_Type exec_arg)
             throw (
-                CF::Device::InvalidState, 
-                CF::ExecutableDevice::InvalidProcess, 
+                CF::InvalidState, 
+                CF::ExecutableInterface::InvalidProcess, 
                 CORBA::SystemException ) 
         {
             // Initialize local variables
@@ -275,29 +271,29 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
             PersonaId personaId;
 
             // Search for the personaId that related to the incoming terminate request
-            processIter = _processMap.find(processId);
+            processIter = _processMap.find(exec_arg.processId);
             if (processIter != _processMap.end()) {
 
                 // Search for the persona that related to the found personaId
                 personaIter = _personaMap.find(processIter->second);
                 if (personaIter != _personaMap.end()) {
-                    _deviceManager->unregisterDevice(personaIter->second->_this());
-                    personaIter->second->setAdminState(CF::Device::UNLOCKED);
+                    try {
+                        _deviceManagerFullRegistry->unregisterComponent(personaIter->second->identifier());
+                    } catch ( ... ) {
+                    }
+                    personaIter->second->setAdminState(CF::AdministratableInterface::UNLOCKED);
                     personaIter->second->releaseObject();
                     _processMap.erase(processIter); // Erase process mapping here to minimize collisions with non-persona processIds
                     _personaMap.erase(personaIter);
                     return;
                 }
             }
-            LOG_WARN(ProgrammableDevice_prog_base, __FUNCTION__ << 
-                    ": Unable to locate persona using pid '" << processId <<"'");
         }
         
         CORBA::Boolean allocateCapacity(const CF::Properties& capacities) 
             throw (
-                CF::Device::InvalidState, 
-                CF::Device::InvalidCapacity, 
-                CF::Device::InsufficientCapacity, 
+                CF::InvalidState, 
+                CF::CapacityManagement::InvalidCapacity, 
                 CORBA::SystemException ) 
         {
             boost::mutex::scoped_lock lock(_allocationMutex);
@@ -324,8 +320,7 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
                     // Grab the current hw_load_request struct
                     loadRequestsPtr = getHwLoadRequests();
                     if (loadRequestsPtr == NULL) {
-                        LOG_ERROR(ProgrammableDevice_prog_base, __FUNCTION__ <<
-                            ": Unable to get HwLoadRequest vector! Pointer is NULL");
+                        std::cout<<"Unable to get HwLoadRequest vector! Pointer is NULL"<<std::endl;
                         continue;
                     }
 
@@ -343,8 +338,7 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
                             (*cfPropsPtr)[iv].value >>= (*loadRequestsPtr)[iv];
                         }
                     } else {
-                        LOG_ERROR(ProgrammableDevice_prog_base, __FUNCTION__ << 
-                            ": Unable to convert HW_LOAD_REQUEST prop!");
+                        std::cout<<"Unable to convert HW_LOAD_REQUEST prop!"<<std::endl;
                         continue;
                     }
 
@@ -354,8 +348,7 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
                         // Grab the current hw_load_status struct
                         statusVecPtr = getHwLoadStatuses();
                         if (statusVecPtr == NULL) {
-                            LOG_ERROR(ProgrammableDevice_prog_base, __FUNCTION__ <<
-                                ": Unable to get HwLoadStatus vector! Pointer is NULL");
+                            std::cout<<"Unable to get HwLoadStatus vector! Pointer is NULL"<<std::endl;
                             continue;
                         }
                         
@@ -370,14 +363,12 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
             }
 
             updateAdminStates();
-            LOG_DEBUG(ProgrammableDevice_prog_base, __FUNCTION__ << ": Allocation Result: " << allocationSuccess);
             return allocationSuccess;
         }
         
         void deallocateCapacity(const CF::Properties& capacities) 
             throw (
-                CF::Device::InvalidState, 
-                CF::Device::InvalidCapacity, 
+                CF::InvalidState, 
                 CORBA::SystemException ) 
         {
             // Initialize local variables
@@ -394,8 +385,6 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
                 id = capacities[ii].id;
 
                 if (id == HW_LOAD_REQUEST_PROP()) {
-                    LOG_DEBUG(ProgrammableDevice_prog_base, __FUNCTION__ <<
-                        ": Deallocating hw_load_requests...");
                     
                     // Attempt to Convert Any to unwrappable type
                     if (capacities[ii].value >>= anySeqPtr) {
@@ -411,16 +400,14 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
                             (*cfPropsPtr)[iv].value >>= loadRequestsToRemove[iv];
                         }
                     } else {
-                        LOG_ERROR(ProgrammableDevice_prog_base, __FUNCTION__ << 
-                            ": Unable to convert HW_LOAD_REQUEST property");
+                        std::cout<<"Unable to convert HW_LOAD_REQUEST property"<<std::endl;
                         continue;
                     }
                     
                     // Grab the current hw_load_status struct
                     statusVecPtr = getHwLoadStatuses();
                     if (statusVecPtr == NULL) {
-                        LOG_ERROR(ProgrammableDevice_prog_base, __FUNCTION__ <<
-                            ": Unable to get HwLoadStatus vector! Pointer is NULL");
+                        std::cout<<"Unable to get HwLoadStatus vector! Pointer is NULL"<<std::endl;
                         continue;
                     }
                     
@@ -434,7 +421,7 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
 
             updateAdminStates();
             if (deallocationSuccess == false) {
-                throw CF::Device::InvalidCapacity("Unable to deallocation capacities", capacities);
+                throw CF::CapacityManagement::InvalidCapacity("Unable to deallocation capacities", capacities);
             }
         }
         
@@ -448,7 +435,7 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
 
             // Terminate all children that were executed
             for (processIter = _processMap.begin(); processIter != _processMap.end(); processIter++) {
-                this->terminate(processIter->first);
+                //this->terminate(processIter->second);
             }
 
             // Clean up all children that were executed
@@ -458,7 +445,7 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
             }
 
             ProgrammableDevice_base::releaseObject();
-            setAdminState(CF::Device::SHUTTING_DOWN);
+            setAdminState(CF::AdministratableInterface::SHUTTING_DOWN);
         }
         
         HwLoadRequestVec* getHwLoadRequests() { 
@@ -473,7 +460,7 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
 
         void setHwLoadRequestsPtr(HwLoadRequestVec* propPtr) {
             if (propPtr == NULL) {
-               LOG_ERROR(ProgrammableDevice_prog_base, "CANNOT SET HW_LOAD_REQUESTS_PTR: PROPERTY IS NULL");
+               std::cout<<"CANNOT SET HW_LOAD_REQUESTS_PTR: PROPERTY IS NULL"<<std::endl;
                return;
             }
             _hwLoadRequestsPtr = propPtr;
@@ -481,7 +468,7 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
         
         void setHwLoadStatusesPtr(HwLoadStatusVec* propPtr) {
             if (propPtr == NULL) {
-               LOG_ERROR(ProgrammableDevice_prog_base, "CANNOT SET HW_LOAD_STATUSES_PTR: PROPERTY IS NULL");
+               std::cout<<"CANNOT SET HW_LOAD_STATUSES_PTR: PROPERTY IS NULL"<<std::endl;
                return;
             }
             _hwLoadStatusesPtr = propPtr;
@@ -498,13 +485,13 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
         virtual std::string HW_LOAD_STATUS_PROP()  { return "hw_load_statuses"; };
 
 
-        virtual Device_impl* generatePersona (
+        virtual DeviceComponent* generatePersona (
                                     int                         argc, 
                                     char*                       argv[], 
                                     ConstructorPtr              fnptr, 
                                     const char*                 libraryName)=0;
 
-        virtual Device_impl* instantiatePersona (
+        virtual DeviceComponent* instantiatePersona (
                                     const char*                 libraryName, 
                                     const CF::Properties&       options, 
                                     const CF::Properties&       parameters) 
@@ -515,8 +502,7 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
             void* pHandle = dlopen(absPath.c_str(), RTLD_NOW);
             if (!pHandle) {
                 char* errorMsg = dlerror();
-                LOG_FATAL(ProgrammableDevice_prog_base, __FUNCTION__ << 
-                    ": Unable to open library '" << absPath.c_str() << "': " << errorMsg);
+                std::cout<<"Unable to open library '" << absPath.c_str() << "': " << errorMsg<<std::endl;
                 return NULL;
             }  
             
@@ -530,8 +516,7 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
 
             for (size_t ii = 0; ii < combinedProps.length(); ii++) {
                 std::string id(combinedProps[ii].id);
-                std::string val = ossie::any_to_string(combinedProps[ii].value);
-                LOG_DEBUG(ProgrammableDevice_prog_base, "ARGV[" << id << "]: " << val);
+                std::string val = sca::any_to_string(combinedProps[ii].value);
             }
 
             // Convert combined properties into ARGV/ARGC format
@@ -542,7 +527,7 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
             char* argv[argc];
             for (unsigned int i = 0; i < combinedProps.length(); i++) {
                 propId = combinedProps[i].id;
-                propValue = ossie::any_to_string(combinedProps[i].value);
+                propValue = sca::any_to_string(combinedProps[i].value);
 
                 argv[argCounter] = (char*) malloc(propId.size() + 1);
                 strcpy(argv[argCounter++], propId.c_str());
@@ -556,8 +541,7 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
             void* fnPtr = dlsym(pHandle, symbol);
             if (!fnPtr) {
                 char* errorMsg = dlerror();
-                LOG_FATAL(ProgrammableDevice_prog_base, __FUNCTION__ << 
-                    ": Unable to find symbol '" << symbol << "': " << errorMsg);
+                std::cout<<"Unable to find symbol '" << symbol << "': " << errorMsg<<std::endl;
                 return NULL;
             }
 
@@ -565,12 +549,11 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
             ConstructorPtr constructPtr = reinterpret_cast<ConstructorPtr>(fnPtr);
 
             // Attempt to instantiate the persona device via the constructor pointer
-            Device_impl* personaPtr = NULL;
+            DeviceComponent* personaPtr = NULL;
             try {
                 personaPtr = generatePersona(argc, argv, constructPtr, libraryName);
             } catch (...) {
-                LOG_FATAL(ProgrammableDevice_prog_base, __FUNCTION__ << 
-                    ": Unable to construct persona device: '" << argv[0] << "'");
+                std::cout<<"Unable to construct persona device: '" << argv[0] << "'"<<std::endl;
             }
 
             for (unsigned int i = 0; i < argCounter; i++) {
@@ -622,8 +605,7 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
                     success |= applyHwLoadRequest(loadRequestVec[ii], loadStatusVec[availableStatusIndex]);
                     usedStatusIndices[ii] = availableStatusIndex;;
                 } else {
-                    LOG_ERROR(ProgrammableDevice_prog_base, __FUNCTION__ << 
-                        ": Device cannot be allocated against. No load capacity");
+                    std::cout<<"Device cannot be allocated against. No load capacity"<<std::endl;
                     success = false;
                 }
 
@@ -701,8 +683,7 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
         {
             HwLoadStatusVec* statusVecPtr = getHwLoadStatuses();
             if (statusVecPtr == NULL) {
-                LOG_ERROR(ProgrammableDevice_prog_base, __FUNCTION__ <<
-                    ": Unable to get HwLoadStatus vector! Pointer is NULL");
+                std::cout<<"Unable to get HwLoadStatus vector! Pointer is NULL"<<std::endl;
                 return false;
             }
             return (findAvailableHwLoadStatusIndex((*statusVecPtr)) >= 0);
@@ -714,17 +695,16 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
                 // Unlock all devices if there is capacity for more loads
                 PersonaMapIter iter;
                 for (iter = _personaMap.begin(); iter != _personaMap.end(); iter++) {
-                    iter->second->adminState(CF::Device::UNLOCKED);
+                    iter->second->adminState(CF::AdministratableInterface::UNLOCKED);
                 }
-                setAdminState(CF::Device::UNLOCKED);
+                setAdminState(CF::AdministratableInterface::UNLOCKED);
             } else {
                 // Lock all personas that are not loaded onto the device
                 
                 // Grab the current hw_load_status struct
                 HwLoadStatusVec* statusVecPtr = getHwLoadStatuses();
                 if (statusVecPtr == NULL) {
-                    LOG_ERROR(ProgrammableDevice_prog_base, __FUNCTION__ <<
-                        ": Unable to get HwLoadStatus vector! Pointer is NULL");
+                    std::cout<<"Unable to get HwLoadStatus vector! Pointer is NULL"<<std::endl;
                     return;
                 }
 
@@ -741,11 +721,9 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
                     if (strVecContainsStr(allRequesterIds, iter->first)) {
                         continue; // Skip the running personas
                     }
-                    LOG_DEBUG(ProgrammableDevice_prog_base, __FUNCTION__ <<
-                        ": Locking device '" << ossie::corba::returnString(iter->second->identifier()) << "'");
-                    iter->second->adminState(CF::Device::LOCKED);
+                    iter->second->adminState(CF::AdministratableInterface::LOCKED);
                 }
-                setAdminState(CF::Device::LOCKED);
+                setAdminState(CF::AdministratableInterface::LOCKED);
             }
         }
 
@@ -785,8 +763,8 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
         }
 };
 
-template <typename HW_LOAD_REQUEST, typename HW_LOAD_STATUS>
+/*template <typename HW_LOAD_REQUEST, typename HW_LOAD_STATUS>
 PREPARE_ALT_LOGGING(ProgrammableDevice_prog_base<HW_LOAD_REQUEST BOOST_PP_COMMA() 
-                                 HW_LOAD_STATUS>, ProgrammableDevice_prog_base);
+                                 HW_LOAD_STATUS>, ProgrammableDevice_prog_base);*/
 
 #endif

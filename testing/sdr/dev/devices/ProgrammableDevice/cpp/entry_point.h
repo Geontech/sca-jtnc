@@ -37,6 +37,6 @@
 //          Within 'generatePersona' method located in the resource cpp file:
 //          Device_impl* personaPtr = personaEntryPoint(argc, argv, SharedAPIObject);
 //
-typedef Device_impl* (*ConstructorPtr)(int, char*[], Device_impl* parentDevice);
+typedef DeviceComponent* (*ConstructorPtr)(int, char*[], DeviceComponent* parentDevice);
 
 #endif

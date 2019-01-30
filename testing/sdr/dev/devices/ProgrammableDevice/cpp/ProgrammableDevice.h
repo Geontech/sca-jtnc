@@ -40,7 +40,7 @@ class ProgrammableDevice_i : public ProgrammableDevice_prog_base_type
         void initialize() throw (CF::LifeCycle::InitializeError, CORBA::SystemException);
 
     protected:
-        Device_impl* generatePersona(int argc, char* argv[], ConstructorPtr fnptr, const char* libName);
+        DeviceComponent* generatePersona(int argc, char* argv[], ConstructorPtr fnptr, const char* libName);
         bool loadHardware(HwLoadStatusStruct& requestStatus);
         void unloadHardware(const HwLoadStatusStruct& requestStatus);
 };

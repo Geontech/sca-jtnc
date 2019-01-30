@@ -261,7 +261,8 @@ AC_CONFIG_FILES(Makefile \
 AM_COND_IF( [BUILD_TESTS], [
 AC_CONFIG_FILES( [testing/Makefile \
                 testing/sdr/dev/devices/BasicTestDevice_cpp/BasicTestDevice_cpp_impl1/Makefile \
-                testing/sdr/dev/devices/cpp_dev/cpp/Makefile ])
+                testing/sdr/dev/devices/cpp_dev/cpp/Makefile \
+                testing/sdr/dev/devices/ProgrammableDevice/cpp/Makefile ])
 ])
 
 AC_OUTPUT

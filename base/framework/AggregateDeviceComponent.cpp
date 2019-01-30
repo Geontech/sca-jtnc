@@ -23,26 +23,73 @@
 #include <signal.h>
 #include <sys/signalfd.h>
 
-#include "sca/DeviceComponent.h"
+#include "sca/AggregateDeviceComponent.h"
 
-DeviceComponent::DeviceComponent (char* componentRegistry_ior, char* _id, char* _label, char* sftwrPrfl) : component_running_mutex(),
-    component_running(&component_running_mutex) {
-    initializeCommonAttributes(_id);
+AggregateExecutableDeviceComponent::AggregateExecutableDeviceComponent (char* componentRegistry_ior, char* _id, char* _label, char* sftwrPrfl) : DeviceComponent(componentRegistry_ior, _id, _label, sftwrPrfl) {
+    //initializeCommonAttributes(_id);
 }
 
-DeviceComponent::DeviceComponent (char* componentRegistry_ior, char* _id, char* _label, char* sftwrPrfl, char* compositeDev_ior) : component_running_mutex(),
-    component_running(&component_running_mutex) {
-    initializeCommonAttributes(_id);
+AggregateExecutableDeviceComponent::AggregateExecutableDeviceComponent (char* componentRegistry_ior, char* _id, char* _label, char* sftwrPrfl, char* compositeDev_ior) : DeviceComponent(componentRegistry_ior, _id, _label, sftwrPrfl, compositeDev_ior) {
+    //initializeCommonAttributes(_id);
+}
+AggregateExecutableDeviceComponent::AggregateExecutableDeviceComponent (char* componentRegistry_ior, char* _id, char* _label, char* sftwrPrfl, CF::Properties capacities) : DeviceComponent(componentRegistry_ior, _id, _label, sftwrPrfl) {
+    //initializeCommonAttributes(_id);
+}
+AggregateExecutableDeviceComponent::AggregateExecutableDeviceComponent (char* componentRegistry_ior, char* _id, char* _label, char* sftwrPrfl, CF::Properties capacities, char *compDev) : DeviceComponent(componentRegistry_ior, _id, _label, sftwrPrfl, compDev) {
+    //initializeCommonAttributes(_id);
 }
 
-void DeviceComponent::initializeCommonAttributes(const std::string _id) {
+/*void DeviceComponent::initializeCommonAttributes(const std::string _id) {
     _identifier = _id;
     _started = false;
+}*/
+
+AggregateExecutableDeviceComponent::~AggregateExecutableDeviceComponent () {
 }
 
-DeviceComponent::~DeviceComponent () {
+void AggregateExecutableDeviceComponent::unload (const char* fileName) throw (CORBA::SystemException, CF::InvalidState, CF::InvalidFileName)
+{
+}
+void AggregateExecutableDeviceComponent::load (CF::FileSystem_ptr fs, const char* fileName, CF::LoadableInterface::LoadType loadKind)
+        throw (CF::LoadableInterface::LoadFail, CF::InvalidFileName, CF::LoadableInterface::InvalidLoadKind,
+                CF::InvalidState, CORBA::SystemException)
+{
 }
 
+void AggregateExecutableDeviceComponent::addDevice(CORBA::Object_ptr associatedDevice, const char* identifier)  throw (CF::InvalidObjectReference)
+{
+    /*unsigned int devSeqLength = _devices->length();
+
+    for (unsigned int i = 0; i < devSeqLength; i++) {
+        if (!strcmp(associatedDevice->identifier(), (*_devices)[i]->identifier())) {
+            return;
+        }
+    }
+    _devices->length(devSeqLength + 1);
+    (*_devices)[devSeqLength] = CF::Device::_duplicate(associatedDevice);*/
+}
+
+void AggregateExecutableDeviceComponent::removeDevice(const char* identifier)  throw (CF::InvalidObjectReference)
+{
+    /*unsigned int devSeqLength = _devices->length();
+
+    for (unsigned int i = 0; i < devSeqLength; i++) {
+        if (!strcmp(associatedDevice->identifier(), (*_devices)[i]->identifier())) {
+            for (unsigned int j = i + 1; j < devSeqLength; j++) {
+                (*_devices)[j-1] = (*_devices)[j];
+            }
+            _devices->length(devSeqLength - 1);
+        }
+    }
+
+    return;*/
+}
+CF::AggregateDevice_ptr AggregateExecutableDeviceComponent::compositeDevice()
+{
+    return CF::AggregateDevice::_nil();
+};
+
+/*
 void DeviceComponent::run() {
     component_running.wait();
 }
@@ -157,7 +204,6 @@ void DeviceComponent::setExecparamProperties(std::map<std::string, char*>& execp
 void  DeviceComponent::setAdditionalParameters ( std::string &registrar_ior)
 {
   _deviceManagerRegistry = CF::ComponentRegistry::_nil();
-  _deviceManagerFullRegistry = CF::FullComponentRegistry::_nil();
   CORBA::Object_var obj = sca::corba::Orb()->string_to_object(registrar_ior.c_str());
   if (CORBA::is_nil(obj)) {
     std::cout<<"Invalid device manager IOR"<<std::endl;
@@ -168,7 +214,6 @@ void  DeviceComponent::setAdditionalParameters ( std::string &registrar_ior)
     std::cout<<"Could not narrow device manager IOR"<<std::endl;
     exit(-1);
   }
-  _deviceManagerFullRegistry = CF::FullComponentRegistry::_narrow(obj);
 }
 
 void  DeviceComponent::postConstruction (std::string &registrar_ior)
@@ -216,24 +261,14 @@ void DeviceComponent::insertPort (const std::string& name, PortBase* servant)
     _portServants[name] = servant;
 }
 
-void DeviceComponent::setUsageState (CF::CapacityManagement::UsageType newUsageState)
-{
-    _usageState = newUsageState;
-}
-
-void DeviceComponent::setAdminState (CF::AdministratableInterface::AdminType new_adminState)
-{
-    _adminState = new_adminState;
-}
-
 void DeviceComponent::deactivatePort (PortBase* servant)
 {
     PortableServer::POA_var poa = servant->_default_POA();
     PortableServer::ObjectId_var oid = poa->servant_to_id(servant);
     poa->deactivate_object(oid);
 }
-
-void DeviceComponent::start_device(DeviceComponent::ctor_type ctor, struct sigaction sa, int argc, char* argv[])
+*/
+void AggregateExecutableDeviceComponent::start_device(AggregateExecutableDeviceComponent::ctor_type ctor, struct sigaction sa, int argc, char* argv[])
 {
     char* devMgr_ior = 0;
     char* id = 0;
@@ -291,7 +326,7 @@ void DeviceComponent::start_device(DeviceComponent::ctor_type ctor, struct sigac
         to send CTRL-C to all foreground processes (even children) */
     signal(SIGINT, SIG_IGN);
 
-    DeviceComponent* device = ctor(devMgr_ior, id, blank_string, composite_device);
+    AggregateExecutableDeviceComponent* device = ctor(devMgr_ior, id, blank_string, composite_device);
 
     // setting all the execparams passed as argument, this method resides in the Resource_impl class
     device->setExecparamProperties(execparams);

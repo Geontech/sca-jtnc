@@ -19,7 +19,7 @@
  */
 
 #include <iostream>
-#include "ossie/ossieSupport.h"
+#include "sca/scaSupport.h"
 
 #include "ProgrammableDevice.h"
 
@@ -40,7 +40,7 @@ int main(int argc, char* argv[])
     sa.sa_flags = 0;
     devicePtr = 0;
 
-    Device_impl::start_device(&devicePtr, sa, argc, argv);
+    DeviceComponent::start_device(&devicePtr, sa, argc, argv);
     return 0;
 }
 

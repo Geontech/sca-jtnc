@@ -1,5 +1,5 @@
 #include <iostream>
-#include "ossie/ossieSupport.h"
+//#include "ossie/ossieSupport.h"
 
 #include "base_persona.h"
 

@@ -966,8 +966,8 @@ void Device_impl::setUsageState (CF::Device::UsageType newUsageState)
             new_state = StandardEvent::BUSY;
             break;
     }
-    if ( current_state != new_state ) 
-      sendStateChange( current_state, new_state, StandardEvent::USAGE_STATE_EVENT );
+    /*if ( current_state != new_state ) 
+      sendStateChange( current_state, new_state, StandardEvent::USAGE_STATE_EVENT );*/
     _usageState = newUsageState;
 }
 

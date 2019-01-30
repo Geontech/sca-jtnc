@@ -19,8 +19,8 @@
  */
 
 
-#ifndef DEVICE_IMPL_H
-#define DEVICE_IMPL_H
+#ifndef AGGREGATEDEVICE_IMPL_H
+#define AGGREGATEDEVICE_IMPL_H
 
 #include <signal.h>
 #include <string>
@@ -32,13 +32,12 @@
 #include <boost/function.hpp>
 #include <boost/bind.hpp>
 
-#include "CF/DeviceComponent.h"
-#include "CF/CFFullComponentRegistry.h"
+#include "CF/AggregateDevices.h"
+#include "sca/DeviceComponent.h"
 #include "sca/CorbaUtils.h"
 #include "sca/scaSupport.h"
 #include "sca/UsesPort.h"
 #include "sca/PropertySet_impl.h"
-#include "sca/ThreadedComponent.h"
 #include "sca/Port_impl.h"
 
 #ifndef ENABLE_LOGGING
@@ -47,17 +46,56 @@
 #define LOG_DEBUG(X,Y)  /* X,Y */
 #endif
 
-class DeviceComponent;
+class AggregateExecutableDeviceComponent;
 
-class DeviceComponent: public virtual POA_CF::DeviceComponent, public PropertySet_impl
+class AggregateExecutableDeviceComponent: public virtual POA_CF::AggregateExecutableDevice, public DeviceComponent
 {
 public:
 
-    DeviceComponent (char*, char*, char*, char*);
-    DeviceComponent (char*, char*, char*, char*, char*);
-    ~DeviceComponent ();
+    AggregateExecutableDeviceComponent (char*, char*, char*, char*);
+    AggregateExecutableDeviceComponent (char*, char*, char*, char*, char*);
+    AggregateExecutableDeviceComponent (char*, char*, char*, char*, CF::Properties capacities);
+    AggregateExecutableDeviceComponent (char*, char*, char*, char*, CF::Properties capacities, char *compDev);
+    ~AggregateExecutableDeviceComponent ();
 
-    char* identifier () throw (CORBA::SystemException);
+    void  unload (const char* fileName) throw (CF::InvalidFileName, CF::InvalidState, CORBA::SystemException);
+    void  load (CF::FileSystem_ptr fs, const char* fileName, CF::LoadableInterface::LoadType loadKind)
+        throw (CF::LoadableInterface::LoadFail, 
+                CF::InvalidFileName, 
+                CF::LoadableInterface::InvalidLoadKind,
+                CF::InvalidState, 
+                CORBA::SystemException);
+    void terminate (const CF::ExecutableInterface::ExecutionID_Type &executionId)
+        throw (CF::InvalidState, CF::ExecutableInterface::InvalidProcess, CORBA::SystemException)
+    {};
+    
+    CF::ExecutableInterface::ExecutionID_Type* execute (
+                        const char*             name, 
+                        const CF::Properties&   options, 
+                        const CF::Properties&   parameters )
+            throw (
+                CF::ExecutableInterface::ExecuteFail, 
+                CF::InvalidFileName, 
+                CF::ExecutableInterface::InvalidOptions, 
+                CF::ExecutableInterface::InvalidParameters,
+                CF::ExecutableInterface::InvalidFunction, 
+                CF::InvalidState, 
+                CORBA::SystemException )
+    {
+        return NULL;
+    };
+
+    CF::ObjectSequence* devices ()
+    {
+        CF::ObjectSequence *retval = new CF::ObjectSequence();
+        return retval;
+    }
+
+    void addDevice(CORBA::Object_ptr associatedDevice, const char* identifier) throw (CF::InvalidObjectReference);
+    void removeDevice(const char* identifier) throw (CF::InvalidObjectReference);
+    CF::AggregateDevice_ptr compositeDevice();
+ 
+    /*char* identifier () throw (CORBA::SystemException);
     CORBA::Boolean started() throw (CORBA::SystemException);
     void start () throw (CF::ControllableInterface::StartError, CORBA::SystemException);
     void stop () throw (CF::ControllableInterface::StopError, CORBA::SystemException);
@@ -79,8 +117,6 @@ public:
     void addPort (const std::string& name, const std::string& description, PortBase* servant);
     void insertPort (const std::string& name, PortBase* servant);
     void deactivatePort (PortBase* servant);
-    void setUsageState (CF::CapacityManagement::UsageType newUsageState);
-    void setAdminState (CF::AdministratableInterface::AdminType new_adminState);
 
     void setExecparamProperties(std::map<std::string, char*>&);
     virtual void  postConstruction( std::string &registrar_ior);
@@ -102,12 +138,11 @@ protected:
     std::string _identifier;
     omni_mutex component_running_mutex;
     omni_condition component_running;
-    CF::ComponentRegistry_ptr _deviceManagerRegistry;
-    CF::FullComponentRegistry_ptr _deviceManagerFullRegistry;
+    CF::ComponentRegistry_ptr _deviceManagerRegistry;*/
 
 private:
     template <class T>
-    static DeviceComponent* make_device(T*& device, char* devMgrIOR, char* identifier, char* profile, char* compositeDeviceIOR)
+    static AggregateExecutableDeviceComponent* make_device(T*& device, char* devMgrIOR, char* identifier, char* profile, char* compositeDeviceIOR)
     {
         if (compositeDeviceIOR) {
             // The AggregateDevice version of the constructor implicitly activates the new device,
@@ -120,14 +155,11 @@ private:
         return device;
     }
 
-    typedef boost::function<DeviceComponent* (char*, char*, char*, char*)> ctor_type;
+    typedef boost::function<AggregateExecutableDeviceComponent* (char*, char*, char*, char*)> ctor_type;
     static void start_device(ctor_type ctor, struct sigaction sa, int argc, char* argv[]);
 
-    DeviceComponent(); // Code that tries to use this constructor will not work
-    DeviceComponent(DeviceComponent&); // No copying
-    
-    CF::CapacityManagement::UsageType _usageState;
-    CF::AdministratableInterface::AdminType _adminState;
+    AggregateExecutableDeviceComponent(); // Code that tries to use this constructor will not work
+    AggregateExecutableDeviceComponent(AggregateExecutableDeviceComponent&); // No copying
 
 };
 

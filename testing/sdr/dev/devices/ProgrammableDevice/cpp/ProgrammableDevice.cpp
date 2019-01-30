@@ -210,7 +210,7 @@ void ProgrammableDevice_i::unloadHardware(const HwLoadStatusStruct& requestStatu
     // The hardware may be physically unloaded at this point
 }
 
-Device_impl* ProgrammableDevice_i::generatePersona(int argc, char* argv[], ConstructorPtr personaEntryPoint, const char* libName) 
+DeviceComponent* ProgrammableDevice_i::generatePersona(int argc, char* argv[], ConstructorPtr personaEntryPoint, const char* libName) 
 {
     return personaEntryPoint(argc, argv, this);
 }

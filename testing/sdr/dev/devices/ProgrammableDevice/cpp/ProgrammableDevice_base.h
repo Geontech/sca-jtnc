@@ -22,9 +22,9 @@
 #define PROGRAMMABLEDEVICE_IMPL_BASE_H
 
 #include <boost/thread.hpp>
-#include <ossie/ExecutableDevice_impl.h>
-#include <ossie/CF/AggregateDevices.h>
-#include <ossie/AggregateDevice_impl.h>
+//#include <ossie/ExecutableDevice_impl.h>
+#include <sca/CF/AggregateDevices.h>
+#include <sca/AggregateDeviceComponent.h>
 
 #include "struct_props.h"
 
@@ -101,7 +101,7 @@ class ProcessThread
         boost::mutex _eor_mutex;
 };
 
-class ProgrammableDevice_base : public ExecutableDevice_impl, public virtual POA_CF::AggregateExecutableDevice, public AggregateDevice_impl
+class ProgrammableDevice_base : public virtual POA_CF::AggregateExecutableDevice, public AggregateExecutableDeviceComponent, protected ThreadedComponent
 {
     public:
         ProgrammableDevice_base(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl);
@@ -109,9 +109,9 @@ class ProgrammableDevice_base : public ExecutableDevice_impl, public virtual POA
         ProgrammableDevice_base(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl, CF::Properties capacities);
         ProgrammableDevice_base(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl, CF::Properties capacities, char *compDev);
 
-        void start() throw (CF::Resource::StartError, CORBA::SystemException);
+        void start() throw (CF::ControllableInterface::StartError, CORBA::SystemException);
 
-        void stop() throw (CF::Resource::StopError, CORBA::SystemException);
+        void stop() throw (CF::ControllableInterface::StopError, CORBA::SystemException);
 
         void releaseObject() throw (CF::LifeCycle::ReleaseError, CORBA::SystemException);
 
