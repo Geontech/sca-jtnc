@@ -35,9 +35,9 @@ class PersonaDevice_i : public PersonaDevice_persona_base
         ~PersonaDevice_i();
         int serviceFunction();
         CORBA::Boolean allocateCapacity(const CF::Properties& capacities) 
-            throw (CF::Device::InvalidState, CF::Device::InvalidCapacity, CF::Device::InsufficientCapacity, CORBA::SystemException);
+            throw (CF::InvalidState, CF::CapacityManagement::InvalidCapacity, CORBA::SystemException);
         void deallocateCapacity(const CF::Properties& capacities) 
-            throw (CF::Device::InvalidState, CF::Device::InvalidCapacity, CORBA::SystemException);
+            throw (CF::InvalidState, CF::CapacityManagement::InvalidCapacity, CORBA::SystemException);
 
     protected:
         void hwLoadRequest(CF::Properties& request);

@@ -22,7 +22,9 @@
 #define PERSONADEVICE_IMPL_BASE_H
 
 #include <boost/thread.hpp>
-#include <ossie/Device_impl.h>
+#include <sca/DeviceComponent.h>
+#include <sca/ThreadedComponent.h>
+#include <bulkio/bulkio.h>
 
 
 #define NOOP 0
@@ -98,7 +100,7 @@ class ProcessThread
         boost::mutex _eor_mutex;
 };
 
-class PersonaDevice_base : public Device_impl
+class PersonaDevice_base : public DeviceComponent, protected ThreadedComponent
 {
     public:
         PersonaDevice_base(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl);
@@ -106,9 +108,9 @@ class PersonaDevice_base : public Device_impl
         PersonaDevice_base(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl, CF::Properties capacities);
         PersonaDevice_base(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl, CF::Properties capacities, char *compDev);
 
-        void start() throw (CF::Resource::StartError, CORBA::SystemException);
+        void start() throw (CF::ControllableInterface::StartError, CORBA::SystemException);
 
-        void stop() throw (CF::Resource::StopError, CORBA::SystemException);
+        void stop() throw (CF::ControllableInterface::StopError, CORBA::SystemException);
 
         void releaseObject() throw (CF::LifeCycle::ReleaseError, CORBA::SystemException);
 

@@ -31,28 +31,28 @@
 ******************************************************************************************/
 
 PersonaDevice_base::PersonaDevice_base(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl) :
-    Device_impl(devMgr_ior, id, lbl, sftwrPrfl),
+    DeviceComponent(devMgr_ior, id, lbl, sftwrPrfl),
     serviceThread(0)
 {
     construct();
 }
 
 PersonaDevice_base::PersonaDevice_base(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl, char *compDev) :
-    Device_impl(devMgr_ior, id, lbl, sftwrPrfl, compDev),
+    DeviceComponent(devMgr_ior, id, lbl, sftwrPrfl, compDev),
     serviceThread(0)
 {
     construct();
 }
 
 PersonaDevice_base::PersonaDevice_base(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl, CF::Properties capacities) :
-    Device_impl(devMgr_ior, id, lbl, sftwrPrfl, capacities),
+    DeviceComponent(devMgr_ior, id, lbl, sftwrPrfl, capacities),
     serviceThread(0)
 {
     construct();
 }
 
 PersonaDevice_base::PersonaDevice_base(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl, CF::Properties capacities, char *compDev) :
-    Device_impl(devMgr_ior, id, lbl, sftwrPrfl, capacities, compDev),
+    DeviceComponent(devMgr_ior, id, lbl, sftwrPrfl, capacities, compDev),
     serviceThread(0)
 {
     construct();
@@ -60,7 +60,7 @@ PersonaDevice_base::PersonaDevice_base(char *devMgr_ior, char *id, char *lbl, ch
 
 void PersonaDevice_base::construct()
 {
-    Resource_impl::_started = false;
+    DeviceComponent::_started = false;
     loadProperties();
     serviceThread = 0;
     
@@ -75,7 +75,7 @@ void PersonaDevice_base::initialize() throw (CF::LifeCycle::InitializeError, COR
 {
 }
 
-void PersonaDevice_base::start() throw (CORBA::SystemException, CF::Resource::StartError)
+void PersonaDevice_base::start() throw (CORBA::SystemException, CF::ControllableInterface::StartError)
 {
     boost::mutex::scoped_lock lock(serviceThreadLock);
     if (serviceThread == 0) {
@@ -83,24 +83,24 @@ void PersonaDevice_base::start() throw (CORBA::SystemException, CF::Resource::St
         serviceThread->start();
     }
     
-    if (!Resource_impl::started()) {
-    	Resource_impl::start();
+    if (!DeviceComponent::started()) {
+    	DeviceComponent::start();
     }
 }
 
-void PersonaDevice_base::stop() throw (CORBA::SystemException, CF::Resource::StopError)
+void PersonaDevice_base::stop() throw (CORBA::SystemException, CF::ControllableInterface::StopError)
 {
     boost::mutex::scoped_lock lock(serviceThreadLock);
     // release the child thread (if it exists)
     if (serviceThread != 0) {
         if (!serviceThread->release(2)) {
-            throw CF::Resource::StopError(CF::CF_NOTSET, "Processing thread did not die");
+            throw CF::ControllableInterface::StopError(CF::CF_NOTSET, "Processing thread did not die");
         }
         serviceThread = 0;
     }
     
-    if (Resource_impl::started()) {
-    	Resource_impl::stop();
+    if (DeviceComponent::started()) {
+    	DeviceComponent::stop();
     }
 }
 
@@ -109,16 +109,16 @@ void PersonaDevice_base::releaseObject() throw (CORBA::SystemException, CF::Life
     // This function clears the device running condition so main shuts down everything
     try {
         stop();
-    } catch (CF::Resource::StopError& ex) {
+    } catch (CF::ControllableInterface::StopError& ex) {
         // TODO - this should probably be logged instead of ignored
     }
 
     // deactivate ports
-    releaseInPorts();
-    releaseOutPorts();
+    //releaseInPorts();
+    //releaseOutPorts();
 
 
-    Device_impl::releaseObject();
+    DeviceComponent::releaseObject();
 }
 
 void PersonaDevice_base::loadProperties()

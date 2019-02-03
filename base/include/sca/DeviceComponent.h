@@ -55,6 +55,8 @@ public:
 
     DeviceComponent (char*, char*, char*, char*);
     DeviceComponent (char*, char*, char*, char*, char*);
+    DeviceComponent (char*, char*, char*, char*, CF::Properties);
+    DeviceComponent (char*, char*, char*, char*, CF::Properties, char*);
     ~DeviceComponent ();
 
     char* identifier () throw (CORBA::SystemException);
@@ -82,6 +84,11 @@ public:
     void setUsageState (CF::CapacityManagement::UsageType newUsageState);
     void setAdminState (CF::AdministratableInterface::AdminType new_adminState);
 
+    bool isLocked();
+    bool isDisabled ();
+    bool isBusy ();
+    bool isIdle ();
+
     void setExecparamProperties(std::map<std::string, char*>&);
     virtual void  postConstruction( std::string &registrar_ior);
     
@@ -104,6 +111,9 @@ protected:
     omni_condition component_running;
     CF::ComponentRegistry_ptr _deviceManagerRegistry;
     CF::FullComponentRegistry_ptr _deviceManagerFullRegistry;
+    CF::CapacityManagement::UsageType _usageState;
+    CF::AdministratableInterface::AdminType _adminState;
+    CF::AggregateDevice_ptr _aggregateDevice;
 
 private:
     template <class T>
@@ -125,9 +135,6 @@ private:
 
     DeviceComponent(); // Code that tries to use this constructor will not work
     DeviceComponent(DeviceComponent&); // No copying
-    
-    CF::CapacityManagement::UsageType _usageState;
-    CF::AdministratableInterface::AdminType _adminState;
 
 };
 

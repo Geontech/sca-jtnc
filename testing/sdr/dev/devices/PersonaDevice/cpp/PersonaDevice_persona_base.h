@@ -21,7 +21,7 @@
 #define PERSONADEVICE_IMPL_REPROG_H
 
 #include "PersonaDevice_base.h"
-#include "ossie/Device_impl.h"
+#include "sca/DeviceComponent.h"
 class PersonaDevice_persona_base;
 
 class PersonaDevice_persona_base : public PersonaDevice_base
@@ -33,9 +33,9 @@ class PersonaDevice_persona_base : public PersonaDevice_base
         PersonaDevice_persona_base(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl, CF::Properties capacities);
         PersonaDevice_persona_base(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl, CF::Properties capacities, char *compDev);
         virtual void construct();
-        virtual void setParentDevice(Device_impl* parentDevice) { _parentDevice = parentDevice; };
-        virtual Device_impl* getParentDevice() { return _parentDevice; };
-        virtual void adminState(CF::Device::AdminType adminState) 
+        virtual void setParentDevice(DeviceComponent* parentDevice) { _parentDevice = parentDevice; };
+        virtual DeviceComponent* getParentDevice() { return _parentDevice; };
+        virtual void adminState(CF::AdministratableInterface::AdminType adminState) 
             throw (CORBA::SystemException);
         virtual void releaseObject() 
             throw (CF::LifeCycle::ReleaseError, CORBA::SystemException);
@@ -55,7 +55,7 @@ class PersonaDevice_persona_base : public PersonaDevice_base
         virtual void beforeHardwareUnprogrammed() {};
         virtual void afterHardwareUnprogrammed() {};
     private:
-        Device_impl*            _parentDevice;
+        DeviceComponent*            _parentDevice;
         bool                    _parentAllocated;
         CF::Properties          _previousRequestProps;
         virtual void formatRequestProps(const CF::Properties& requestProps, CF::Properties& formattedProps);

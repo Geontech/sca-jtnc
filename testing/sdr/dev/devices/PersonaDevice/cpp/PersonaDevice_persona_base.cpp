@@ -90,18 +90,18 @@ void PersonaDevice_persona_base::construct()
 }
 
 // TODO: This was overriden since setting admin state is not accessible via the current IDL
-void PersonaDevice_persona_base::adminState(CF::Device::AdminType adminState) 
+void PersonaDevice_persona_base::adminState(CF::AdministratableInterface::AdminType adminState) 
     throw (CORBA::SystemException)
 {
     // Force admin state to change usage state since usage state is currently protected
     switch (adminState) {
-        case CF::Device::LOCKED:
-            setUsageState(CF::Device::BUSY);
+        case CF::AdministratableInterface::LOCKED:
+            setUsageState(CF::CapacityManagement::BUSY);
             break;
-        case CF::Device::UNLOCKED:
-            setUsageState(CF::Device::IDLE);
+        case CF::AdministratableInterface::UNLOCKED:
+            setUsageState(CF::CapacityManagement::IDLE);
             break;
-        case CF::Device::SHUTTING_DOWN:
+        case CF::AdministratableInterface::SHUTTING_DOWN:
             // Do nothing
             break;
     }
@@ -118,31 +118,28 @@ void PersonaDevice_persona_base::releaseObject()
     // This function clears the component running condition so main shuts down everything
     try {
         stop();
-    } catch (CF::Resource::StopError& ex) {
+    } catch (CF::ControllableInterface::StopError& ex) {
         // TODO - this should probably be logged instead of ignored
     }
 
     // deactivate ports
-    releaseInPorts();
-    releaseOutPorts();
+    //releaseInPorts();
+    //releaseOutPorts();
 
 
     // SR:419
     LOG_DEBUG(PersonaDevice_persona_base, __FUNCTION__ << ": Receive releaseObject call");
-    if (_adminState == CF::Device::UNLOCKED) {
-        LOG_DEBUG(PersonaDevice_persona_base, __FUNCTION__ << ": Releasing Device")
-        setAdminState(CF::Device::SHUTTING_DOWN);
+    if (_adminState == CF::AdministratableInterface::UNLOCKED) {
+        setAdminState(CF::AdministratableInterface::SHUTTING_DOWN);
 
         // SR:418
         // TODO Release aggregate devices if more than one exists
         if (!CORBA::is_nil(_aggregateDevice)) {
             try {
-                _aggregateDevice->removeDevice(this->_this());
+                _aggregateDevice->removeDevice(this->identifier());
             } catch (...) {
             }
         }
-
-        LOG_DEBUG(PersonaDevice_persona_base, __FUNCTION__ << ": Done Releasing Device")
     }
 }
 
@@ -151,15 +148,10 @@ CORBA::Boolean PersonaDevice_persona_base::attemptToProgramParent()
 {
     // Return false if there is no reference to the parent
     if (_parentDevice == NULL) {
-        LOG_ERROR(PersonaDevice_persona_base, __FUNCTION__ << 
-            ": No reference to parent exists!");
         return false;
     }
 
     if (_parentAllocated == false) {
-
-        LOG_DEBUG(PersonaDevice_persona_base, __FUNCTION__ << 
-            ": About to allocate parent device");
         
         beforeHardwareProgrammed();
 
@@ -186,7 +178,6 @@ CORBA::Boolean PersonaDevice_persona_base::attemptToUnprogramParent()
 {
     // Return false if there is no reference to the parent
     if (_parentDevice == NULL) {
-        LOG_ERROR(PersonaDevice_persona_base, __FUNCTION__ << ": No reference to parent exists!");
         return false;
     }
     
@@ -195,7 +186,6 @@ CORBA::Boolean PersonaDevice_persona_base::attemptToUnprogramParent()
         
         // Grab previous user-defined allocation request
         if (_previousRequestProps.length() == 0) {
-            LOG_ERROR(PersonaDevice_persona_base, __FUNCTION__ << ": Previously requested hw_load Props empty!");
             return false;
         }
 
@@ -220,8 +210,6 @@ void PersonaDevice_persona_base::formatRequestProps(
 
     // Sanity check - Kick out if properties are empty
     if (requestProps.length() == 0) {
-        LOG_ERROR(PersonaDevice_persona_base, __FUNCTION__ << 
-            ": Unable to format hw_load_request properties.  Properties are empty!");
         return;
     }
 
@@ -229,8 +217,6 @@ void PersonaDevice_persona_base::formatRequestProps(
     if (requestProps.length() == 1) {
         propId = requestProps[0].id;
         if (propId == "hw_load_requests") {
-            LOG_DEBUG(PersonaDevice_persona_base, __FUNCTION__ <<
-                ": No formatting occurred - Request properties are properly formatted!");
             formattedProps = requestProps;
             return;
         }
@@ -248,8 +234,6 @@ void PersonaDevice_persona_base::formatRequestProps(
   
     // Case 2 - Properties are multiple hw_load_request structs
     if (allPropsAreHwLoadRequest) {
-        LOG_DEBUG(PersonaDevice_persona_base, __FUNCTION__ << 
-            ": Found hw_load_request array - Formatting to structseq");
         formattedProps.length(1);
         formattedProps[0].id = "hw_load_requests";
         formattedProps[0].value <<= requestProps;
@@ -258,8 +242,6 @@ void PersonaDevice_persona_base::formatRequestProps(
 
     // Case 3 - Properties reprensent the contents of a single hw_load_request
     if (foundRequestId) {
-        LOG_DEBUG(PersonaDevice_persona_base, __FUNCTION__ <<
-            ": Found hw_load_request contents - Formatting to struct and structseq");
         
         hwLoadRequest.length(1);
         hwLoadRequest[0].id = "hw_load_request";
@@ -270,7 +252,4 @@ void PersonaDevice_persona_base::formatRequestProps(
         formattedProps[0].value <<= hwLoadRequest;
         return;
     }
-    
-    LOG_ERROR(PersonaDevice_persona_base, __FUNCTION__ <<
-        ": Unable to format hw_load_request properties - Format unknown!");
 }

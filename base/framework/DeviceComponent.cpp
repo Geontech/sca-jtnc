@@ -35,9 +35,20 @@ DeviceComponent::DeviceComponent (char* componentRegistry_ior, char* _id, char* 
     initializeCommonAttributes(_id);
 }
 
+DeviceComponent::DeviceComponent (char* componentRegistry_ior, char* _id, char* _label, char* sftwrPrfl, CF::Properties capacities, char* compositeDev_ior) : component_running_mutex(),
+    component_running(&component_running_mutex) {
+    initializeCommonAttributes(_id);
+}
+
+DeviceComponent::DeviceComponent (char* componentRegistry_ior, char* _id, char* _label, char* sftwrPrfl, CF::Properties capacities) : component_running_mutex(),
+    component_running(&component_running_mutex) {
+    initializeCommonAttributes(_id);
+}
+
 void DeviceComponent::initializeCommonAttributes(const std::string _id) {
     _identifier = _id;
     _started = false;
+    _aggregateDevice = CF::AggregateDevice::_nil();
 }
 
 DeviceComponent::~DeviceComponent () {
@@ -135,6 +146,41 @@ CF::AdministratableInterface::AdminType DeviceComponent::adminState () throw (CO
 }
 
 void DeviceComponent::adminState (CF::AdministratableInterface::AdminType _adminType) {
+}
+
+bool DeviceComponent::isLocked ()
+{
+    if (_adminState == CF::AdministratableInterface::LOCKED) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+
+bool DeviceComponent::isDisabled ()
+{
+    return false;
+}
+
+
+bool DeviceComponent::isBusy ()
+{
+    if (_usageState == CF::CapacityManagement::BUSY) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+
+bool DeviceComponent::isIdle ()
+{
+    if (_usageState == CF::CapacityManagement::IDLE) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 void DeviceComponent::setExecparamProperties(std::map<std::string, char*>& execparams)

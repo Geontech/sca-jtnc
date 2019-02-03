@@ -193,13 +193,11 @@ int PersonaDevice_i::serviceFunction()
 }
 
 CORBA::Boolean PersonaDevice_i::allocateCapacity(const CF::Properties& capacities)
-        throw (CF::Device::InvalidState, CF::Device::InvalidCapacity, CF::Device::InsufficientCapacity, CORBA::SystemException) 
+        throw (CF::InvalidState, CF::CapacityManagement::InvalidCapacity, CORBA::SystemException) 
 {
     bool allocationSuccess = true;
 
     if (isBusy() || isLocked()) {
-        LOG_WARN(PersonaDevice_i, __FUNCTION__ << 
-            ": Cannot allocate capacities... Device state is locked and/or busy");
         return false;
     }
 
@@ -216,7 +214,7 @@ CORBA::Boolean PersonaDevice_i::allocateCapacity(const CF::Properties& capacitie
 }
 
 void PersonaDevice_i::deallocateCapacity(const CF::Properties& capacities)
-        throw (CF::Device::InvalidState, CF::Device::InvalidCapacity, CORBA::SystemException) 
+        throw (CF::InvalidState, CF::CapacityManagement::InvalidCapacity, CORBA::SystemException) 
 {
 
     /*
@@ -232,9 +230,9 @@ void PersonaDevice_i::hwLoadRequest(CF::Properties& request) {
     // Simple example of a single hw_load_request
     request.length(4);
     request[0].id = CORBA::string_dup("hw_load_request::request_id");
-    request[0].value <<= ossie::generateUUID(); 
+    request[0].value <<= sca::generateUUID(); 
     request[1].id = CORBA::string_dup("hw_load_request::requester_id");
-    request[1].value <<= ossie::corba::returnString(identifier());
+    request[1].value <<= sca::corba::returnString(identifier());
     request[2].id = CORBA::string_dup("hw_load_request::hardware_id");
     request[2].value <<= "MY_HARDWARE_TYPE";
     request[3].id = CORBA::string_dup("hw_load_request::load_filepath");
