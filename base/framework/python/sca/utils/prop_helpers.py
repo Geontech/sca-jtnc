@@ -210,31 +210,32 @@ def getPropNameDict(prf):
 
         nameDict[str(tagbase)] = str(structSequence.get_id())
         tagbase = tagbase + "."
-        struct = structSequence.get_struct()
+        if False:
+            struct = structSequence.get_struct()
 
-        # pull out all of the elements of the struct
-        for prop in struct.get_simple():
-            # make sure this struct element's name is unique
-            if prop.get_name() == None:
-                name = prop.get_id()
-            else:
-                name = prop.get_name()
-            if nameDict.has_key( tagbase + str(name)):
-                print "WARN: property with non-unique name %s" % name
-                continue
+            # pull out all of the elements of the struct
+            for prop in struct.get_simple():
+                # make sure this struct element's name is unique
+                if prop.get_name() == None:
+                    name = prop.get_id()
+                else:
+                    name = prop.get_name()
+                if nameDict.has_key( tagbase + str(name)):
+                    print "WARN: property with non-unique name %s" % name
+                    continue
 
-            nameDict[str(tagbase + str(name))] = str(prop.get_id())
-        for prop in struct.get_simplesequence():
-            # make sure this struct element's name is unique
-            if prop.get_name() == None:
-                name = prop.get_id()
-            else:
-                name = prop.get_name()
-            if nameDict.has_key( tagbase + str(name)):
-                print "WARN: property with non-unique name %s" % name
-                continue
+                nameDict[str(tagbase + str(name))] = str(prop.get_id())
+            for prop in struct.get_simplesequence():
+                # make sure this struct element's name is unique
+                if prop.get_name() == None:
+                    name = prop.get_id()
+                else:
+                    name = prop.get_name()
+                if nameDict.has_key( tagbase + str(name)):
+                    print "WARN: property with non-unique name %s" % name
+                    continue
 
-            nameDict[str(tagbase + str(name))] = str(prop.get_id())
+                nameDict[str(tagbase + str(name))] = str(prop.get_id())
           
     return nameDict
 
@@ -310,7 +311,7 @@ def isMatch(prop, modes, kinds, actions):
         if foundConf and foundAlloc:
             matchAction = True
 
-    elif isinstance(prop, (_parsers.PRFParser.struct, _parsers.PRFParser.structSequence)):
+    elif isinstance(prop, (_parsers.PRFParser.struct, _parsers.PRFParser.structsequence)):
         matchAction = True # There is no action, so always match
 
         matchKind = False
@@ -318,9 +319,13 @@ def isMatch(prop, modes, kinds, actions):
             k = [_configurationkind()]
         else:
             k = prop.get_configurationkind()
-        for kind in k:
-            if kind.get_kindtype() in kinds:
+        if type(k) != list:
+            if k.get_kindtype() in kinds:
                 matchKind = True
+        else:
+            for kind in k:
+                if kind.get_kindtype() in kinds:
+                    matchKind = True
 
         if k in kinds:
             matchKind = True

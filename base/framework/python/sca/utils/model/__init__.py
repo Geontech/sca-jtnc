@@ -1298,7 +1298,9 @@ class QueryableBase(object):
         # Struct Sequence
         for prop in self._prf.get_structsequence():
             if not commandline and _prop_helpers.isMatch(prop, modes, kinds, action):
-                if prop.get_struct() != None:
+                members = []
+                #if prop.get_struct() != None:
+                if False:
                     members = []
                     #get the struct definition
                     for prp in prop.get_struct().get_simple():
@@ -1358,9 +1360,11 @@ class QueryableBase(object):
                                 newValue[str(id_)] = _value
                             structSeqDefValue.append(newValue)
                 kindList = []
-                for k in prop.get_configurationkind():
-                    kindList.append(k.get_kindtype())
-                p = _prop_helpers.structSequenceProperty(id=prop.get_id(), structID=prop.get_struct().get_id(), valueType=members, kinds=kindList, props=prop.get_struct().get_simple()+prop.get_struct().get_simplesequence(), compRef=weakref.proxy(self), defValue=structSeqDefValue, mode=prop.get_mode())
+                #for k in prop.get_configurationkind():
+                kindList.append(prop.get_configurationkind().get_kindtype())
+                #p = _prop_helpers.structSequenceProperty(id=prop.get_id(), structID=prop.get_struct().get_id(), valueType=members, kinds=kindList, props=prop.get_struct().get_simple()+prop.get_struct().get_simplesequence(), compRef=weakref.proxy(self), defValue=structSeqDefValue, mode=prop.get_mode())
+                #p = _prop_helpers.structSequenceProperty(id=prop.get_id(), structID=prop.get_structrefid(), valueType=members, kinds=kindList, props=prop.get_struct().get_simple(), compRef=weakref.proxy(self), defValue=structSeqDefValue, mode=prop.get_mode())
+                p = _prop_helpers.structSequenceProperty(id=prop.get_id(), structID=prop.get_structrefid(), valueType=members, kinds=kindList, props=[], compRef=weakref.proxy(self), defValue=[], mode=prop.get_mode())
                 id_clean = _prop_helpers._cleanId(prop)
                 p.clean_name = _prop_helpers.addCleanName(id_clean, prop.get_id(), _displayNames, _duplicateNames)
                 propertySet.append(p)

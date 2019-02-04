@@ -60,6 +60,9 @@ class SBTestTest(scatest.CorbaTestCase):
     def tearDown(self):
         sb.release()
 
+    def test_programmable(self):
+        comp = sb.launch('ProgrammableDevice')
+
     def test_btd(self):
         comp = sb.launch('BasicTestDevice_cpp')
         print 'BasicTestDevice_cpp', comp.query([])

@@ -324,10 +324,13 @@ class Sandbox(object):
         # Helper method to classify the initialization stage for a particular
         # property. The caller provides the type-specific information (kinds,
         # commandline).
-        if kinds:
-            kinds = set(k.get_kindtype() for k in kinds)
+        if type(kinds) != list and kinds:
+            kinds = set((kinds.get_kindtype(),))
         else:
-            kinds = set(('configure',))
+            if kinds:
+                kinds = set(k.get_kindtype() for k in kinds)
+            else:
+                kinds = set(('configure',))
         if 'execparam' in kinds:
             return 'commandline'
         elif 'property' in kinds:
