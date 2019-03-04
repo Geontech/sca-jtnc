@@ -112,6 +112,7 @@ protected:
     bool _started;
     void initializeCommonAttributes(const std::string _id);
     std::string _identifier;
+    std::string compDev_ior;
     omni_mutex component_running_mutex;
     omni_condition component_running;
     CF::ComponentRegistry_ptr _deviceManagerRegistry;

@@ -33,7 +33,9 @@ class PersonaDevice_persona_base : public PersonaDevice_base
         PersonaDevice_persona_base(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl, CF::Properties capacities);
         PersonaDevice_persona_base(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl, CF::Properties capacities, char *compDev);
         virtual void construct();
-        virtual void setParentDevice(DeviceComponent* parentDevice) { _parentDevice = parentDevice; };
+        virtual void setParentDevice(DeviceComponent* parentDevice) {
+            _parentDevice = parentDevice;
+        };
         virtual DeviceComponent* getParentDevice() { return _parentDevice; };
         virtual void adminState(CF::AdministratableInterface::AdminType adminState) 
             throw (CORBA::SystemException);

@@ -25,18 +25,27 @@
 
 #include "sca/DeviceComponent.h"
 
-DeviceComponent::DeviceComponent (char* componentRegistry_ior, char* _id, char* _label, char* sftwrPrfl) : component_running_mutex(),
+DeviceComponent::DeviceComponent (char* componentRegistry_ior, char* _id, char* _label, char* compositeDev_ior) : component_running_mutex(),
     component_running(&component_running_mutex) {
+    if (compositeDev_ior) {
+        compDev_ior = compositeDev_ior;
+    }
     initializeCommonAttributes(_id);
 }
 
 DeviceComponent::DeviceComponent (char* componentRegistry_ior, char* _id, char* _label, char* sftwrPrfl, char* compositeDev_ior) : component_running_mutex(),
     component_running(&component_running_mutex) {
+    if (compositeDev_ior) {
+        compDev_ior = compositeDev_ior;
+    }
     initializeCommonAttributes(_id);
 }
 
 DeviceComponent::DeviceComponent (char* componentRegistry_ior, char* _id, char* _label, char* sftwrPrfl, CF::Properties capacities, char* compositeDev_ior) : component_running_mutex(),
     component_running(&component_running_mutex) {
+    if (compositeDev_ior) {
+        compDev_ior = compositeDev_ior;
+    }
     initializeCommonAttributes(_id);
 }
 
@@ -49,6 +58,17 @@ void DeviceComponent::initializeCommonAttributes(const std::string _id) {
     _identifier = _id;
     _started = false;
     _aggregateDevice = CF::AggregateDevice::_nil();
+    if (not compDev_ior.empty()) {
+        CORBA::Object_var _aggDev_obj = sca::corba::Orb()->string_to_object(compDev_ior.c_str());
+        if (CORBA::is_nil(_aggDev_obj)) {
+            std::cout<<"Invalid composite device IOR: " << compDev_ior<<std::endl;
+        } else {
+            _aggregateDevice = CF::AggregateDevice::_narrow(_aggDev_obj);
+            std::cout<<"................... adding device"<<std::endl;
+            _aggregateDevice->addDevice(this->_this(), _identifier.c_str());
+            std::cout<<"................... adding device"<<std::endl;
+        }
+    }
 }
 
 DeviceComponent::~DeviceComponent () {
@@ -237,7 +257,7 @@ void  DeviceComponent::postConstruction (std::string &registrar_ior)
 
 CF::AggregateDevice_ptr DeviceComponent::compositeDevice()
 {
-    return CF::AggregateDevice::_nil();
+    return _aggregateDevice;
 };
 
 void DeviceComponent::addPort (const std::string& name, PortBase* servant)
@@ -407,7 +427,6 @@ void DeviceComponent::start_lib_device(DeviceComponent::ctor_type ctor, struct s
     std::map<std::string, char*> execparams;
                 
     for (int i = 0; i < argc; i++) {
-            
         if (strcmp("COMPONENT_REGISTRY_IOR", argv[i]) == 0) {
             devMgr_ior = argv[++i];
         } else if (strcmp("DEVICE_ID", argv[i]) == 0) {

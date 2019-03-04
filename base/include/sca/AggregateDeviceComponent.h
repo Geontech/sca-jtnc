@@ -139,6 +139,9 @@ protected:
     omni_mutex component_running_mutex;
     omni_condition component_running;
     CF::ComponentRegistry_ptr _deviceManagerRegistry;*/
+    
+protected:
+    CF::ObjectSequence_var _devices;
 
 private:
     template <class T>

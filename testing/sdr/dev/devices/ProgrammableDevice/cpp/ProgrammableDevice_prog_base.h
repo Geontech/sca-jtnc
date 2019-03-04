@@ -547,6 +547,9 @@ std::cout<<"(2a)"<<std::endl;
             combinedProps.length(skipRunInd + 1);
             combinedProps[skipRunInd].id = CORBA::string_dup("SKIP_RUN");
             combinedProps[skipRunInd].value <<= true;
+            combinedProps.length(combinedProps.length() + 1);
+            combinedProps[combinedProps.length() - 1].id = CORBA::string_dup("COMPOSITE_DEVICE_IOR");
+            combinedProps[combinedProps.length() - 1].value <<= sca::corba::objectToString(this->_this());
 
             for (size_t ii = 0; ii < combinedProps.length(); ii++) {
                 std::string id(combinedProps[ii].id);

@@ -27,16 +27,21 @@
 
 AggregateExecutableDeviceComponent::AggregateExecutableDeviceComponent (char* componentRegistry_ior, char* _id, char* _label, char* sftwrPrfl) : DeviceComponent(componentRegistry_ior, _id, _label, sftwrPrfl) {
     //initializeCommonAttributes(_id);
+
+    _devices = new CF::ObjectSequence();
 }
 
 AggregateExecutableDeviceComponent::AggregateExecutableDeviceComponent (char* componentRegistry_ior, char* _id, char* _label, char* sftwrPrfl, char* compositeDev_ior) : DeviceComponent(componentRegistry_ior, _id, _label, sftwrPrfl, compositeDev_ior) {
     //initializeCommonAttributes(_id);
+    _devices = new CF::ObjectSequence();
 }
 AggregateExecutableDeviceComponent::AggregateExecutableDeviceComponent (char* componentRegistry_ior, char* _id, char* _label, char* sftwrPrfl, CF::Properties capacities) : DeviceComponent(componentRegistry_ior, _id, _label, sftwrPrfl) {
     //initializeCommonAttributes(_id);
+    _devices = new CF::ObjectSequence();
 }
 AggregateExecutableDeviceComponent::AggregateExecutableDeviceComponent (char* componentRegistry_ior, char* _id, char* _label, char* sftwrPrfl, CF::Properties capacities, char *compDev) : DeviceComponent(componentRegistry_ior, _id, _label, sftwrPrfl, compDev) {
     //initializeCommonAttributes(_id);
+    _devices = new CF::ObjectSequence();
 }
 
 /*void DeviceComponent::initializeCommonAttributes(const std::string _id) {
@@ -58,32 +63,41 @@ void AggregateExecutableDeviceComponent::load (CF::FileSystem_ptr fs, const char
 
 void AggregateExecutableDeviceComponent::addDevice(CORBA::Object_ptr associatedDevice, const char* identifier)  throw (CF::InvalidObjectReference)
 {
-    /*unsigned int devSeqLength = _devices->length();
+    unsigned int devSeqLength = _devices->length();
 
+    CF::DeviceComponent_var tmp_assocdev = CF::DeviceComponent::_narrow(associatedDevice);
     for (unsigned int i = 0; i < devSeqLength; i++) {
-        if (!strcmp(associatedDevice->identifier(), (*_devices)[i]->identifier())) {
-            return;
+        //CF::DeviceComponent_var tmpdev = (*_devices)[i]._narrow();
+        CF::DeviceComponent_var tmpdev = CF::DeviceComponent::_narrow(_devices[i]);
+        if (tmpdev) {
+            if (!strcmp(tmp_assocdev->identifier(), tmpdev->identifier())) {
+                return;
+            }
         }
     }
     _devices->length(devSeqLength + 1);
-    (*_devices)[devSeqLength] = CF::Device::_duplicate(associatedDevice);*/
+    _devices[devSeqLength] = CORBA::Object::_duplicate(associatedDevice);
 }
 
 void AggregateExecutableDeviceComponent::removeDevice(const char* identifier)  throw (CF::InvalidObjectReference)
 {
-    /*unsigned int devSeqLength = _devices->length();
+    unsigned int devSeqLength = _devices->length();
+    std::string tmp_assoc_identifier = sca::corba::returnString(identifier);
 
     for (unsigned int i = 0; i < devSeqLength; i++) {
-        if (!strcmp(associatedDevice->identifier(), (*_devices)[i]->identifier())) {
+        CF::DeviceComponent_var tmpdev = CF::DeviceComponent::_narrow(_devices[i]);
+        std::string tmp_dev_identifier = sca::corba::returnString(tmpdev->identifier());
+        if (tmp_assoc_identifier == tmp_dev_identifier) {
             for (unsigned int j = i + 1; j < devSeqLength; j++) {
-                (*_devices)[j-1] = (*_devices)[j];
+                _devices[j-1] = _devices[j];
             }
             _devices->length(devSeqLength - 1);
         }
     }
 
-    return;*/
+    return;
 }
+
 CF::AggregateDevice_ptr AggregateExecutableDeviceComponent::compositeDevice()
 {
     return CF::AggregateDevice::_nil();
