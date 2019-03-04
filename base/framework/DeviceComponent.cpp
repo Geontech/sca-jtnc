@@ -406,7 +406,9 @@ void DeviceComponent::start_device(DeviceComponent::ctor_type ctor, struct sigac
         exit(EXIT_FAILURE);
     }
     device->run();
+    std::cout<<"programmable device "<<device->_refcount_value()<<std::endl;
     device->_remove_ref();
+    std::cout<<"programmable device b "<<device->_refcount_value()<<std::endl;
     sca::corba::OrbShutdown(true);
 }
 

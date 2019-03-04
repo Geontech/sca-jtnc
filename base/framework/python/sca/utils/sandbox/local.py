@@ -220,7 +220,6 @@ class LocalLauncher(SandboxLauncher):
         impl = None
         if self._host:
             device = self._host
-            print 'self._host============', self._host, self._host.ref
             impl = comp._spd.get_implementation()[0]
 
         sdrroot = comp._sandbox.getSdrRoot()
@@ -251,26 +250,15 @@ class LocalLauncher(SandboxLauncher):
             if not self._host:
                 process = device.execute(entry_point, deps, execparams, debugger, window, self._stdout)
             else:
-                print entry_point
                 _cmdline_params = []
-                print 'self._sdrroot', sdrroot, sdrroot.getLocation(), dir(sdrroot)
-                print '+++++', entry_point.find(sdrroot.getLocation()), entry_point[len(sdrroot.getLocation()):]
                 for item in execparams:
                     _cmdline_params.append(CF.DataType(id=item,value=to_any(execparams[item])))
                 try:
-                    print '............ calling terminate'
-                    process_info = CF.ExecutableInterface.ExecutionID_Type(1,2,"hello",[])
-                    print 'process_info: ', process_info
-                    print device.ref
-                    print device.ref.terminate
-                    device.ref.terminate(process_info)
                     process = device.execute('/sdr'+entry_point[len(sdrroot.getLocation()):], [], _cmdline_params)
                 except Exception, e:
                     print 'received exception', e
-                print '========== got the return', process
 
             # Set up a callback to notify when the component exits abnormally.
-            print '............. stuff (1)'
             name = comp._instanceName
             def terminate_callback(pid, status):
                 if status > 0:
@@ -279,11 +267,9 @@ class LocalLauncher(SandboxLauncher):
                     print 'Component %s (pid=%d) terminated with signal %d' % (name, pid, -status)
             if not self._host:
                 process.setTerminationCallback(terminate_callback)
-            print '............. stuff (2)'
 
         # Wait for the component to register with the virtual naming service or
         # DeviceManager.
-        print '............. stuff (3)'
         if self._timeout is None:
             # Default timeout depends on whether the debugger might increase
             # the startup time
@@ -293,7 +279,6 @@ class LocalLauncher(SandboxLauncher):
                 timeout = 10.0
         else:
             timeout = self._timeout
-        print '............. stuff (4)'
         sleepIncrement = 0.1
         while self.getReference(comp) is None:
             if not process.isAlive():
@@ -304,7 +289,6 @@ class LocalLauncher(SandboxLauncher):
                 process.terminate()
                 raise RuntimeError, "%s '%s' did not register with virtual environment"  % (self._getType(), comp._instanceName)
 
-        print '............. stuff (5)'
         # Attach a debugger to the process.
         if debugger and debugger.canAttach():
             if not window:
@@ -314,7 +298,6 @@ class LocalLauncher(SandboxLauncher):
             debug_process = launcher.LocalProcess(debug_command, debug_args)
             process.addChild(debug_process)
 
-        print '............. stuff (6)'
         # Store the process on the component proxy.
         if impl.get_code().get_type() == 'SharedLibrary' and self._shared:
             comp._process = None
@@ -323,7 +306,6 @@ class LocalLauncher(SandboxLauncher):
             comp._process = process
             comp._pid = process.pid()
 
-        print '............. stuff (7)'
         # Return the now-resolved CORBA reference.
         ref = self.getReference(comp)
         try:
@@ -339,7 +321,7 @@ class LocalLauncher(SandboxLauncher):
             ref._non_existent()
         except:
             pass
-        print '............. stuff (8)'
+
         return ref
 
     def setup(self, comp):
@@ -547,11 +529,9 @@ class LocalSandbox(Sandbox):
         self.__components[component._instanceName] = component
     
     def _unregisterComponent(self, component):
-        print '................. registering'
         name = component._instanceName
         if name in self.__components:
             del self.__components[name]
-        print '................. done registering'
     
     def _addService(self, service):
         self.__services[service._instanceName] = service

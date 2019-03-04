@@ -218,8 +218,6 @@ class Sandbox(object):
                debugger=None, window=None, properties={}, configure=True,
                initialize=True, timeout=None, objType=None, shared=True, stdout=None, host=None):
         sdrRoot = self.getSdrRoot()
-        
-        print '============= launching', descriptor, host
 
         # Parse the component XML profile.
         profile = sdrRoot.findProfile(descriptor, objType)

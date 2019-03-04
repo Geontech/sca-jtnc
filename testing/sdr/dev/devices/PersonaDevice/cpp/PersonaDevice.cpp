@@ -52,7 +52,6 @@ PersonaDevice_i::PersonaDevice_i(char *devMgr_ior, char *id, char *lbl, char *sf
 
 PersonaDevice_i::~PersonaDevice_i()
 {
-    std::cout<<"============ destroying device"<<std::endl;
 }
 
 /***********************************************************************************************

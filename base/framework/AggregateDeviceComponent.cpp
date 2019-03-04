@@ -98,11 +98,6 @@ void AggregateExecutableDeviceComponent::removeDevice(const char* identifier)  t
     return;
 }
 
-CF::AggregateDevice_ptr AggregateExecutableDeviceComponent::compositeDevice()
-{
-    return CF::AggregateDevice::_nil();
-};
-
 /*
 void DeviceComponent::run() {
     component_running.wait();

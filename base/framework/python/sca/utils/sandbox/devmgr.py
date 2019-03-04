@@ -68,7 +68,6 @@ class DeviceManagerStub(CF__POA.FullComponentRegistry):
         poa.deactivate_object(self._object_id)
 
     def _registerDevice(self, identifier, device):
-        print '........... adding device', device
         if identifier in self.__devices:
             log.warning("Device '%s' already registered with virtual DeviceManager", identifier)
         log.debug("Registering device '%s' with virtual DeviceManager", identifier)
@@ -86,7 +85,6 @@ class DeviceManagerStub(CF__POA.FullComponentRegistry):
         return None
 
     def _unregisterDevice(self, identifier):
-        print '======== unregistering device'
         if not identifier:
             log.warning('Virtual DeviceManager ignoring unregistration of unidentified device')
         elif identifier not in self.__devices:
@@ -97,13 +95,10 @@ class DeviceManagerStub(CF__POA.FullComponentRegistry):
             del self.__devices[identifier]
 
     def registerComponent(self, registeringDevice):
-        print '*********** received the register request'
         try:
             identifier = registeringDevice.identifier
         except:
-            print '................ bad'
             return
-        print '........ registered ok'
         self.__lock.acquire()
         try:
             self._registerDevice(identifier, registeringDevice)
@@ -117,13 +112,11 @@ class DeviceManagerStub(CF__POA.FullComponentRegistry):
         return ""
 
     def unregisterComponent(self, unregisteringDevice_id):
-        print '................. registering'
         self.__lock.acquire()
         try:
             self._unregisterDevice(unregisteringDevice_id)
         finally:
             self.__lock.release()
-        print '................. done registering'
 
     def getDevice(self, identifier):
         self.__lock.acquire()

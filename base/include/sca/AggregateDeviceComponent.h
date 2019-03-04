@@ -93,8 +93,7 @@ public:
 
     void addDevice(CORBA::Object_ptr associatedDevice, const char* identifier) throw (CF::InvalidObjectReference);
     void removeDevice(const char* identifier) throw (CF::InvalidObjectReference);
-    CF::AggregateDevice_ptr compositeDevice();
- 
+
     /*char* identifier () throw (CORBA::SystemException);
     CORBA::Boolean started() throw (CORBA::SystemException);
     void start () throw (CF::ControllableInterface::StartError, CORBA::SystemException);
