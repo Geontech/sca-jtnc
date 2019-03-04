@@ -257,7 +257,7 @@ void  DeviceComponent::postConstruction (std::string &registrar_ior)
 
 CF::AggregateDevice_ptr DeviceComponent::compositeDevice()
 {
-    return _aggregateDevice;
+    return CF::AggregateDevice::_duplicate(_aggregateDevice);
 };
 
 void DeviceComponent::addPort (const std::string& name, PortBase* servant)

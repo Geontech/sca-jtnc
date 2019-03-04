@@ -87,8 +87,14 @@ public:
 
     CF::ObjectSequence* devices ()
     {
-        CF::ObjectSequence *retval = new CF::ObjectSequence();
-        return retval;
+        CF::ObjectSequence_var retval = new CF::ObjectSequence();
+        
+        retval->length(_devices->length());
+        for (unsigned int i=0; i<_devices->length(); i++) {
+            retval[i] = _devices[i];
+        }
+
+        return retval._retn();
     }
 
     void addDevice(CORBA::Object_ptr associatedDevice, const char* identifier) throw (CF::InvalidObjectReference);
