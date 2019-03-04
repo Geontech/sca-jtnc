@@ -441,10 +441,6 @@ void DeviceComponent::start_lib_device(DeviceComponent::ctor_type ctor, struct s
         }
     }
 
-    // The ORB must be initialized before configuring logging, which may use
-    // CORBA to get its configuration file. Devices do not need persistent IORs.
-    sca::corba::CorbaInit(argc, argv);
-
     DeviceComponent* device = ctor(devMgr_ior, id, blank_string, composite_device);
 
     // setting all the execparams passed as argument, this method resides in the Resource_impl class
