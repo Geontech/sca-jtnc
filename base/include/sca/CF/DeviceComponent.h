@@ -118,6 +118,14 @@
 #define __CFControllableInterface_hh_EXTERNAL_GUARD__
 #include <CFControllableInterface.h>
 #endif
+#ifndef __CFAggregateDevice_hh_EXTERNAL_GUARD__
+#define __CFAggregateDevice_hh_EXTERNAL_GUARD__
+#include <CFAggregateDevice.h>
+#endif
+#ifndef __CFAggregateDeviceAttributes_hh_EXTERNAL_GUARD__
+#define __CFAggregateDeviceAttributes_hh_EXTERNAL_GUARD__
+#include <CFAggregateDeviceAttributes.h>
+#endif
 
 
 
@@ -226,7 +234,8 @@ _CORBA_MODULE_BEG
     public virtual _objref_PropertySet,
     public virtual _objref_PortAccessor,
     public virtual _objref_LifeCycle,
-    public virtual _objref_ControllableInterface
+    public virtual _objref_ControllableInterface,
+    public virtual _objref_AggregateDeviceAttributes
   {
   public:
     // IDL operations
@@ -267,7 +276,8 @@ _CORBA_MODULE_BEG
     public virtual _impl_PropertySet,
     public virtual _impl_PortAccessor,
     public virtual _impl_LifeCycle,
-    public virtual _impl_ControllableInterface
+    public virtual _impl_ControllableInterface,
+    public virtual _impl_AggregateDeviceAttributes
   {
   public:
     virtual ~_impl_DeviceComponent();
@@ -302,7 +312,8 @@ _CORBA_MODULE_BEG
       public virtual PropertySet,
       public virtual PortAccessor,
       public virtual LifeCycle,
-      public virtual ControllableInterface
+      public virtual ControllableInterface,
+      public virtual AggregateDeviceAttributes
   {
   public:
     virtual ~DeviceComponent();

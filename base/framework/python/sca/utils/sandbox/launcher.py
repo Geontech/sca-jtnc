@@ -169,6 +169,8 @@ class VirtualDevice(object):
         return True
 
     def matchImplementation(self, sdrroot, profile, spd):
+        if len(spd.get_implementation()) == 1:
+            return spd.get_implementation()[0]
         for impl in spd.get_implementation():
             if self._checkImplementation(sdrroot, profile, impl):
                 return impl

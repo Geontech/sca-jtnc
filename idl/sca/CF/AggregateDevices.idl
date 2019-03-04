@@ -28,20 +28,19 @@
 */
 #include "DeviceComponent.idl"
 #include "CFAggregateDevice.idl"
-#include "CFAggregateDeviceAttributes.idl"
 #include "CFLoadableInterface.idl"
 #include "CFExecutableInterface.idl"
 
 /* These are SCA CoreFramework extensions provided by OSSIE
 */
 module CF {
-  interface AggregatePlainDevice : CF::DeviceComponent, CF::AggregateDevice, CF::AggregateDeviceAttributes
+  interface AggregatePlainDevice : CF::DeviceComponent, CF::AggregateDevice
   {};
 
-  interface AggregateLoadableDevice : CF::DeviceComponent, CF::LoadableInterface, CF::AggregateDevice, CF::AggregateDeviceAttributes
+  interface AggregateLoadableDevice : CF::DeviceComponent, CF::LoadableInterface, CF::AggregateDevice
   {};
 
-  interface AggregateExecutableDevice : CF::DeviceComponent, CF::LoadableInterface, CF::ExecutableInterface, CF::AggregateDevice, CF::AggregateDeviceAttributes
+  interface AggregateExecutableDevice : CF::DeviceComponent, CF::LoadableInterface, CF::ExecutableInterface, CF::AggregateDevice
   {};
 };
 #endif

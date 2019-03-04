@@ -1225,7 +1225,7 @@ def release():
 def launch(descriptor, instanceName=None, refid=None, impl=None,
            debugger=None, window=None, execparams={}, configure=True,
            initialize=True, timeout=None, objType=None, properties={},
-           shared=True, stdout=None, parentDevice=None):
+           shared=True, stdout=None, host=None):
     """
     Execute a softpkg, returning a proxy object. This is a factory function
     that may return a component, device or service depending on the SPD.
@@ -1295,7 +1295,7 @@ def launch(descriptor, instanceName=None, refid=None, impl=None,
     return _getSandbox().launch(descriptor=descriptor, instanceName=instanceName, refid=refid,
                                 impl=impl, debugger=debugger, window=window, properties=properties,
                                 initialize=initialize, configure=configure, timeout=timeout,
-                                objType=objType, shared=shared, stdout=stdout)
+                                objType=objType, shared=shared, stdout=stdout, host=host)
 
 def createEventChannel(name, exclusive=False):
     """

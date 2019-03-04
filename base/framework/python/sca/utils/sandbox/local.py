@@ -119,9 +119,8 @@ class LocalSdrRoot(SdrRoot):
             descriptor = os.path.expanduser(descriptor)
         return super(LocalSdrRoot,self).findProfile(descriptor, objType=objType)
 
-
 class LocalLauncher(SandboxLauncher):
-    def __init__(self, execparams, initProps, initialize, configProps, debugger, window, timeout, shared, stdout=None):
+    def __init__(self, execparams, initProps, initialize, configProps, debugger, window, timeout, shared, stdout=None, host=None):
         self._execparams = execparams
         self._debugger = debugger
         self._window = window
@@ -131,6 +130,7 @@ class LocalLauncher(SandboxLauncher):
         self._timeout = timeout
         self._shared = shared
         self._stdout = stdout
+        self._host = host
 
     def _getImplementation(self, spd, identifier):
         for implementation in spd.get_implementation():
@@ -217,11 +217,18 @@ class LocalLauncher(SandboxLauncher):
 
         # Find a suitable implementation
         device = launcher.VirtualDevice()
+        impl = None
+        if self._host:
+            device = self._host
+            print 'self._host============', self._host, self._host.ref
+            impl = comp._spd.get_implementation()[0]
+
         sdrroot = comp._sandbox.getSdrRoot()
-        if comp._impl:
-            impl = self._getImplementation(comp._spd, comp._impl)
-        else:
-            impl = device.matchImplementation(sdrroot, comp._profile, comp._spd)
+        if not impl:
+            if comp._impl:
+                impl = self._getImplementation(comp._spd, comp._impl)
+            else:
+                impl = device.matchImplementation(sdrroot, comp._profile, comp._spd)
         log.trace("Using implementation '%s'", impl.get_id())
 
         # Resolve all dependency localfiles
@@ -230,7 +237,10 @@ class LocalLauncher(SandboxLauncher):
         # Execute the entry point, either on the virtual device or the Sandbox
         # component host
         entry_point = sdrroot.relativePath(comp._profile, impl.get_code().get_entrypoint().valueOf_)
-        if impl.get_code().get_type() == 'SharedLibrary':
+        if self._host:
+            if hasattr(self._host.ref, 'execute'):
+                self._host.execute = self._host.ref.execute
+        if impl.get_code().get_type() == 'SharedLibrary' and not self._host:
             if self._shared:
                 container = comp._sandbox._getComponentHost(_debugger = debugger)
             else:
@@ -238,19 +248,42 @@ class LocalLauncher(SandboxLauncher):
             container.executeLinked(entry_point, [], execparams, deps)
             process = container._process
         else:
-            process = device.execute(entry_point, deps, execparams, debugger, window, self._stdout)
+            if not self._host:
+                process = device.execute(entry_point, deps, execparams, debugger, window, self._stdout)
+            else:
+                print entry_point
+                _cmdline_params = []
+                print 'self._sdrroot', sdrroot, sdrroot.getLocation(), dir(sdrroot)
+                print '+++++', entry_point.find(sdrroot.getLocation()), entry_point[len(sdrroot.getLocation()):]
+                for item in execparams:
+                    _cmdline_params.append(CF.DataType(id=item,value=to_any(execparams[item])))
+                try:
+                    print '............ calling terminate'
+                    process_info = CF.ExecutableInterface.ExecutionID_Type(1,2,"hello",[])
+                    print 'process_info: ', process_info
+                    print device.ref
+                    print device.ref.terminate
+                    device.ref.terminate(process_info)
+                    process = device.execute('/sdr'+entry_point[len(sdrroot.getLocation()):], [], _cmdline_params)
+                except Exception, e:
+                    print 'received exception', e
+                print '========== got the return', process
 
             # Set up a callback to notify when the component exits abnormally.
+            print '............. stuff (1)'
             name = comp._instanceName
             def terminate_callback(pid, status):
                 if status > 0:
                     print 'Component %s (pid=%d) exited with status %d' % (name, pid, status)
                 elif status < 0:
                     print 'Component %s (pid=%d) terminated with signal %d' % (name, pid, -status)
-            process.setTerminationCallback(terminate_callback)
+            if not self._host:
+                process.setTerminationCallback(terminate_callback)
+            print '............. stuff (2)'
 
         # Wait for the component to register with the virtual naming service or
         # DeviceManager.
+        print '............. stuff (3)'
         if self._timeout is None:
             # Default timeout depends on whether the debugger might increase
             # the startup time
@@ -260,6 +293,7 @@ class LocalLauncher(SandboxLauncher):
                 timeout = 10.0
         else:
             timeout = self._timeout
+        print '............. stuff (4)'
         sleepIncrement = 0.1
         while self.getReference(comp) is None:
             if not process.isAlive():
@@ -270,6 +304,7 @@ class LocalLauncher(SandboxLauncher):
                 process.terminate()
                 raise RuntimeError, "%s '%s' did not register with virtual environment"  % (self._getType(), comp._instanceName)
 
+        print '............. stuff (5)'
         # Attach a debugger to the process.
         if debugger and debugger.canAttach():
             if not window:
@@ -279,6 +314,7 @@ class LocalLauncher(SandboxLauncher):
             debug_process = launcher.LocalProcess(debug_command, debug_args)
             process.addChild(debug_process)
 
+        print '............. stuff (6)'
         # Store the process on the component proxy.
         if impl.get_code().get_type() == 'SharedLibrary' and self._shared:
             comp._process = None
@@ -287,6 +323,7 @@ class LocalLauncher(SandboxLauncher):
             comp._process = process
             comp._pid = process.pid()
 
+        print '............. stuff (7)'
         # Return the now-resolved CORBA reference.
         ref = self.getReference(comp)
         try:
@@ -302,6 +339,7 @@ class LocalLauncher(SandboxLauncher):
             ref._non_existent()
         except:
             pass
+        print '............. stuff (8)'
         return ref
 
     def setup(self, comp):
@@ -487,7 +525,7 @@ class LocalSandbox(Sandbox):
         return True
 
     def _createLauncher(self, comptype, execparams, initProps, initialize, configProps, debugger,
-                        window, timeout, shared, stdout):
+                        window, timeout, shared, stdout, host=None):
         if comptype == 'resource':
             clazz = LocalComponentLauncher
         elif comptype in ('device', 'loadabledevice', 'executabledevice'):
@@ -496,7 +534,7 @@ class LocalSandbox(Sandbox):
             clazz = LocalServiceLauncher 
         else:
             return None
-        return clazz(execparams, initProps, initialize, configProps, debugger, window, timeout, shared, stdout)
+        return clazz(execparams, initProps, initialize, configProps, debugger, window, timeout, shared, stdout, host)
 
     def getComponents(self):
         return self.__components.values()
@@ -509,9 +547,11 @@ class LocalSandbox(Sandbox):
         self.__components[component._instanceName] = component
     
     def _unregisterComponent(self, component):
+        print '................. registering'
         name = component._instanceName
         if name in self.__components:
             del self.__components[name]
+        print '................. done registering'
     
     def _addService(self, service):
         self.__services[service._instanceName] = service

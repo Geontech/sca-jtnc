@@ -30,10 +30,11 @@
 #include "CFPortAccessor.idl"
 #include "CFLifeCycle.idl"
 #include "CFControllableInterface.idl"
+#include "CFAggregateDeviceAttributes.idl"
 
 module CF {
 
-   interface DeviceComponent: CF::DeviceAttributes, CF::AdministratableInterface, CF::CapacityManagement, CF::TestableInterface, CF::PropertySet, CF::PortAccessor, CF::LifeCycle, CF::ControllableInterface {
+   interface DeviceComponent: CF::DeviceAttributes, CF::AdministratableInterface, CF::CapacityManagement, CF::TestableInterface, CF::PropertySet, CF::PortAccessor, CF::LifeCycle, CF::ControllableInterface, CF::AggregateDeviceAttributes {
    };
 };
 #endif

@@ -22,7 +22,6 @@
 #define PROGRAMMABLEDEVICE_IMPL_BASE_H
 
 #include <boost/thread.hpp>
-//#include <ossie/ExecutableDevice_impl.h>
 #include <sca/CF/AggregateDevices.h>
 #include <sca/AggregateDeviceComponent.h>
 

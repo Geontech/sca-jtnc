@@ -76,6 +76,7 @@ public:
     void deallocateCapacity (const CF::Properties& capacities) throw (CF::InvalidState, CF::CapacityManagement::InvalidCapacity, CORBA::SystemException);
     CF::DeviceAttributes::OperationalType operationalState () throw (CORBA::SystemException);
     CF::AdministratableInterface::AdminType adminState ()throw (CORBA::SystemException);
+    CF::AggregateDevice_ptr compositeDevice();
     void adminState (CF::AdministratableInterface::AdminType _adminType);
     void addPort (const std::string& name, PortBase* servant);
     void addPort (const std::string& name, const std::string& description, PortBase* servant);
@@ -95,6 +96,10 @@ public:
     template<class T>
     static void start_device(T** devPtr, struct sigaction sa, int argc, char* argv[]) {
         start_device(boost::bind(&DeviceComponent::make_device<T>,boost::ref(*devPtr),_1,_2,_3,_4), sa, argc, argv);
+    }
+    template<class T>
+    static void start_lib_device(T** devPtr, struct sigaction sa, int argc, char* argv[]) {
+        start_lib_device(boost::bind(&DeviceComponent::make_device<T>,boost::ref(*devPtr),_1,_2,_3,_4), sa, argc, argv);
     }
     virtual void run ();
     virtual void halt ();
@@ -135,6 +140,9 @@ private:
 
     DeviceComponent(); // Code that tries to use this constructor will not work
     DeviceComponent(DeviceComponent&); // No copying
+
+public:
+    static void start_lib_device(ctor_type ctor, struct sigaction sa, int argc, char* argv[]);
 
 };
 

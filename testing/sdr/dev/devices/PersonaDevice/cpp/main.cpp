@@ -24,7 +24,7 @@
 
 PersonaDevice_i *devicePtr;
 
-void signal_catcher(int sig)
+/*void signal_catcher(int sig)
 {
     // IMPORTANT Don't call exit(...) in this function
     // issue all CORBA calls that you need for cleanup here before calling ORB shutdown
@@ -34,24 +34,30 @@ void signal_catcher(int sig)
 }
 int main(int argc, char* argv[])
 {
+    std::cout<<"================ main begin"<<std::endl;
     struct sigaction sa;
     sa.sa_handler = signal_catcher;
     sa.sa_flags = 0;
     devicePtr = 0;
 
     DeviceComponent::start_device(&devicePtr, sa, argc, argv);
+    std::cout<<"================ main end"<<std::endl;
     return 0;
 }
-
+*/
 extern "C" {
     DeviceComponent* construct(int argc, char* argv[], DeviceComponent* parentDevice) {
 
+std::cout<<"------------- persona construct (1)"<<std::endl;
         struct sigaction sa;
-        sa.sa_handler = signal_catcher;
-        sa.sa_flags = 0;
+        /*sa.sa_handler = signal_catcher;
+        sa.sa_flags = 0;*/
         devicePtr = 0;
+std::cout<<"------------- persona construct (2)"<<std::endl;
 
-        DeviceComponent::start_device(&devicePtr, sa, argc, argv);
+        //DeviceComponent::start_device(&devicePtr, sa, argc, argv);
+        DeviceComponent::start_lib_device(&devicePtr, sa, argc, argv);
+std::cout<<"------------- persona construct (3)"<<std::endl;
 
         // Any addition parameters passed into construct can now be
         // set directly onto devicePtr since it is the instantiated
@@ -59,6 +65,7 @@ extern "C" {
         //      Example:
         //         devicePtr->setSharedAPI(sharedAPI);
         devicePtr->setParentDevice(parentDevice);
+std::cout<<"------------- persona construct (4)"<<std::endl;
 
         return devicePtr;
     }

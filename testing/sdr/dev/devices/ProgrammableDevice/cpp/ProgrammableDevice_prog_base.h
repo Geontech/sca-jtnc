@@ -189,6 +189,7 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
             _personaMap.clear();
             _processMap.clear();
             _processIdIncrement = 0;
+            counter=0;
 
             _defaultHwLoadStatuses.clear();
             _defaultHwLoadStatuses.resize(1);
@@ -242,6 +243,7 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
             if (persona == NULL) {
                 throw (CF::ExecutableInterface::ExecuteFail());
             }
+            std::cout<<"........... refcount c: "<<persona->_refcount_value()<<std::endl;
            
             // Grab the name from the instantiated object 
             personaId = sca::corba::returnString(persona->identifier());
@@ -251,13 +253,25 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
             _processMap[++_processIdIncrement] = personaId;
 
             CF::ExecutableInterface::ExecutionID_Type_var retval = new CF::ExecutableInterface::ExecutionID_Type();
-            retval->threadId = 0;
-            retval->processId = _processIdIncrement;
-            //retval->processCollocation;
-            //retval->cores;
+            retval->threadId = (CORBA::ULongLong) 0;
+            retval->processId = (CORBA::ULongLong) _processIdIncrement;
+            retval->processCollocation = CORBA::string_dup("none");
+            /*CF::ULongSeq_var cores = new CF::ULongSeq;
+            cores->length(0);
+            retval->cores = cores;*/
+            retval->cores.length(0);
 
+            std::cout<<"........... refcount d: "<<persona->_refcount_value()<<std::endl;
             return retval._retn();
         }
+
+        struct DeviceEntry {
+            //boost::scoped_ptr<ModuleBundle> bundle;
+            DeviceComponent* servant;
+        };
+        typedef std::map<int,DeviceEntry*> ComponentTable;
+        ComponentTable activeComponents;
+        int counter;
         
         void terminate (CF::ExecutableInterface::ExecutionID_Type exec_arg)
             throw (
@@ -269,6 +283,13 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
             ProcessMapIter processIter;
             PersonaMapIter personaIter;
             PersonaId personaId;
+            
+            std::cout<<"........... terminate call"<<std::endl;
+            std::cout<<"exec_arg.processId: "<<exec_arg.processId<<std::endl;
+            std::cout<<"exec_arg.threadId: "<<exec_arg.threadId<<std::endl;
+            std::cout<<"exec_arg.processCollocation: "<<exec_arg.processCollocation<<std::endl;
+            std::cout<<"exec_arg.cores: "<<exec_arg.cores.length()<<std::endl;
+            return;
 
             // Search for the personaId that related to the incoming terminate request
             processIter = _processMap.find(exec_arg.processId);
@@ -429,23 +450,34 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
             throw ( CF::LifeCycle::ReleaseError, 
                     CORBA::SystemException)
         {
+            std::cout<<".............. begin shutdown (1)"<<std::endl;
             // Initialize local variables
             ProcessMapIter processIter;
             PersonaMapIter personaIter;
 
+            std::cout<<".............. begin shutdown (2)"<<std::endl;
             // Terminate all children that were executed
             for (processIter = _processMap.begin(); processIter != _processMap.end(); processIter++) {
-                //this->terminate(processIter->second);
+                std::cout<<"........... refcount a: "<<_personaMap[processIter->second]->_refcount_value()<<std::endl;
+                std::cout<<"... foo"<<std::endl;
+                _deviceManagerFullRegistry->unregisterComponent(_personaMap[processIter->second]->identifier());
+                _personaMap[processIter->second]->releaseObject();
+                std::cout<<"........... refcount a1: "<<_personaMap[processIter->second]->_refcount_value()<<std::endl;
+                //_personaMap[processIter->second]->_remove_ref();
+                std::cout<<"........... refcount b: "<<_personaMap[processIter->second]->_refcount_value()<<std::endl;
             }
+            std::cout<<".............. begin shutdown (3)"<<std::endl;
 
             // Clean up all children that were executed
             for (personaIter = _personaMap.begin(); personaIter != _personaMap.end(); personaIter++) {
                 delete personaIter->second;
                 personaIter->second = NULL;
             }
+            std::cout<<".............. begin shutdown (4)"<<std::endl;
 
             ProgrammableDevice_base::releaseObject();
             setAdminState(CF::AdministratableInterface::SHUTTING_DOWN);
+            std::cout<<".............. begin shutdown (5)"<<std::endl;
         }
         
         HwLoadRequestVec* getHwLoadRequests() { 
@@ -496,6 +528,7 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
                                     const CF::Properties&       options, 
                                     const CF::Properties&       parameters) 
         {
+std::cout<<"(1a)"<<std::endl;
             // Open up the cached .so file
             std::string absPath = get_current_dir_name();
             absPath.append(libraryName);
@@ -506,6 +539,7 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
                 return NULL;
             }  
             
+std::cout<<"(2a)"<<std::endl;
             // Add SKIP_FLAG to properties
             CF::Properties combinedProps = parameters;
             unsigned int skipRunInd;
@@ -518,6 +552,7 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
                 std::string id(combinedProps[ii].id);
                 std::string val = sca::any_to_string(combinedProps[ii].value);
             }
+std::cout<<"(3a)"<<std::endl;
 
             // Convert combined properties into ARGV/ARGC format
             std::string propId;
@@ -535,7 +570,7 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
                 argv[argCounter] = (char*) malloc(propValue.size() + 1);
                 strcpy(argv[argCounter++], propValue.c_str());
             }
-
+std::cout<<"(4a)"<<std::endl;
             // Look for the 'construct' C-method
             const char* symbol = "construct";
             void* fnPtr = dlsym(pHandle, symbol);
@@ -544,7 +579,7 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
                 std::cout<<"Unable to find symbol '" << symbol << "': " << errorMsg<<std::endl;
                 return NULL;
             }
-
+std::cout<<"(5a)"<<std::endl;
             // Cast the symbol as a ConstructorPtr
             ConstructorPtr constructPtr = reinterpret_cast<ConstructorPtr>(fnPtr);
 
@@ -555,10 +590,13 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
             } catch (...) {
                 std::cout<<"Unable to construct persona device: '" << argv[0] << "'"<<std::endl;
             }
+            std::cout<<"........... refcount d: "<<personaPtr->_refcount_value()<<std::endl;
 
+std::cout<<"(6a)"<<std::endl;
             for (unsigned int i = 0; i < argCounter; i++) {
                 free(argv[i]);
             }
+std::cout<<"(7a)"<<std::endl;
 
             return personaPtr;
         }

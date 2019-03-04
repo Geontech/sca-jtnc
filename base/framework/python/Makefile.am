@@ -99,6 +99,7 @@ BUILT_SOURCES = \
  sca/cf/Port_idl.py \
  sca/cf/QueryablePort_idl.py \
  sca/cf/NegotiablePort_idl.py \
+ sca/cf/AggregateDevices_idl.py \
  sca/bulkio/bio_dataFloat_idl.py \
  sca/bulkio/bio_dataBit_idl.py \
  sca/bulkio/bio_dataDouble_idl.py \

@@ -62,6 +62,20 @@ class SBTestTest(scatest.CorbaTestCase):
 
     def test_programmable(self):
         comp = sb.launch('ProgrammableDevice')
+        print dir(comp)
+        print comp.__class__
+        print '======================='
+        a = CF.ExecutableInterface.ExecutionID_Type(1,2,'hello',[])
+        print CF.ExecutableInterface.ExecutionID_Type
+        print a
+        print dir(a)
+        print '======================='
+        comp_2 = sb.launch('PersonaDevice', host=comp)
+        raw_input('press any key')
+        #print dir(comp)
+        print comp._get_compositeDevice()
+        print comp_2._get_compositeDevice()
+        raw_input('press any key')
 
     def test_btd(self):
         comp = sb.launch('BasicTestDevice_cpp')

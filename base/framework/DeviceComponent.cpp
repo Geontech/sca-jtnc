@@ -235,6 +235,11 @@ void  DeviceComponent::postConstruction (std::string &registrar_ior)
     _deviceManagerRegistry->registerComponent(this_dev);
 }
 
+CF::AggregateDevice_ptr DeviceComponent::compositeDevice()
+{
+    return CF::AggregateDevice::_nil();
+};
+
 void DeviceComponent::addPort (const std::string& name, PortBase* servant)
 {
     insertPort(name, servant);
@@ -292,7 +297,7 @@ void DeviceComponent::start_device(DeviceComponent::ctor_type ctor, struct sigac
             exit(-1);
         }
     }
-    
+
     std::map<std::string, char*> execparams;
                 
     for (int i = 0; i < argc; i++) {
@@ -380,10 +385,66 @@ void DeviceComponent::start_device(DeviceComponent::ctor_type ctor, struct sigac
         sca::corba::OrbShutdown(true);
         exit(EXIT_FAILURE);
     }
-
     device->run();
     device->_remove_ref();
     sca::corba::OrbShutdown(true);
+}
+
+void DeviceComponent::start_lib_device(DeviceComponent::ctor_type ctor, struct sigaction sa, int argc, char* argv[])
+{
+    char* devMgr_ior = 0;
+    char* id = 0;
+    char* blank_string = 0;
+    char* composite_device = 0;
+
+    for (int index = 1; index < argc; ++index) {
+        if (std::string(argv[index]) == std::string("-i")) {
+            std::cout<<"Interactive mode (-i) no longer supported. Please use the sandbox to run Components/Devices/Services outside the scope of a Domain"<<std::endl;
+            exit(-1);
+        }
+    }
+
+    std::map<std::string, char*> execparams;
+                
+    for (int i = 0; i < argc; i++) {
+            
+        if (strcmp("COMPONENT_REGISTRY_IOR", argv[i]) == 0) {
+            devMgr_ior = argv[++i];
+        } else if (strcmp("DEVICE_ID", argv[i]) == 0) {
+            id = argv[++i];
+        } else if (strcmp("COMPOSITE_DEVICE_IOR", argv[i]) == 0) {
+            composite_device = argv[++i];
+        } else if (i > 0) {  // any other argument besides the first one is part of the execparams
+            std::string paramName = argv[i];
+            execparams[paramName] = argv[++i];
+        }
+    }
+
+    // The ORB must be initialized before configuring logging, which may use
+    // CORBA to get its configuration file. Devices do not need persistent IORs.
+    sca::corba::CorbaInit(argc, argv);
+
+    DeviceComponent* device = ctor(devMgr_ior, id, blank_string, composite_device);
+
+    // setting all the execparams passed as argument, this method resides in the Resource_impl class
+    device->setExecparamProperties(execparams);
+
+    //perform post construction operations for the device
+    std::string tmp_devMgr_ior = devMgr_ior;
+    try {
+      device->postConstruction( tmp_devMgr_ior);
+      device->_remove_ref();
+    }
+    catch( CF::InvalidObjectReference &ex ) {
+      if ( device ) device->_remove_ref();
+      exit(EXIT_FAILURE);
+    } catch ( CORBA::SystemException &ex ) {
+        if ( device ) device->_remove_ref();
+        exit(EXIT_FAILURE);
+    } catch ( ... ) {
+        if ( device ) device->_remove_ref();
+        exit(EXIT_FAILURE);
+    }
 }
 
 
