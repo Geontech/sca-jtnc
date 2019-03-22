@@ -26,14 +26,6 @@
 #define __CFDeviceAttributes_hh_EXTERNAL_GUARD__
 #include <CFDeviceAttributes.h>
 #endif
-#ifndef __CFAdministratableInterface_hh_EXTERNAL_GUARD__
-#define __CFAdministratableInterface_hh_EXTERNAL_GUARD__
-#include <CFAdministratableInterface.h>
-#endif
-#ifndef __CFProperties_hh_EXTERNAL_GUARD__
-#define __CFProperties_hh_EXTERNAL_GUARD__
-#include <CFProperties.h>
-#endif
 #ifndef __CFPrimitiveTypes_hh_EXTERNAL_GUARD__
 #define __CFPrimitiveTypes_hh_EXTERNAL_GUARD__
 #include <CFPrimitiveTypes.h>
@@ -86,6 +78,10 @@
 #define __CFStringSeq_hh_EXTERNAL_GUARD__
 #include <CFStringSeq.h>
 #endif
+#ifndef __CFProperties_hh_EXTERNAL_GUARD__
+#define __CFProperties_hh_EXTERNAL_GUARD__
+#include <CFProperties.h>
+#endif
 #ifndef __CFCommonTypes_hh_EXTERNAL_GUARD__
 #define __CFCommonTypes_hh_EXTERNAL_GUARD__
 #include <CFCommonTypes.h>
@@ -93,6 +89,26 @@
 #ifndef __CFPlatformTypes_hh_EXTERNAL_GUARD__
 #define __CFPlatformTypes_hh_EXTERNAL_GUARD__
 #include <CFPlatformTypes.h>
+#endif
+#ifndef __CFExecutableInterface_hh_EXTERNAL_GUARD__
+#define __CFExecutableInterface_hh_EXTERNAL_GUARD__
+#include <CFExecutableInterface.h>
+#endif
+#ifndef __CFFile_hh_EXTERNAL_GUARD__
+#define __CFFile_hh_EXTERNAL_GUARD__
+#include <CFFile.h>
+#endif
+#ifndef __CFFileSystem_hh_EXTERNAL_GUARD__
+#define __CFFileSystem_hh_EXTERNAL_GUARD__
+#include <CFFileSystem.h>
+#endif
+#ifndef __CFLoadableInterface_hh_EXTERNAL_GUARD__
+#define __CFLoadableInterface_hh_EXTERNAL_GUARD__
+#include <CFLoadableInterface.h>
+#endif
+#ifndef __CFAdministratableInterface_hh_EXTERNAL_GUARD__
+#define __CFAdministratableInterface_hh_EXTERNAL_GUARD__
+#include <CFAdministratableInterface.h>
 #endif
 #ifndef __CFCapacityManagement_hh_EXTERNAL_GUARD__
 #define __CFCapacityManagement_hh_EXTERNAL_GUARD__
@@ -296,6 +312,126 @@ _CORBA_MODULE_BEG
 
   _CORBA_MODULE_VAR _dyn_attr const ::CORBA::TypeCode_ptr _tc_DeviceComponent;
 
+#ifndef __CF_mExecutableDeviceComponent__
+#define __CF_mExecutableDeviceComponent__
+  class ExecutableDeviceComponent;
+  class _objref_ExecutableDeviceComponent;
+  class _impl_ExecutableDeviceComponent;
+  
+  typedef _objref_ExecutableDeviceComponent* ExecutableDeviceComponent_ptr;
+  typedef ExecutableDeviceComponent_ptr ExecutableDeviceComponentRef;
+
+  class ExecutableDeviceComponent_Helper {
+  public:
+    typedef ExecutableDeviceComponent_ptr _ptr_type;
+
+    static _ptr_type _nil();
+    static _CORBA_Boolean is_nil(_ptr_type);
+    static void release(_ptr_type);
+    static void duplicate(_ptr_type);
+    static void marshalObjRef(_ptr_type, cdrStream&);
+    static _ptr_type unmarshalObjRef(cdrStream&);
+  };
+
+  typedef _CORBA_ObjRef_Var<_objref_ExecutableDeviceComponent, ExecutableDeviceComponent_Helper> ExecutableDeviceComponent_var;
+  typedef _CORBA_ObjRef_OUT_arg<_objref_ExecutableDeviceComponent,ExecutableDeviceComponent_Helper > ExecutableDeviceComponent_out;
+
+#endif
+
+  // interface ExecutableDeviceComponent
+  class ExecutableDeviceComponent {
+  public:
+    // Declarations for this interface type.
+    typedef ExecutableDeviceComponent_ptr _ptr_type;
+    typedef ExecutableDeviceComponent_var _var_type;
+
+    static _ptr_type _duplicate(_ptr_type);
+    static _ptr_type _narrow(::CORBA::Object_ptr);
+    static _ptr_type _unchecked_narrow(::CORBA::Object_ptr);
+    
+    static _ptr_type _nil();
+
+    static inline void _marshalObjRef(_ptr_type, cdrStream&);
+
+    static inline _ptr_type _unmarshalObjRef(cdrStream& s) {
+      omniObjRef* o = omniObjRef::_unMarshal(_PD_repoId,s);
+      if (o)
+        return (_ptr_type) o->_ptrToObjRef(_PD_repoId);
+      else
+        return _nil();
+    }
+
+    static inline _ptr_type _fromObjRef(omniObjRef* o) {
+      if (o)
+        return (_ptr_type) o->_ptrToObjRef(_PD_repoId);
+      else
+        return _nil();
+    }
+
+    static _core_attr const char* _PD_repoId;
+
+    // Other IDL defined within this scope.
+    
+  };
+
+  class _objref_ExecutableDeviceComponent :
+    public virtual _objref_ExecutableInterface,
+    public virtual _objref_LoadableInterface,
+    public virtual _objref_DeviceComponent
+  {
+  public:
+    // IDL operations
+    
+
+    // Constructors
+    inline _objref_ExecutableDeviceComponent()  { _PR_setobj(0); }  // nil
+    _objref_ExecutableDeviceComponent(omniIOR*, omniIdentity*);
+
+  protected:
+    virtual ~_objref_ExecutableDeviceComponent();
+
+    
+  private:
+    virtual void* _ptrToObjRef(const char*);
+
+    _objref_ExecutableDeviceComponent(const _objref_ExecutableDeviceComponent&);
+    _objref_ExecutableDeviceComponent& operator = (const _objref_ExecutableDeviceComponent&);
+    // not implemented
+
+    friend class ExecutableDeviceComponent;
+  };
+
+  class _pof_ExecutableDeviceComponent : public _OMNI_NS(proxyObjectFactory) {
+  public:
+    inline _pof_ExecutableDeviceComponent() : _OMNI_NS(proxyObjectFactory)(ExecutableDeviceComponent::_PD_repoId) {}
+    virtual ~_pof_ExecutableDeviceComponent();
+
+    virtual omniObjRef* newObjRef(omniIOR*,omniIdentity*);
+    virtual _CORBA_Boolean is_a(const char*) const;
+  };
+
+  class _impl_ExecutableDeviceComponent :
+    public virtual _impl_ExecutableInterface,
+    public virtual _impl_LoadableInterface,
+    public virtual _impl_DeviceComponent
+  {
+  public:
+    virtual ~_impl_ExecutableDeviceComponent();
+
+    
+    
+  public:  // Really protected, workaround for xlC
+    virtual _CORBA_Boolean _dispatch(omniCallHandle&);
+
+  private:
+    virtual void* _ptrToInterface(const char*);
+    virtual const char* _mostDerivedRepoId();
+    
+  };
+
+
+  _CORBA_MODULE_VAR _dyn_attr const ::CORBA::TypeCode_ptr _tc_ExecutableDeviceComponent;
+
 _CORBA_MODULE_END
 
 
@@ -323,6 +459,20 @@ _CORBA_MODULE_BEG
     }
   };
 
+  class ExecutableDeviceComponent :
+    public virtual CF::_impl_ExecutableDeviceComponent,
+    public virtual ExecutableInterface,
+      public virtual LoadableInterface,
+      public virtual DeviceComponent
+  {
+  public:
+    virtual ~ExecutableDeviceComponent();
+
+    inline ::CF::ExecutableDeviceComponent_ptr _this() {
+      return (::CF::ExecutableDeviceComponent_ptr) _do_this(::CF::ExecutableDeviceComponent::_PD_repoId);
+    }
+  };
+
 _CORBA_MODULE_END
 
 
@@ -343,10 +493,19 @@ void operator<<=(::CORBA::Any& _a, CF::DeviceComponent_ptr _s);
 void operator<<=(::CORBA::Any& _a, CF::DeviceComponent_ptr* _s);
 _CORBA_Boolean operator>>=(const ::CORBA::Any& _a, CF::DeviceComponent_ptr& _s);
 
+void operator<<=(::CORBA::Any& _a, CF::ExecutableDeviceComponent_ptr _s);
+void operator<<=(::CORBA::Any& _a, CF::ExecutableDeviceComponent_ptr* _s);
+_CORBA_Boolean operator>>=(const ::CORBA::Any& _a, CF::ExecutableDeviceComponent_ptr& _s);
+
 
 
 inline void
 CF::DeviceComponent::_marshalObjRef(::CF::DeviceComponent_ptr obj, cdrStream& s) {
+  omniObjRef::_marshal(obj->_PR_getobj(),s);
+}
+
+inline void
+CF::ExecutableDeviceComponent::_marshalObjRef(::CF::ExecutableDeviceComponent_ptr obj, cdrStream& s) {
   omniObjRef::_marshal(obj->_PR_getobj(),s);
 }
 

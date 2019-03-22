@@ -29,4 +29,5 @@ ossie__v_pysetup__0 = $(ossie__v_pysetup_0)
 SUBDIRS = sdr/dev/devices/BasicTestDevice_cpp/BasicTestDevice_cpp_impl1 \
           sdr/dev/devices/cpp_dev/cpp \
           sdr/dev/devices/PersonaDevice/cpp \
+          sdr/dev/devices/PersonaExecutableDevice/cpp \
           sdr/dev/devices/ProgrammableDevice/cpp

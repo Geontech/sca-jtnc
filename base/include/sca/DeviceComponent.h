@@ -147,6 +147,44 @@ public:
 
 };
 
+class ExecutableDeviceComponent: public virtual POA_CF::ExecutableDeviceComponent, public DeviceComponent
+{
+public:
+
+    ExecutableDeviceComponent (char*, char*, char*, char*);
+    ExecutableDeviceComponent (char*, char*, char*, char*, char*);
+    ExecutableDeviceComponent (char*, char*, char*, char*, CF::Properties capacities);
+    ExecutableDeviceComponent (char*, char*, char*, char*, CF::Properties capacities, char *compDev);
+    ~ExecutableDeviceComponent ();
+
+    void  unload (const char* fileName) throw (CF::InvalidFileName, CF::InvalidState, CORBA::SystemException);
+    void  load (CF::FileSystem_ptr fs, const char* fileName, CF::LoadableInterface::LoadType loadKind)
+        throw (CF::LoadableInterface::LoadFail, 
+                CF::InvalidFileName, 
+                CF::LoadableInterface::InvalidLoadKind,
+                CF::InvalidState, 
+                CORBA::SystemException);
+    void terminate (const CF::ExecutableInterface::ExecutionID_Type &executionId)
+        throw (CF::InvalidState, CF::ExecutableInterface::InvalidProcess, CORBA::SystemException)
+    {};
+    
+    CF::ExecutableInterface::ExecutionID_Type* execute (
+                        const char*             name, 
+                        const CF::Properties&   options, 
+                        const CF::Properties&   parameters )
+            throw (
+                CF::ExecutableInterface::ExecuteFail, 
+                CF::InvalidFileName, 
+                CF::ExecutableInterface::InvalidOptions, 
+                CF::ExecutableInterface::InvalidParameters,
+                CF::ExecutableInterface::InvalidFunction, 
+                CF::InvalidState, 
+                CORBA::SystemException )
+    {
+        return NULL;
+    };
+};
+
 
 #endif
 
