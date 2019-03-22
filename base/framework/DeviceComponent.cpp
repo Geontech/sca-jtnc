@@ -64,9 +64,7 @@ void DeviceComponent::initializeCommonAttributes(const std::string _id) {
             std::cout<<"Invalid composite device IOR: " << compDev_ior<<std::endl;
         } else {
             _aggregateDevice = CF::AggregateDevice::_narrow(_aggDev_obj);
-            std::cout<<"................... adding device"<<std::endl;
             _aggregateDevice->addDevice(this->_this(), _identifier.c_str());
-            std::cout<<"................... adding device"<<std::endl;
         }
     }
 }
@@ -406,9 +404,7 @@ void DeviceComponent::start_device(DeviceComponent::ctor_type ctor, struct sigac
         exit(EXIT_FAILURE);
     }
     device->run();
-    std::cout<<"programmable device "<<device->_refcount_value()<<std::endl;
     device->_remove_ref();
-    std::cout<<"programmable device b "<<device->_refcount_value()<<std::endl;
     sca::corba::OrbShutdown(true);
 }
 
