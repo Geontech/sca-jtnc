@@ -456,7 +456,6 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
             for (processIter = _processMap.begin(); processIter != _processMap.end(); processIter++) {
                 _deviceManagerFullRegistry->unregisterComponent(_personaMap[processIter->second]->identifier());
                 _personaMap[processIter->second]->releaseObject();
-                std::cout<<"........... refcount b: "<<_personaMap[processIter->second]->_refcount_value()<<std::endl;
             }
 
             // Clean up all children that were executed
@@ -467,7 +466,6 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
 
             ProgrammableDevice_base::releaseObject();
             setAdminState(CF::AdministratableInterface::SHUTTING_DOWN);
-            std::cout<<"...... done release"<<std::endl;
         }
         
         HwLoadRequestVec* getHwLoadRequests() { 
