@@ -91,7 +91,6 @@ class DeviceManagerStub(CF__POA.FullComponentRegistry):
             log.warning("Device '%s' not registered with virtual DeviceManager", identifier)
         else:
             log.debug("Unregistering device '%s' from virtual DeviceManager", identifier)
-            print '..... deleting'
             del self.__devices[identifier]
 
     def registerComponent(self, registeringDevice):
