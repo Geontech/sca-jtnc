@@ -460,4 +460,81 @@ void DeviceComponent::start_lib_device(DeviceComponent::ctor_type ctor, struct s
     }
 }
 
+ExecutableDeviceComponent::ExecutableDeviceComponent(char* componentRegistry_ior, char* _id, char* _label, char* compositeDev_ior) :
+    DeviceComponent(componentRegistry_ior, _id, _label, compositeDev_ior)
+{
+    _processIdIncrement = 0;
+};
+
+ExecutableDeviceComponent::ExecutableDeviceComponent(char* componentRegistry_ior, char* _id, char* _label, char* sftwrPrfl, char* compositeDev_ior) :
+    DeviceComponent(componentRegistry_ior, _id, _label, sftwrPrfl, compositeDev_ior)
+{
+    _processIdIncrement = 0;
+};
+
+ExecutableDeviceComponent::ExecutableDeviceComponent(char* componentRegistry_ior, char* _id, char* _label, char* sftwrPrfl, CF::Properties capacities) :
+    DeviceComponent(componentRegistry_ior, _id, _label, sftwrPrfl, capacities)
+{
+    _processIdIncrement = 0;
+};
+
+ExecutableDeviceComponent::ExecutableDeviceComponent(char* componentRegistry_ior, char* _id, char* _label, char* sftwrPrfl, CF::Properties capacities, char* compositeDev_ior) :
+    DeviceComponent(componentRegistry_ior, _id, _label, sftwrPrfl, capacities, compositeDev_ior)
+{
+    _processIdIncrement = 0;
+};
+
+ExecutableDeviceComponent::~ExecutableDeviceComponent()
+{
+};
+
+void ExecutableDeviceComponent::unload (const char* fileName) throw (CF::InvalidFileName, CF::InvalidState, CORBA::SystemException)
+{
+};
+
+void ExecutableDeviceComponent::load (CF::FileSystem_ptr fs, const char* fileName, CF::LoadableInterface::LoadType loadKind)
+    throw (CF::LoadableInterface::LoadFail, CF::InvalidFileName, CF::LoadableInterface::InvalidLoadKind, CF::InvalidState, CORBA::SystemException)
+{
+};
+
+void ExecutableDeviceComponent::terminate (const CF::ExecutableInterface::ExecutionID_Type &executionId)
+    throw (CF::InvalidState, CF::ExecutableInterface::InvalidProcess, CORBA::SystemException)
+{
+    
+};
+
+CF::ExecutableInterface::ExecutionID_Type* ExecutableDeviceComponent::execute (
+                const char*             name, 
+                const CF::Properties&   options, 
+                const CF::Properties&   parameters )
+    throw (CF::ExecutableInterface::ExecuteFail, CF::InvalidFileName, CF::ExecutableInterface::InvalidOptions, CF::ExecutableInterface::InvalidParameters,
+        CF::ExecutableInterface::InvalidFunction, CF::InvalidState, CORBA::SystemException )
+{
+    // Initialize local variables
+    /*DeviceComponent* persona = NULL; 
+    std::string personaId;
+
+    // Attempt to instantiate the object contained in the shared library
+    persona = instantiatePersona(name, options, parameters);
+    if (persona == NULL) {
+        throw (CF::ExecutableInterface::ExecuteFail());
+    }
+
+    // Grab the name from the instantiated object 
+    personaId = sca::corba::returnString(persona->identifier());
+    
+    // Save off the name-pid and name-object mappings
+    _personaMap[personaId] = persona;
+    _processMap[++_processIdIncrement] = personaId;*/
+
+    CF::ExecutableInterface::ExecutionID_Type_var retval = new CF::ExecutableInterface::ExecutionID_Type();
+    retval->threadId = (CORBA::ULongLong) 0;
+    retval->processId = (CORBA::ULongLong) _processIdIncrement;
+    retval->processCollocation = CORBA::string_dup("none");
+    retval->cores.length(0);
+
+    return retval._retn();
+}
+
+
 

@@ -73,6 +73,19 @@ class SBTestTest(scatest.CorbaTestCase):
             identifiers.append(_comp._get_identifier())
         self.assertNotEqual(identifiers[0], identifiers[1])
 
+    def test_exec_pers(self):
+        comp = sb.launch('ProgrammableDevice')
+        comp_2 = sb.launch('PersonaExecutableDevice', host=comp)
+        self.assertEquals(comp._get_identifier(),comp_2._get_compositeDevice()._get_identifier())
+        self.assertEquals(len(comp.ref._get_devices()), 1)
+        comp_3 = sb.launch('PersonaExecutableDevice', host=comp)
+        self.assertEquals(comp._get_identifier(),comp_3._get_compositeDevice()._get_identifier())
+        self.assertEquals(len(comp.ref._get_devices()), 2)
+        identifiers = []
+        for _comp in comp.ref._get_devices():
+            identifiers.append(_comp._get_identifier())
+        self.assertNotEqual(identifiers[0], identifiers[1])
+
     def test_btd(self):
         comp = sb.launch('BasicTestDevice_cpp')
         print 'BasicTestDevice_cpp', comp.query([])

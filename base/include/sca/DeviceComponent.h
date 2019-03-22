@@ -147,6 +147,9 @@ public:
 
 };
 
+typedef std::string ComponentId;
+typedef std::map<unsigned int, ComponentId> ProcessMap;
+
 class ExecutableDeviceComponent: public virtual POA_CF::ExecutableDeviceComponent, public DeviceComponent
 {
 public:
@@ -164,9 +167,9 @@ public:
                 CF::LoadableInterface::InvalidLoadKind,
                 CF::InvalidState, 
                 CORBA::SystemException);
+    
     void terminate (const CF::ExecutableInterface::ExecutionID_Type &executionId)
-        throw (CF::InvalidState, CF::ExecutableInterface::InvalidProcess, CORBA::SystemException)
-    {};
+        throw (CF::InvalidState, CF::ExecutableInterface::InvalidProcess, CORBA::SystemException);
     
     CF::ExecutableInterface::ExecutionID_Type* execute (
                         const char*             name, 
@@ -179,10 +182,10 @@ public:
                 CF::ExecutableInterface::InvalidParameters,
                 CF::ExecutableInterface::InvalidFunction, 
                 CF::InvalidState, 
-                CORBA::SystemException )
-    {
-        return NULL;
-    };
+                CORBA::SystemException );
+protected:
+    ProcessMap      _processMap;         // Mapping of name to processId
+    unsigned int    _processIdIncrement; // Used to generate unique ProcessIds
 };
 
 

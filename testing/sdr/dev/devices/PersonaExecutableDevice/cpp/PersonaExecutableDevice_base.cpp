@@ -31,28 +31,28 @@
 ******************************************************************************************/
 
 PersonaExecutableDevice_base::PersonaExecutableDevice_base(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl) :
-    DeviceComponent(devMgr_ior, id, lbl, sftwrPrfl),
+    ExecutableDeviceComponent(devMgr_ior, id, lbl, sftwrPrfl),
     serviceThread(0)
 {
     construct();
 }
 
 PersonaExecutableDevice_base::PersonaExecutableDevice_base(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl, char *compDev) :
-    DeviceComponent(devMgr_ior, id, lbl, sftwrPrfl, compDev),
+    ExecutableDeviceComponent(devMgr_ior, id, lbl, sftwrPrfl, compDev),
     serviceThread(0)
 {
     construct();
 }
 
 PersonaExecutableDevice_base::PersonaExecutableDevice_base(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl, CF::Properties capacities) :
-    DeviceComponent(devMgr_ior, id, lbl, sftwrPrfl, capacities),
+    ExecutableDeviceComponent(devMgr_ior, id, lbl, sftwrPrfl, capacities),
     serviceThread(0)
 {
     construct();
 }
 
 PersonaExecutableDevice_base::PersonaExecutableDevice_base(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl, CF::Properties capacities, char *compDev) :
-    DeviceComponent(devMgr_ior, id, lbl, sftwrPrfl, capacities, compDev),
+    ExecutableDeviceComponent(devMgr_ior, id, lbl, sftwrPrfl, capacities, compDev),
     serviceThread(0)
 {
     construct();

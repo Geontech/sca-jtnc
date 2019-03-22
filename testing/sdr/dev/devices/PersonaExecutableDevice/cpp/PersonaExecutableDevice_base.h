@@ -100,7 +100,7 @@ class ProcessThread
         boost::mutex _eor_mutex;
 };
 
-class PersonaExecutableDevice_base : public DeviceComponent, protected ThreadedComponent
+class PersonaExecutableDevice_base : public ExecutableDeviceComponent, protected ThreadedComponent
 {
     public:
         PersonaExecutableDevice_base(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl);
