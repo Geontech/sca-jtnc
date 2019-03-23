@@ -33,6 +33,20 @@
 #include "sca/ProcessThread.h"
 #include "CF/CF.h"
 
+#define ENABLE_LOGGING
+#define PREPARE_LOGGING(classname)
+#define LOG_TRACE(classname, expression)
+#define LOG_DEBUG(classname, expression)
+#define LOG_INFO(classname, expression)
+#define LOG_ERROR(classname, expression)
+#define LOG_FATAL(classname, expression)
+
+#define RH_TRACE(classname, expression)
+#define RH_DEBUG(classname, expression)
+#define RH_INFO(classname, expression)
+#define RH_ERROR(classname, expression)
+#define RH_FATAL(classname, expression)
+
 namespace sca {
     class Value;
 }
