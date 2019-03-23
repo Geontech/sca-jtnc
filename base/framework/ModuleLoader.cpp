@@ -44,7 +44,7 @@ namespace fs = boost::filesystem;
 namespace {
     static std::string real_path(const std::string& filename)
     {
-        char buf[PATH_MAX];
+        char buf[4096];
         ::realpath(filename.c_str(), &buf[0]);
         return std::string(buf);
     }
