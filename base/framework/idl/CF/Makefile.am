@@ -85,6 +85,7 @@ BUILT_SOURCES =	CFAdministratableInterfaceSK.cpp \
 		UTCTimeSK.cpp \
 		CFTestableInterfaceSK.cpp \
 		DeviceComponentSK.cpp \
+		ComponentSK.cpp \
 		AdditionalTypesSK.cpp \
 		PortSK.cpp \
 		QueryablePortSK.cpp \
@@ -142,6 +143,7 @@ BUILT_SOURCES =	CFAdministratableInterfaceSK.cpp \
 		CFPrimitiveTypesDynSK.cpp \
 		UTCTimeDynSK.cpp \
 		CFTestableInterfaceDynSK.cpp \
+		ComponentDynSK.cpp \
 		DeviceComponentDynSK.cpp \
 		AdditionalTypesDynSK.cpp
 
@@ -149,7 +151,7 @@ CLEANFILES = $(BUILT_SOURCES)
 
 
 cfheaderdir = $(pkgincludedir)/CF
-dist_cfheader_HEADERS = AdditionalTypes.h UTCTime.h Port.h QueryablePort.h NegotiablePort.h CFAdministratableInterface.h DeviceComponent.h CFCharSeq.h CFDeviceAttributes.h CFFileManager.h CFLongLongSeq.h CFProperties.h CFULongLongSeq.h CFAggregateDeviceAttributes.h CFCommonTypes.h CFDomainInstallation.h CFFileSystem.h CFLongSeq.h CFPropertySet.h CFULongSeq.h CFAggregateDevice.h AggregateDevices.h CFComponentFactory.h CFDomainManager.h CFFloatSeq.h CFOctetSeq.h CFReleasableManager.h CFUShortSeq.h CFApplicationFactory.h CFComponentIdentifier.h CFDoubleSeq.h CFFullComponentRegistry.h CFPlatformTypes.h CFShortSeq.h SE_DomainEvent.h CFApplicationManager.h CFComponentRegistry.h CFEventChannelRegistry.h CF.h CFPortAccessor.h CFSpecializedInfo.h SE_StateEvent.h CFBooleanSeq.h CFControllableInterface.h CFExecutableInterface.h CFLifeCycle.h CFPrimitiveSeqTypes.h CFStringSeq.h StandardEvent.h CFCapacityManagement.h CFDeploymentAttributes.h CFFile.h CFLoadableInterface.h CFPrimitiveTypes.h CFTestableInterface.h
+dist_cfheader_HEADERS = AdditionalTypes.h UTCTime.h Port.h QueryablePort.h NegotiablePort.h CFAdministratableInterface.h DeviceComponent.h Component.h CFCharSeq.h CFDeviceAttributes.h CFFileManager.h CFLongLongSeq.h CFProperties.h CFULongLongSeq.h CFAggregateDeviceAttributes.h CFCommonTypes.h CFDomainInstallation.h CFFileSystem.h CFLongSeq.h CFPropertySet.h CFULongSeq.h CFAggregateDevice.h AggregateDevices.h CFComponentFactory.h CFDomainManager.h CFFloatSeq.h CFOctetSeq.h CFReleasableManager.h CFUShortSeq.h CFApplicationFactory.h CFComponentIdentifier.h CFDoubleSeq.h CFFullComponentRegistry.h CFPlatformTypes.h CFShortSeq.h SE_DomainEvent.h CFApplicationManager.h CFComponentRegistry.h CFEventChannelRegistry.h CF.h CFPortAccessor.h CFSpecializedInfo.h SE_StateEvent.h CFBooleanSeq.h CFControllableInterface.h CFExecutableInterface.h CFLifeCycle.h CFPrimitiveSeqTypes.h CFStringSeq.h StandardEvent.h CFCapacityManagement.h CFDeploymentAttributes.h CFFile.h CFLoadableInterface.h CFPrimitiveTypes.h CFTestableInterface.h
 
 lib_LTLIBRARIES = libscaidl.la
 nodist_libscaidl_la_SOURCES = $(BUILT_SOURCES)

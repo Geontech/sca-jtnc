@@ -160,6 +160,8 @@ public:
     ExecutableDeviceComponent (char*, char*, char*, char*, CF::Properties capacities, char *compDev);
     ~ExecutableDeviceComponent ();
 
+    virtual Component* ExecutableDeviceComponent::instantiateComponent(const char* libraryName, const CF::Properties& options, const CF::Properties& parameters);
+
     void  unload (const char* fileName) throw (CF::InvalidFileName, CF::InvalidState, CORBA::SystemException);
     void  load (CF::FileSystem_ptr fs, const char* fileName, CF::LoadableInterface::LoadType loadKind)
         throw (CF::LoadableInterface::LoadFail, 

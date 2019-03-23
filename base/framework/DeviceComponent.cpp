@@ -22,6 +22,7 @@
 #include <string.h>
 #include <signal.h>
 #include <sys/signalfd.h>
+#include <dlfcn.h>
 
 #include "sca/DeviceComponent.h"
 
@@ -502,6 +503,76 @@ void ExecutableDeviceComponent::terminate (const CF::ExecutableInterface::Execut
 {
     
 };
+
+Component* ExecutableDeviceComponent::instantiateComponent (const char* libraryName, const CF::Properties& options, const CF::Properties& parameters) 
+{
+    // Open up the cached .so file
+    std::string absPath = get_current_dir_name();
+    absPath.append(libraryName);
+    void* pHandle = dlopen(absPath.c_str(), RTLD_NOW);
+    if (!pHandle) {
+        char* errorMsg = dlerror();
+        std::cout<<"Unable to open library '" << absPath.c_str() << "': " << errorMsg<<std::endl;
+        return NULL;
+    }  
+
+    // Add SKIP_FLAG to properties
+    CF::Properties combinedProps = parameters;
+    unsigned int skipRunInd;
+    skipRunInd = combinedProps.length();
+    combinedProps.length(skipRunInd + 1);
+    combinedProps[skipRunInd].id = CORBA::string_dup("SKIP_RUN");
+    combinedProps[skipRunInd].value <<= true;
+    combinedProps.length(combinedProps.length() + 1);
+    combinedProps[combinedProps.length() - 1].id = CORBA::string_dup("COMPOSITE_DEVICE_IOR");
+    combinedProps[combinedProps.length() - 1].value <<= sca::corba::objectToString(this->_this());
+
+    for (size_t ii = 0; ii < combinedProps.length(); ii++) {
+        std::string id(combinedProps[ii].id);
+        std::string val = sca::any_to_string(combinedProps[ii].value);
+    }
+
+    // Convert combined properties into ARGV/ARGC format
+    std::string propId;
+    std::string propValue;
+    unsigned int argCounter = 0;
+    int argc = combinedProps.length() * 2;
+    char* argv[argc];
+    for (unsigned int i = 0; i < combinedProps.length(); i++) {
+        propId = combinedProps[i].id;
+        propValue = sca::any_to_string(combinedProps[i].value);
+
+        argv[argCounter] = (char*) malloc(propId.size() + 1);
+        strcpy(argv[argCounter++], propId.c_str());
+
+        argv[argCounter] = (char*) malloc(propValue.size() + 1);
+        strcpy(argv[argCounter++], propValue.c_str());
+    }
+    // Look for the 'construct' C-method
+    const char* symbol = "construct";
+    void* fnPtr = dlsym(pHandle, symbol);
+    if (!fnPtr) {
+        char* errorMsg = dlerror();
+        std::cout<<"Unable to find symbol '" << symbol << "': " << errorMsg<<std::endl;
+        return NULL;
+    }
+    // Cast the symbol as a ConstructorPtr
+    ConstructorPtr constructPtr = reinterpret_cast<ConstructorPtr>(fnPtr);
+
+    // Attempt to instantiate the persona device via the constructor pointer
+    DeviceComponent* personaPtr = NULL;
+    try {
+        personaPtr = generatePersona(argc, argv, constructPtr, libraryName);
+    } catch (...) {
+        std::cout<<"Unable to construct persona device: '" << argv[0] << "'"<<std::endl;
+    }
+
+    for (unsigned int i = 0; i < argCounter; i++) {
+        free(argv[i]);
+    }
+
+    return personaPtr;
+}
 
 CF::ExecutableInterface::ExecutionID_Type* ExecutableDeviceComponent::execute (
                 const char*             name, 
