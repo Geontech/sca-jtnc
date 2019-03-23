@@ -504,7 +504,7 @@ void ExecutableDeviceComponent::terminate (const CF::ExecutableInterface::Execut
     
 };
 
-Component* ExecutableDeviceComponent::instantiateComponent (const char* libraryName, const CF::Properties& options, const CF::Properties& parameters) 
+/*ResourceComponent* ExecutableDeviceComponent::instantiateComponent (const char* libraryName, const CF::Properties& options, const CF::Properties& parameters) 
 {
     // Open up the cached .so file
     std::string absPath = get_current_dir_name();
@@ -556,15 +556,17 @@ Component* ExecutableDeviceComponent::instantiateComponent (const char* libraryN
         std::cout<<"Unable to find symbol '" << symbol << "': " << errorMsg<<std::endl;
         return NULL;
     }
+    typedef ResourceComponent* (*ConstructorPtr)(int, char*[]);
     // Cast the symbol as a ConstructorPtr
     ConstructorPtr constructPtr = reinterpret_cast<ConstructorPtr>(fnPtr);
 
     // Attempt to instantiate the persona device via the constructor pointer
     DeviceComponent* personaPtr = NULL;
     try {
-        personaPtr = generatePersona(argc, argv, constructPtr, libraryName);
+        constructPtr(argc, argv, this);
+        //personaPtr = generatePersona(argc, argv, constructPtr, libraryName);
     } catch (...) {
-        std::cout<<"Unable to construct persona device: '" << argv[0] << "'"<<std::endl;
+        std::cout<<"Unable to construct component: '" << argv[0] << "'"<<std::endl;
     }
 
     for (unsigned int i = 0; i < argCounter; i++) {
@@ -572,6 +574,17 @@ Component* ExecutableDeviceComponent::instantiateComponent (const char* libraryN
     }
 
     return personaPtr;
+}*/
+std::string ExecutableDeviceComponent::getRealPath(const std::string& path)
+{
+    // Assume that all paths are relative to the deployment root, which is
+    // given by the launching device (or the Sandbox)
+    boost::filesystem::path realpath = boost::filesystem::path(std::getenv("SCAROOT")) / "dom" / path;
+    if (!boost::filesystem::exists(realpath)) {
+        std::string message = "File " + path + " does not exist";
+        throw CF::InvalidFileName(CF::CF_EEXIST, message.c_str());
+    }
+    return realpath.string();
 }
 
 CF::ExecutableInterface::ExecutionID_Type* ExecutableDeviceComponent::execute (
@@ -581,6 +594,59 @@ CF::ExecutableInterface::ExecutionID_Type* ExecutableDeviceComponent::execute (
     throw (CF::ExecutableInterface::ExecuteFail, CF::InvalidFileName, CF::ExecutableInterface::InvalidOptions, CF::ExecutableInterface::InvalidParameters,
         CF::ExecutableInterface::InvalidFunction, CF::InvalidState, CORBA::SystemException )
 {
+    const std::string path = getRealPath(name);
+
+    boost::scoped_ptr<sca::ModuleBundle> bundle(new sca::ModuleBundle(path));
+
+    //boost::mutex::scoped_lock lock(loadMutex);
+    /*for (size_t ii = 0; ii < deps.length(); ++ii) {
+        const std::string libpath = getRealPath(std::string(deps[ii]));
+        LOG_DEBUG(ComponentHost, "Loading dependency: " << libpath);
+        try {
+            // We don't know which symbols are needed from this library; they
+            // just need to be accessible to the component entry point. Loading
+            // them as "local" instead of "global" allows symbol conflicts to
+            // be resolved correctly (it seems).
+            if (boost::filesystem::is_directory(libpath)) {
+                bundle->loadDirectory(libpath, ModuleLoader::LAZY, ModuleLoader::LOCAL);
+            } else {
+                bundle->load(libpath, ModuleLoader::LAZY, ModuleLoader::LOCAL);
+            }
+        } catch (const std::exception& exc) {
+            LOG_ERROR(ComponentHost, "Unable to load dependency: " << exc.what());
+            throw CF::ExecutableDevice::ExecuteFail(CF::CF_EINVAL, exc.what());
+        }
+    }*/
+
+    sca::Module* module;
+    try {
+        // Resolve all required symbols now so that we can catch the error and
+        // turn it into an exception, rather than having the process exit at
+        // point-of-use
+        module = bundle->load(path, sca::ModuleLoader::NOW, sca::ModuleLoader::LOCAL);
+    } catch (const std::exception& exc) {
+        throw CF::ExecutableInterface::ExecuteFail(CF::CF_EINVAL, exc.what());
+    }
+
+    typedef ResourceComponent* (*ConstructorPtr)(const std::string&, const std::string&);
+    ConstructorPtr make_component;
+    try {
+        make_component = reinterpret_cast<ConstructorPtr>(module->symbol("make_component"));
+    } catch (const std::exception& exc) {
+        throw CF::ExecutableInterface::InvalidFunction();
+    }
+
+    ResourceComponent* servant = ResourceComponent::create_component(make_component, parameters);
+
+    /*ComponentEntry* component = new ComponentEntry;
+    component->bundle.swap(bundle);
+    component->servant = servant;
+
+    int thread_id = ++counter;
+    activeComponents[thread_id] = component;
+
+    servant->addReleaseListener(this, &ComponentHost::componentReleased);*/
+
     // Initialize local variables
     /*DeviceComponent* persona = NULL; 
     std::string personaId;

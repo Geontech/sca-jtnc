@@ -31,6 +31,7 @@
 
 #include <boost/function.hpp>
 #include <boost/bind.hpp>
+#include <boost/filesystem.hpp>
 
 #include "CF/DeviceComponent.h"
 #include "CF/CFFullComponentRegistry.h"
@@ -39,7 +40,9 @@
 #include "sca/UsesPort.h"
 #include "sca/PropertySet_impl.h"
 #include "sca/ThreadedComponent.h"
+#include "sca/ResourceComponent.h"
 #include "sca/Port_impl.h"
+#include "sca/ModuleLoader.h"
 
 #ifndef ENABLE_LOGGING
 #define ENABLE_LOGGING /* */
@@ -160,7 +163,8 @@ public:
     ExecutableDeviceComponent (char*, char*, char*, char*, CF::Properties capacities, char *compDev);
     ~ExecutableDeviceComponent ();
 
-    virtual Component* ExecutableDeviceComponent::instantiateComponent(const char* libraryName, const CF::Properties& options, const CF::Properties& parameters);
+    //virtual ResourceComponent* ExecutableDeviceComponent::instantiateComponent(const char* libraryName, const CF::Properties& options, const CF::Properties& parameters);
+    std::string getRealPath(const std::string& path);
 
     void  unload (const char* fileName) throw (CF::InvalidFileName, CF::InvalidState, CORBA::SystemException);
     void  load (CF::FileSystem_ptr fs, const char* fileName, CF::LoadableInterface::LoadType loadKind)

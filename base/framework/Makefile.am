@@ -21,7 +21,7 @@
 AM_CPPFLAGS = -I../include -I../include/sca/CF
 
 lib_LTLIBRARIES = libscacf.la
-libscacf_la_SOURCES = DeviceComponent.cpp bitbuffer.cpp bitops.cpp BufferManager.cpp AggregateDeviceComponent.cpp helperFunctions.cpp UsesPort.cpp Port_impl.cpp Transport.cpp ProvidesPort.cpp CorbaUtils.cpp ThreadedComponent.cpp PropertyInterface.cpp PropertySet_impl.cpp prop_helpers.cpp PropertyMap.cpp Value.cpp AnyUtils.cpp PropertyType.cpp type_traits.cpp shm/Allocator.cpp  shm/HeapClient.cpp  shm/Heap.cpp  shm/MappedFile.cpp  shm/Superblock.cpp  shm/SuperblockFile.cpp  shm/System.cpp
+libscacf_la_SOURCES = ModuleLoader.cpp ResourceComponent.cpp DeviceComponent.cpp bitbuffer.cpp bitops.cpp BufferManager.cpp AggregateDeviceComponent.cpp helperFunctions.cpp UsesPort.cpp Port_impl.cpp Transport.cpp ProvidesPort.cpp CorbaUtils.cpp ThreadedComponent.cpp PropertyInterface.cpp PropertySet_impl.cpp prop_helpers.cpp PropertyMap.cpp Value.cpp AnyUtils.cpp PropertyType.cpp type_traits.cpp shm/Allocator.cpp  shm/HeapClient.cpp  shm/Heap.cpp  shm/MappedFile.cpp  shm/Superblock.cpp  shm/SuperblockFile.cpp  shm/System.cpp
 
 libscacf_la_CXXFLAGS = -Wall $(BOOST_CPPFLAGS) $(OMNICOS_CFLAGS) $(OMNIORB_CFLAGS) $(LOG4CXX_FLAGS)
 # Include the omniORB internal directory, otherwise CorbaUtils will not build
