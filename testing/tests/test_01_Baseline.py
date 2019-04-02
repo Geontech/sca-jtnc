@@ -61,30 +61,32 @@ class SBTestTest(scatest.CorbaTestCase):
         sb.release()
 
     def test_programmable(self):
-        comp = sb.launch('ProgrammableDevice')
-        comp_2 = sb.launch('PersonaDevice', host=comp)
-        self.assertEquals(comp._get_identifier(),comp_2._get_compositeDevice()._get_identifier())
-        self.assertEquals(len(comp.ref._get_devices()), 1)
-        comp_3 = sb.launch('PersonaDevice', host=comp)
-        self.assertEquals(comp._get_identifier(),comp_3._get_compositeDevice()._get_identifier())
-        self.assertEquals(len(comp.ref._get_devices()), 2)
+        prog_dev = sb.launch('ProgrammableDevice')
+        pers_dev_1 = sb.launch('PersonaDevice', host=prog_dev)
+        self.assertEquals(prog_dev._get_identifier(),pers_dev_1._get_compositeDevice()._get_identifier())
+        self.assertEquals(len(prog_dev.ref._get_devices()), 1)
+        pers_dev_2 = sb.launch('PersonaDevice', host=prog_dev)
+        self.assertEquals(prog_dev._get_identifier(),pers_dev_2._get_compositeDevice()._get_identifier())
+        self.assertEquals(len(prog_dev.ref._get_devices()), 2)
         identifiers = []
-        for _comp in comp.ref._get_devices():
+        for _comp in prog_dev.ref._get_devices():
             identifiers.append(_comp._get_identifier())
         self.assertNotEqual(identifiers[0], identifiers[1])
 
     def test_exec_pers(self):
-        comp = sb.launch('ProgrammableDevice')
-        comp_2 = sb.launch('PersonaExecutableDevice', host=comp)
-        self.assertEquals(comp._get_identifier(),comp_2._get_compositeDevice()._get_identifier())
-        self.assertEquals(len(comp.ref._get_devices()), 1)
-        comp_3 = sb.launch('PersonaExecutableDevice', host=comp)
-        self.assertEquals(comp._get_identifier(),comp_3._get_compositeDevice()._get_identifier())
-        self.assertEquals(len(comp.ref._get_devices()), 2)
+        prog_dev = sb.launch('ProgrammableDevice')
+        pers_dev_1 = sb.launch('PersonaExecutableDevice', host=prog_dev)
+        self.assertEquals(prog_dev._get_identifier(),pers_dev_1._get_compositeDevice()._get_identifier())
+        self.assertEquals(len(prog_dev.ref._get_devices()), 1)
+        pers_dev_2 = sb.launch('PersonaExecutableDevice', host=prog_dev)
+        self.assertEquals(prog_dev._get_identifier(),pers_dev_2._get_compositeDevice()._get_identifier())
+        self.assertEquals(len(prog_dev.ref._get_devices()), 2)
         identifiers = []
-        for _comp in comp.ref._get_devices():
+        for _comp in prog_dev.ref._get_devices():
             identifiers.append(_comp._get_identifier())
         self.assertNotEqual(identifiers[0], identifiers[1])
+        comp_1 = sb.launch('alloc_shm', host=pers_dev_1)
+        raw_input('press any key')
 
     def test_btd(self):
         comp = sb.launch('BasicTestDevice_cpp')
