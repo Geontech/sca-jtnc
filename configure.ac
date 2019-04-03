@@ -79,7 +79,9 @@ if test x"$HAVE_EXPAT" = xno ; then
 fi
 
 PKG_CHECK_MODULES([OMNIORB], [omniORB4 >= 4.0.0])
-OMNIORB_INCLUDEDIR=`pkg-config --variable=includedir omniORB4`
+if test x"$OMNIORB_INCLUDEDIR" = x ; then
+        OMNIORB_INCLUDEDIR=`pkg-config --variable=includedir omniORB4`
+fi
 AC_SUBST(OMNIORB_INCLUDEDIR)
 PKG_CHECK_EXISTS([omniORB4 >= 4.2.0],[AC_DEFINE([OMNIORB4_2],[1],[])])
 PKG_CHECK_MODULES([OMNITHREAD], [omnithread3 >= 4.0.0])
@@ -91,7 +93,9 @@ PKG_CHECK_EXISTS([omniCOS4 >= 4.0.0], [libomnicos_exist=yes], [libomnicos_exist=
 dnl Use PKG_CHECK_MODULES to declare the CFLAGS and LIBS varible
 AC_MSG_RESULT([yes])
 PKG_CHECK_MODULES([OMNICOS], [omniCOS4 >= 4.0.0])
-OMNICOS_IDLDIR=`pkg-config --variable=idldir omniCOS4`
+if test x"$OMNICOS_IDLDIR" = x ; then
+        OMNICOS_IDLDIR=`pkg-config --variable=idldir omniCOS4`
+fi
 AC_SUBST(OMNICOS_IDLDIR)
 
 AC_DEFINE(ENABLE_EVENTS, 1, [Define if events are enabled])
@@ -104,7 +108,9 @@ if test "$IDL" = no; then
 fi
 
 AC_MSG_CHECKING([for default IDL path])
-idldir=`pkg-config --variable=idldir omniORB4`
+if test x"$idldir" = x ; then
+        idldir=`pkg-config --variable=idldir omniORB4`
+fi
 AC_MSG_RESULT([$idldir])
 AC_SUBST(IDLDIR, [$idldir])
 
