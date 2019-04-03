@@ -25,7 +25,7 @@ dnl
 # -----------------------------------------------------------------------------
 AC_DEFUN([RH_REDHAWK],
 [
-  AC_REQUIRE([OSSIE_CHECK_OSSIE])
+  AC_REQUIRE([OSSIE_CHECK_SCA])
   AC_REQUIRE([PKG_CHECK_EXISTS])
   rh_redhawk_version_check=""
   AS_IF([test "x$1" != "x"], [
@@ -52,7 +52,7 @@ AC_DEFUN([RH_SOFTPKG_PREFIX],
   AS_IF([test "x${prefix}" = "xNONE"],
   [
     AC_REQUIRE([OSSIE_SCAROOT])
-    AS_IF([test "x${ossie_cv_ossie_home}" = "xNONE"], [
+    AS_IF([test "x${ossie_cv_sca_home}" = "xNONE"], [
       AC_MSG_ERROR([SCAROOT is not set; this is not expected])
     ])
     AC_MSG_CHECKING([for softpkg prefix])

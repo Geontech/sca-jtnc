@@ -19,7 +19,7 @@
 #
 
 # vim: noet: softtabstop=0
-acdir = $(datadir)/aclocal/ossie
+acdir = $(datadir)/aclocal/sca
 dist_ac_DATA = \
     AC_CHECK_PYMODULE.m4 \
     AC_CORBA_IDLCOS.m4 \
