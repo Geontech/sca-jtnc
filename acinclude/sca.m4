@@ -37,12 +37,6 @@ AC_DEFUN([OSSIE_SCAHOME],
         ossie_cv_sca_home=$ac_default_prefix
       fi
     )
-
-    dnl Check if this is a cross, if so prepend the sysroot to the ossie home
-    AS_IF([test "x$cross_compiling" = "xyes"], [
-      CROSS_SYSROOT=`$CC --print-sysroot`
-      ossie_cv_sca_home=${CROSS_SYSROOT}${ossie_cv_sca_home}
-    ])
   ])
   AC_SUBST(SCA_HOME, $ossie_cv_sca_home)
 ])
@@ -60,20 +54,22 @@ fi
 export PKG_CONFIG_PATH
 ])
 
-dnl use SCAHOME as the default prefix unless --prefix is provided
+dnl use SCAHOME as the default prefix even if --prefix is provided
 AC_DEFUN([OSSIE_SCAHOME_AS_PREFIX],
 [
-  AS_IF([test "x${prefix}" = "xNONE"], [
-    dnl Prefix wasn't provided, we need to use ossie home
-    AC_REQUIRE([OSSIE_SCAHOME])
-    AS_IF([test "x${ossie_cv_sca_home}" = "xNONE"], [
-      AC_MSG_ERROR([sca root directory is not set; this is not expected])
-    ])
-    dnl Use ossie home value for prefix
-    ac_default_prefix=${ossie_cv_sca_home}
-    prefix=${ossie_cv_sca_home}
-    AC_MSG_NOTICE(using ${ossie_cv_sca_home} as installation prefix)
-  ])
+  AC_REQUIRE([OSSIE_SCAHOME])
+  ac_default_prefix=${ossie_cv_sca_home}
+  prefix=${ossie_cv_sca_home}
+
+  dnl Also set other important install paths that got passed by bitbake
+  bindir=${prefix}/bin
+  libdir=${prefix}/lib
+  datadir=${prefix}/share
+  exec_prefix=${prefix}
+  sbindir=${prefix}/sbin
+  includedir=${prefix}/include
+
+  AC_MSG_NOTICE(using ${ossie_cv_sca_home} as installation prefix)
 ])
 
 dnl A variant on OSSIE_SCAROOT for use *only* when OSSIE_SCAHOME_AS_PREFIX is being used. Priorities:
