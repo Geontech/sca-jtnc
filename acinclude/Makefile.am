@@ -51,7 +51,7 @@ dist_ac_DATA = \
     ax_boost_system.m4 \
     ETR_SOCKET_NSL.m4 \
     java.m4 \
-    ossie.m4 \
+    sca.m4 \
     pkg.m4 \
     AC_M_FUNCTION_INTEGRATION.m4 \
     rhpkg.m4 \
