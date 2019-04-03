@@ -23,6 +23,7 @@
 #include <signal.h>
 #include <sys/signalfd.h>
 #include <dlfcn.h>
+#include <boost/scoped_ptr.hpp>
 
 #include "sca/DeviceComponent.h"
 
