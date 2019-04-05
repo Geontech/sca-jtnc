@@ -31,6 +31,7 @@ ResourceComponent::ResourceComponent (const char* _uuid) :
     component_running(&component_running_mutex),
     _initialized(false)
 {
+    std::cout<<"............. resourcecomponent constructor 1"<<std::endl;
 }
 
 
@@ -42,10 +43,12 @@ ResourceComponent::ResourceComponent (const char* _uuid, const char *label) :
     component_running(&component_running_mutex),
     _initialized(false)
 {
+    std::cout<<"............. resourcecomponent constructor 2"<<std::endl;
 }
 
 ResourceComponent::~ResourceComponent ()
 {
+    std::cout<<"............. destroying resourcecomponent"<<std::endl;
 }
 
 
@@ -119,6 +122,7 @@ CORBA::Boolean ResourceComponent::started () throw (CORBA::SystemException)
 
 void ResourceComponent::initialize () throw (CF::LifeCycle::InitializeError, CORBA::SystemException)
 {
+    std::cout<<".............. initialize"<<std::endl;
   //startPropertyChangeMonitor(_identifier);
   if (!_initialized) {
       _initialized = true;
@@ -190,17 +194,21 @@ ResourceComponent* ResourceComponent::create_component(ResourceComponent::ctor_t
     std::string identifier;
     std::string name_binding;
     std::string application_registrar_ior;
+    std::string profile_name;
     std::string logging_config_uri;
     std::string dpath;
     //int debug_level = -1;
     sca::PropertyMap cmdlineProps;
     for (sca::PropertyMap::const_iterator prop = parameters.begin(); prop != parameters.end(); ++prop) {
         const std::string id = prop->getId();
+        std::cout<<"============ got id: "<<id<<std::endl;
         if (id == "COMPONENT_IDENTIFIER") {
             identifier = prop->getValue().toString();
+        } else if (id == "PROFILE_NAME") {
+            profile_name = prop->getValue().toString();
         } else if (id == "NAME_BINDING") {
             name_binding = prop->getValue().toString();
-        } else if (id == "NAMING_CONTEXT_IOR") {
+        } else if (id == "COMPONENT_REGISTRY_IOR") {
             application_registrar_ior = prop->getValue().toString();
         } else if (id == "DEBUG_LEVEL") {
             //debug_level = atoi(prop->getValue().toString().c_str());
@@ -223,6 +231,29 @@ ResourceComponent* ResourceComponent::create_component(ResourceComponent::ctor_t
     // Activate the component servant.
     PortableServer::ObjectId_var oid = sca::corba::RootPOA()->activate_object(resource);
     CF::ResourceComponent_var resource_obj = resource->_this();
+
+    CF::ComponentRegistry_ptr _applicationRegistry = CF::ComponentRegistry::_nil();
+    //CF::FullComponentRegistry_ptr _applicationFullRegistry = CF::FullComponentRegistry::_nil();
+    CORBA::Object_var obj = sca::corba::Orb()->string_to_object(application_registrar_ior.c_str());
+    if (CORBA::is_nil(obj)) {
+        std::cout<<"Invalid registrar IOR"<<std::endl;
+        exit(-1);
+    }
+    _applicationRegistry = CF::ComponentRegistry::_narrow(obj);
+    if (CORBA::is_nil(_applicationRegistry)) {
+        std::cout<<"Could not narrow registrar IOR"<<std::endl;
+        exit(-1);
+    }
+    //_applicationFullRegistry = CF::FullComponentRegistry::_narrow(obj);
+
+    CF::ComponentType this_comp;
+    this_comp.identifier = identifier.c_str();
+    this_comp.profile = profile_name.c_str();
+    this_comp.type = CF::DEVICE_COMPONENT;
+    this_comp.componentObject = resource->_this();
+    this_comp.providesPorts.length(0);
+    this_comp.specializedInfo.length(0);
+    _applicationRegistry->registerComponent(this_comp);
 
     // Get the application naming context and bind the component into it.
     /*if (!application_registrar_ior.empty()) {
@@ -365,7 +396,7 @@ void ResourceComponent::start_component(ResourceComponent::ctor_type ctor, int a
         }
     }
 
-    if (!cmdlineProps.contains("NAMING_CONTEXT_IOR")) {
+    if (!cmdlineProps.contains("COMPONENT_REGISTRY_IOR")) {
         std::cout<<std::endl<<"usage: "<<argv[0]<<" [execparams]"<<std::endl<<std::endl;
         std::cout<<"The set of execparams is defined in the .prf for the component"<<std::endl;
         std::cout<<"They are provided as arguments pairs ID VALUE, for example:"<<std::endl;

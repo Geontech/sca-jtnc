@@ -580,6 +580,8 @@ std::string ExecutableDeviceComponent::getRealPath(const std::string& path)
     // Assume that all paths are relative to the deployment root, which is
     // given by the launching device (or the Sandbox)
     boost::filesystem::path realpath = boost::filesystem::path(std::getenv("SCAROOT")) / "dom" / path;
+    std::cout<<"............. path is: "<<path<<std::endl;
+    std::cout<<"............. scaroot is: "<<std::getenv("SCAROOT")<<std::endl;
     if (!boost::filesystem::exists(realpath)) {
         std::string message = "File " + path + " does not exist";
         throw CF::InvalidFileName(CF::CF_EEXIST, message.c_str());
@@ -594,6 +596,7 @@ CF::ExecutableInterface::ExecutionID_Type* ExecutableDeviceComponent::execute (
     throw (CF::ExecutableInterface::ExecuteFail, CF::InvalidFileName, CF::ExecutableInterface::InvalidOptions, CF::ExecutableInterface::InvalidParameters,
         CF::ExecutableInterface::InvalidFunction, CF::InvalidState, CORBA::SystemException )
 {
+    std::cout<<"........ executing "<<name<<std::endl;
     const std::string path = getRealPath(name);
 
     boost::scoped_ptr<sca::ModuleBundle> bundle(new sca::ModuleBundle(path));
@@ -637,6 +640,10 @@ CF::ExecutableInterface::ExecutionID_Type* ExecutableDeviceComponent::execute (
     }
 
     ResourceComponent* servant = ResourceComponent::create_component(make_component, parameters);
+    
+    if (servant == NULL) {
+        std::cout<<"unable to instantiate component"<<std::endl;
+    }
 
     /*ComponentEntry* component = new ComponentEntry;
     component->bundle.swap(bundle);
@@ -666,9 +673,13 @@ CF::ExecutableInterface::ExecutionID_Type* ExecutableDeviceComponent::execute (
 
     CF::ExecutableInterface::ExecutionID_Type_var retval = new CF::ExecutableInterface::ExecutionID_Type();
     retval->threadId = (CORBA::ULongLong) 0;
-    retval->processId = (CORBA::ULongLong) _processIdIncrement;
+    retval->processId = (CORBA::ULongLong) ++_processIdIncrement;
     retval->processCollocation = CORBA::string_dup("none");
     retval->cores.length(0);
+    
+    std::cout<<"------------------ done creating the component 1"<<std::endl;
+    servant->initialize();
+    std::cout<<"------------------ done creating the component 2"<<std::endl;
 
     return retval._retn();
 }

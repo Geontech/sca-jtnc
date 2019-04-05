@@ -239,7 +239,12 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
             std::string personaId;
 
             // Attempt to instantiate the object contained in the shared library
-            persona = instantiatePersona(name, options, parameters);
+            std::cout<<"=========== instantiating "<<name<<std::endl;
+            std::string string_name(name);
+            //string_name = std::getenv("SCAROOT")+std::string("/dev")+string_name;
+            string_name = std::string("/sdr/dev")+string_name;
+            std::cout<<"=========== instantiating "<<string_name<<std::endl;
+            persona = instantiatePersona(string_name.c_str(), options, parameters);
             if (persona == NULL) {
                 throw (CF::ExecutableInterface::ExecuteFail());
             }

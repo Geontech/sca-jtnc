@@ -95,6 +95,7 @@ BUILT_SOURCES = \
  sca/cf/CFTestableInterface_idl.py \
  sca/cf/UTCTime_idl.py \
  sca/cf/DeviceComponent_idl.py \
+ sca/cf/Component_idl.py \
  sca/cf/AdditionalTypes_idl.py \
  sca/cf/Port_idl.py \
  sca/cf/QueryablePort_idl.py \

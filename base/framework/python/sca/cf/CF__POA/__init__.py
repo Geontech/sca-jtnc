@@ -54,6 +54,7 @@ import sca.cf.UTCTime_idl
 import sca.cf.AdditionalTypes_idl
 import sca.cf.Port_idl
 import sca.cf.AggregateDevices_idl
+import sca.cf.Component_idl
 
 # ** 2. Sub-modules
 
