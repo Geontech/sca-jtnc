@@ -399,7 +399,6 @@ class LocalComponentLauncher(LocalLauncher):
             del self._registrar
 
     def getReference(self, component):
-        print '===================== getReference 1', component._refid
         return self._registrar.getObject(component._refid)
 
     def _getRequiredExecparams(self, component):
@@ -414,7 +413,6 @@ class LocalComponentLauncher(LocalLauncher):
 
 class LocalDeviceLauncher(LocalLauncher):
     def getReference(self, device):
-        print '===================== getReference 2'
         return DeviceManagerStub.instance().getDevice(device._refid)
 
     def _getRequiredExecparams(self, device):
@@ -438,7 +436,6 @@ class LocalServiceLauncher(LocalLauncher):
         return
 
     def getReference(self, service):
-        print 'getReference 3'
         return DeviceManagerStub.instance().getService(service._instanceName)
 
     def _getRequiredExecparams(self, service):
