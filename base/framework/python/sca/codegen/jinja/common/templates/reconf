@@ -1,0 +1,11 @@
+
+#!/bin/sh
+#{% block license %}
+#{# Allow child templates to include license #}
+#{% endblock %}
+
+#{% block reconf %}
+rm -f config.cache
+[ -d m4 ] || mkdir m4
+autoreconf -i
+#{% endblock %}
