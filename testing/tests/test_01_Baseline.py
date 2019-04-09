@@ -85,6 +85,11 @@ class SBTestTest(scatest.CorbaTestCase):
         for _comp in prog_dev.ref._get_devices():
             identifiers.append(_comp._get_identifier())
         self.assertNotEqual(identifiers[0], identifiers[1])
+        
+        print 'prog_dev', prog_dev.ref.query([])
+        print 'pers_dev_1', pers_dev_1.ref.query([])
+        print 'pers_dev_2', pers_dev_2.ref.query([])
+        raw_input('press any key')
         comp_1 = sb.launch('alloc_shm', host=pers_dev_1)
         raw_input('press any key')
 

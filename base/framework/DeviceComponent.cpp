@@ -580,8 +580,6 @@ std::string ExecutableDeviceComponent::getRealPath(const std::string& path)
     // Assume that all paths are relative to the deployment root, which is
     // given by the launching device (or the Sandbox)
     boost::filesystem::path realpath = boost::filesystem::path(std::getenv("SCAROOT")) / "dom" / path;
-    std::cout<<"............. path is: "<<path<<std::endl;
-    std::cout<<"............. scaroot is: "<<std::getenv("SCAROOT")<<std::endl;
     if (!boost::filesystem::exists(realpath)) {
         std::string message = "File " + path + " does not exist";
         throw CF::InvalidFileName(CF::CF_EEXIST, message.c_str());
@@ -596,30 +594,9 @@ CF::ExecutableInterface::ExecutionID_Type* ExecutableDeviceComponent::execute (
     throw (CF::ExecutableInterface::ExecuteFail, CF::InvalidFileName, CF::ExecutableInterface::InvalidOptions, CF::ExecutableInterface::InvalidParameters,
         CF::ExecutableInterface::InvalidFunction, CF::InvalidState, CORBA::SystemException )
 {
-    std::cout<<"........ executing "<<name<<std::endl;
     const std::string path = getRealPath(name);
 
     boost::scoped_ptr<sca::ModuleBundle> bundle(new sca::ModuleBundle(path));
-
-    //boost::mutex::scoped_lock lock(loadMutex);
-    /*for (size_t ii = 0; ii < deps.length(); ++ii) {
-        const std::string libpath = getRealPath(std::string(deps[ii]));
-        LOG_DEBUG(ComponentHost, "Loading dependency: " << libpath);
-        try {
-            // We don't know which symbols are needed from this library; they
-            // just need to be accessible to the component entry point. Loading
-            // them as "local" instead of "global" allows symbol conflicts to
-            // be resolved correctly (it seems).
-            if (boost::filesystem::is_directory(libpath)) {
-                bundle->loadDirectory(libpath, ModuleLoader::LAZY, ModuleLoader::LOCAL);
-            } else {
-                bundle->load(libpath, ModuleLoader::LAZY, ModuleLoader::LOCAL);
-            }
-        } catch (const std::exception& exc) {
-            LOG_ERROR(ComponentHost, "Unable to load dependency: " << exc.what());
-            throw CF::ExecutableDevice::ExecuteFail(CF::CF_EINVAL, exc.what());
-        }
-    }*/
 
     sca::Module* module;
     try {
@@ -644,42 +621,24 @@ CF::ExecutableInterface::ExecutionID_Type* ExecutableDeviceComponent::execute (
     if (servant == NULL) {
         std::cout<<"unable to instantiate component"<<std::endl;
     }
+    
+    std::cout<<"......... checking started: "<<servant->started()<<std::endl;
+    
+    CF::ResourceComponent_ptr local_ref = servant->_this();
 
-    /*ComponentEntry* component = new ComponentEntry;
-    component->bundle.swap(bundle);
+    std::cout<<"......... checking started again: "<<local_ref->started()<<std::endl;
+    
+    ComponentEntry* component = new ComponentEntry;
     component->servant = servant;
 
-    int thread_id = ++counter;
+    int thread_id = ++_processIdIncrement;
     activeComponents[thread_id] = component;
-
-    servant->addReleaseListener(this, &ComponentHost::componentReleased);*/
-
-    // Initialize local variables
-    /*DeviceComponent* persona = NULL; 
-    std::string personaId;
-
-    // Attempt to instantiate the object contained in the shared library
-    persona = instantiatePersona(name, options, parameters);
-    if (persona == NULL) {
-        throw (CF::ExecutableInterface::ExecuteFail());
-    }
-
-    // Grab the name from the instantiated object 
-    personaId = sca::corba::returnString(persona->identifier());
-    
-    // Save off the name-pid and name-object mappings
-    _personaMap[personaId] = persona;
-    _processMap[++_processIdIncrement] = personaId;*/
 
     CF::ExecutableInterface::ExecutionID_Type_var retval = new CF::ExecutableInterface::ExecutionID_Type();
     retval->threadId = (CORBA::ULongLong) 0;
-    retval->processId = (CORBA::ULongLong) ++_processIdIncrement;
+    retval->processId = (CORBA::ULongLong) _processIdIncrement;
     retval->processCollocation = CORBA::string_dup("none");
     retval->cores.length(0);
-    
-    std::cout<<"------------------ done creating the component 1"<<std::endl;
-    servant->initialize();
-    std::cout<<"------------------ done creating the component 2"<<std::endl;
 
     return retval._retn();
 }

@@ -117,12 +117,12 @@ throw (CORBA::SystemException)
 
 CORBA::Boolean ResourceComponent::started () throw (CORBA::SystemException)
 {
+    std::cout<<"=============== check started"<<std::endl;
     return _started;
 }
 
 void ResourceComponent::initialize () throw (CF::LifeCycle::InitializeError, CORBA::SystemException)
 {
-    std::cout<<".............. initialize"<<std::endl;
   //startPropertyChangeMonitor(_identifier);
   if (!_initialized) {
       _initialized = true;
@@ -201,7 +201,6 @@ ResourceComponent* ResourceComponent::create_component(ResourceComponent::ctor_t
     sca::PropertyMap cmdlineProps;
     for (sca::PropertyMap::const_iterator prop = parameters.begin(); prop != parameters.end(); ++prop) {
         const std::string id = prop->getId();
-        std::cout<<"============ got id: "<<id<<std::endl;
         if (id == "COMPONENT_IDENTIFIER") {
             identifier = prop->getValue().toString();
         } else if (id == "PROFILE_NAME") {
@@ -250,10 +249,12 @@ ResourceComponent* ResourceComponent::create_component(ResourceComponent::ctor_t
     this_comp.identifier = identifier.c_str();
     this_comp.profile = profile_name.c_str();
     this_comp.type = CF::DEVICE_COMPONENT;
-    this_comp.componentObject = resource->_this();
+    this_comp.componentObject = CF::ResourceComponent::_duplicate(resource->_this());
     this_comp.providesPorts.length(0);
     this_comp.specializedInfo.length(0);
+    std::cout<<"============================= begin register"<<std::endl;
     _applicationRegistry->registerComponent(this_comp);
+    std::cout<<"============================= done register"<<std::endl;
 
     // Get the application naming context and bind the component into it.
     /*if (!application_registrar_ior.empty()) {

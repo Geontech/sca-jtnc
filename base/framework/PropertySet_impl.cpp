@@ -130,6 +130,7 @@ void
 PropertySet_impl::query (CF::Properties& configProperties)
 throw (CORBA::SystemException, CF::UnknownProperties)
 {
+    std::cout<<"......... in query"<<std::endl;
     boost::mutex::scoped_lock lock(propertySetAccess);
 
     // For queries of zero length, return all id/value pairs in propertySet.

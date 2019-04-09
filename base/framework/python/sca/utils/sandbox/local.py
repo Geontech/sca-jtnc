@@ -166,7 +166,6 @@ class LocalLauncher(SandboxLauncher):
         return dep_files
 
     def launch(self, comp):
-        print '========================== launching', comp
         # Build up the full set of command line arguments
         execparams = comp._getExecparams()
         execparams.update(self._execparams)
@@ -203,7 +202,6 @@ class LocalLauncher(SandboxLauncher):
                 if not window:
                     window = 'xterm'
 
-        print '(1)'
         # Allow symbolic names for windows
         if isinstance(window, basestring):
             try:
@@ -217,14 +215,12 @@ class LocalLauncher(SandboxLauncher):
                 log.warning('Cannot run terminal %s (%s)', window, e)
                 debugger = None
 
-        print '(2)'
         # Find a suitable implementation
         device = launcher.VirtualDevice()
         impl = None
         if self._host:
             device = self._host
             impl = comp._spd.get_implementation()[0]
-        print '(3)'
 
         sdrroot = comp._sandbox.getSdrRoot()
         if not impl:
@@ -237,17 +233,13 @@ class LocalLauncher(SandboxLauncher):
         # Resolve all dependency localfiles
         deps = self._resolveDependencies(sdrroot, device, impl)
 
-        print '(4)'
         # Execute the entry point, either on the virtual device or the Sandbox
         # component host
         entry_point = sdrroot.relativePath(comp._profile, impl.get_code().get_entrypoint().valueOf_)
-        print '(5)'
         if self._host:
             if hasattr(self._host.ref, 'execute'):
                 self._host.execute = self._host.ref.execute
-        print '(6)'
         if impl.get_code().get_type() == 'SharedLibrary' and not self._host:
-            print '(61)'
             if self._shared:
                 container = comp._sandbox._getComponentHost(_debugger = debugger)
             else:
@@ -255,7 +247,6 @@ class LocalLauncher(SandboxLauncher):
             container.executeLinked(entry_point, [], execparams, deps)
             process = container._process
         else:
-            print '(62)'
             if not self._host:
                 print '(621)'
                 print entry_point, deps, execparams, debugger, window, self._stdout
@@ -270,7 +261,10 @@ class LocalLauncher(SandboxLauncher):
                     print '............ device.execute:', entry_point[len(sdrroot.getLocation())+4:]
                     print '............ ', entry_point
                     process = device.execute(entry_point[len(sdrroot.getLocation())+4:], [], _cmdline_params)
-                    print '(624)'
+                    print execparams
+                    print execparams['COMPONENT_IDENTIFIER']
+                    print self._registrar.getObject(execparams['COMPONENT_IDENTIFIER'])
+                    print '(624)', process
                 except Exception, e:
                     print 'received exception', e
 
@@ -346,8 +340,9 @@ class LocalLauncher(SandboxLauncher):
         #except:
             #print '(103)'
             #pass
-        print '(11)', ref
-        print ref.query([])
+        print '(1)'
+        print orb.object_to_string(ref)
+        print ref._get_started()
 
         return ref
 
@@ -392,24 +387,24 @@ class LocalLauncher(SandboxLauncher):
 
 class LocalComponentLauncher(LocalLauncher):
     def launch(self, *args, **kwargs):
-        self.__registrar = ApplicationRegistrarStub()
+        self._registrar = ApplicationRegistrarStub(orb)
         log.trace('Activating virtual ApplicationRegistrar')
-        namingContextId = poa.activate_object(self.__registrar)
+        namingContextId = poa.activate_object(self._registrar)
         print '................ launching', args, kwargs
         try:
             return LocalLauncher.launch(self, *args, **kwargs)
         finally:
             log.trace('Deactivating virtual ApplicationRegistrar')
             poa.deactivate_object(namingContextId)
-            del self.__registrar
+            del self._registrar
 
     def getReference(self, component):
-        print 'getReference 1', component._refid
-        return self.__registrar.getObject(component._refid)
+        print '===================== getReference 1', component._refid
+        return self._registrar.getObject(component._refid)
 
     def _getRequiredExecparams(self, component):
         return {'COMPONENT_IDENTIFIER': component._refid,
-                'COMPONENT_REGISTRY_IOR': orb.object_to_string(self.__registrar._this()),
+                'COMPONENT_REGISTRY_IOR': orb.object_to_string(self._registrar._this()),
                 'PROFILE_NAME': component._profile,
                 'NAME_BINDING': component._instanceName}
 
@@ -419,7 +414,7 @@ class LocalComponentLauncher(LocalLauncher):
 
 class LocalDeviceLauncher(LocalLauncher):
     def getReference(self, device):
-        print 'getReference 2'
+        print '===================== getReference 2'
         return DeviceManagerStub.instance().getDevice(device._refid)
 
     def _getRequiredExecparams(self, device):

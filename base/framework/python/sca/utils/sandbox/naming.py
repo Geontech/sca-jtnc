@@ -30,20 +30,27 @@ class ApplicationRegistrarStub(CF__POA.FullComponentRegistry):
     Class to extend virtual NamingContext to support ApplicationRegistrar
     operations.
     """
-    def __init__(self):
+    def __init__(self, orb):
         self._context = {}
         self._lock = threading.RLock()
+        self._orb = orb
 
     def getObject(self, _id):
         print '........... getObject 1', self._context
+        print '================= getObject:', self._context.get(_id, None)._get_started()
         with self._lock:
             return self._context.get(_id, None)
 
     def registerComponent(self, registeringComponent):
-        print '===== being registerComponent'
+        print '===== begin registerComponent (component)'
         with self._lock:
             _id = registeringComponent.identifier
             if _id in self._context:
                 raise CF.RegisterError()
             self._context[_id] = registeringComponent.componentObject._narrow(CF.ResourceComponent)
-            print '================= registering:', registeringComponent.componentObject
+            resource = registeringComponent.componentObject._narrow(CF.ResourceComponent)
+            print '================= registering (id:'+_id+'):', registeringComponent.componentObject
+            print '================= registering:', registeringComponent.componentObject._get_started()
+            print self._orb.object_to_string(registeringComponent.componentObject)
+            print '================= done registering'
+        obj = self.getObject(_id)

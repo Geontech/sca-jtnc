@@ -50,6 +50,10 @@
 #define LOG_DEBUG(X,Y)  /* X,Y */
 #endif
 
+struct ComponentEntry {
+    ResourceComponent* servant;
+};
+
 class DeviceComponent;
 
 class DeviceComponent: public virtual POA_CF::DeviceComponent, public PropertySet_impl
@@ -123,6 +127,8 @@ protected:
     CF::CapacityManagement::UsageType _usageState;
     CF::AdministratableInterface::AdminType _adminState;
     CF::AggregateDevice_ptr _aggregateDevice;
+    typedef std::map<int,ComponentEntry*> ComponentTable;
+    ComponentTable activeComponents;
 
 private:
     template <class T>
