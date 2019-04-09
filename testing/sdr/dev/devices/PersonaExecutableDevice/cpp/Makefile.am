@@ -25,7 +25,7 @@ CFDIR = $(top_srcdir)/base
 # you wish to manually control these options.
 include $(srcdir)/Makefile.am.ide
 
-lib_LTLIBRARIES = libPersonaExecutableDevice.la
+noinst_LTLIBRARIES = libPersonaExecutableDevice.la
 libPersonaExecutableDevice_la_SOURCES = $(redhawk_SOURCES_auto)
 libPersonaExecutableDevice_la_CXXFLAGS = -Wall $(BOOST_CPPFLAGS) -I$(CFDIR)/include  -I$(CFDIR)/bulkio/cpp/include  -I$(CFDIR)/include/sca/CF
 libPersonaExecutableDevice_la_LDFLAGS = $(BOOST_REGEX_LIB) $(BOOST_SYSTEM_LIB) $(BOOST_THREAD_LIB) $(OMNIDYNAMIC_LIBS) $(OMNICOS_LIBS) $(CFDIR)/framework/libscacf.la $(CFDIR)/framework/idl/CF/libscaidl.la $(CFDIR)/bulkio/libbulkio-2.2.la $(CFDIR)/framework/idl/BULKIO/libscabulkioidl.la

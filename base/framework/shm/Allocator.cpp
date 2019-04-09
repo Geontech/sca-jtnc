@@ -26,6 +26,7 @@
 #include <sca/BufferManager.h>
 
 #include <boost/thread.hpp>
+#include <boost/scoped_ptr.hpp>
 
 #include "Block.h"
 

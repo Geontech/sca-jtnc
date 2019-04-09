@@ -25,7 +25,7 @@ dnl
 # -----------------------------------------------------------------------------
 AC_DEFUN([RH_REDHAWK],
 [
-  AC_REQUIRE([OSSIE_CHECK_OSSIE])
+  AC_REQUIRE([OSSIE_CHECK_SCA])
   AC_REQUIRE([PKG_CHECK_EXISTS])
   rh_redhawk_version_check=""
   AS_IF([test "x$1" != "x"], [
@@ -49,24 +49,19 @@ AC_DEFUN([RH_REDHAWK],
 # -----------------------------------------------------------------------------
 AC_DEFUN([RH_SOFTPKG_PREFIX],
 [
-  AS_IF([test "x${prefix}" = "xNONE"],
-  [
-    AC_REQUIRE([OSSIE_SCAROOT])
-    AS_IF([test "x${ossie_cv_ossie_home}" = "xNONE"], [
-      AC_MSG_ERROR([SCAROOT is not set; this is not expected])
-    ])
-    AC_MSG_CHECKING([for softpkg prefix])
-    rh_softpkg_path=`echo $1 | tr "." "/"`
-    prefix="${ossie_cv_sdr_root}/dom/deps/${rh_softpkg_path}"
-    # Overrule "lib64" suffix
-    AS_IF([test "x${gr_libdir_suffix}" = "x64"], [
-      libdir=`echo ${libdir} | sed 's/64$//'`
-    ])
-    AC_MSG_RESULT([${prefix}])
-  ])
-  AS_IF([test "x${exec_prefix}" = "xNONE" -a "x$2" != "x"], [
-    exec_prefix="\${prefix}/$2"
-  ])
+  AC_REQUIRE([OSSIE_SCAROOT])
+  AS_IF([test "x${ossie_cv_sca_home}" = "xNONE"], [
+    AC_MSG_ERROR([SCAROOT is not set; this is not expected])
+   ])
+  AC_MSG_CHECKING([for softpkg prefix])
+  rh_softpkg_path=`echo $1 | tr "." "/"`
+  prefix="${ossie_cv_sdr_root}/dom/deps/${rh_softpkg_path}"
+  # Overrule "lib64" suffix
+  AS_IF([test "x${gr_libdir_suffix}" = "x64"], [
+    libdir=`echo ${libdir} | sed 's/64$//'`
+   ])
+  AC_MSG_RESULT([${prefix}])
+  exec_prefix="\${prefix}/$2"
 ])
 
 dnl Internal function to update C++ flags using the current list of soft
