@@ -248,28 +248,17 @@ class LocalLauncher(SandboxLauncher):
             process = container._process
         else:
             if not self._host:
-                print '(621)'
-                print entry_point, deps, execparams, debugger, window, self._stdout
                 process = device.execute(entry_point, deps, execparams, debugger, window, self._stdout)
             else:
-                print '(622)'
                 _cmdline_params = []
                 for item in execparams:
                     _cmdline_params.append(CF.DataType(id=item,value=to_any(execparams[item])))
                 try:
-                    print '(623)', device
-                    print '............ device.execute:', entry_point[len(sdrroot.getLocation())+4:]
-                    print '............ ', entry_point
                     process = device.execute(entry_point[len(sdrroot.getLocation())+4:], [], _cmdline_params)
-                    print execparams
-                    print execparams['COMPONENT_IDENTIFIER']
-                    print self._registrar.getObject(execparams['COMPONENT_IDENTIFIER'])
-                    print '(624)', process
                 except Exception, e:
                     print 'received exception', e
 
             # Set up a callback to notify when the component exits abnormally.
-            print '(63)', comp, comp._instanceName, execparams
             name = comp._instanceName
             def terminate_callback(pid, status):
                 if status > 0:
@@ -279,7 +268,6 @@ class LocalLauncher(SandboxLauncher):
             if not self._host:
                 process.setTerminationCallback(terminate_callback)
 
-        print '(7)'
         # Wait for the component to register with the virtual naming service or
         # DeviceManager.
         if self._timeout is None:
@@ -292,7 +280,6 @@ class LocalLauncher(SandboxLauncher):
         else:
             timeout = self._timeout
         sleepIncrement = 0.1
-        print '=============', process, comp
         while self.getReference(comp) is None:
             if not process.isAlive():
                 raise RuntimeError, "%s '%s' terminated before registering with virtual environment" % (self._getType(), comp._instanceName)
@@ -302,7 +289,6 @@ class LocalLauncher(SandboxLauncher):
                 process.terminate()
                 raise RuntimeError, "%s '%s' did not register with virtual environment"  % (self._getType(), comp._instanceName)
 
-        print '(8)'
         # Attach a debugger to the process.
         if debugger and debugger.canAttach():
             if not window:
@@ -312,7 +298,6 @@ class LocalLauncher(SandboxLauncher):
             debug_process = launcher.LocalProcess(debug_command, debug_args)
             process.addChild(debug_process)
 
-        print '(9)'
         # Store the process on the component proxy.
         if impl.get_code().get_type() == 'SharedLibrary' and self._shared:
             comp._process = None
@@ -321,11 +306,9 @@ class LocalLauncher(SandboxLauncher):
             comp._process = process
             comp._pid = process.pid()
 
-        print '(10)'
         # Return the now-resolved CORBA reference.
         ref = self.getReference(comp)
-        print '(101)'
-        #try:
+        try:
             # Occasionally, when a lot of components are launched from the
             # sandbox, omniORB may have a cached connection where the other end
             # has terminated (this is particularly a problem with Java, because
@@ -335,14 +318,9 @@ class LocalLauncher(SandboxLauncher):
             # CORBA.COMM_FAILURE exception even though the reference is valid.
             # In this case, a call to _non_existent() should cause omniORB to
             # clean up the stale socket, and subsequent calls behave normally.
-            #ref._non_existent()
-            #print '(102)'
-        #except:
-            #print '(103)'
-            #pass
-        print '(1)'
-        print orb.object_to_string(ref)
-        print ref._get_started()
+            ref._non_existent()
+        except:
+            pass
 
         return ref
 
@@ -390,7 +368,6 @@ class LocalComponentLauncher(LocalLauncher):
         self._registrar = ApplicationRegistrarStub(orb)
         log.trace('Activating virtual ApplicationRegistrar')
         namingContextId = poa.activate_object(self._registrar)
-        print '................ launching', args, kwargs
         try:
             return LocalLauncher.launch(self, *args, **kwargs)
         finally:

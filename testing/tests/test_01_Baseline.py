@@ -89,9 +89,8 @@ class SBTestTest(scatest.CorbaTestCase):
         print 'prog_dev', prog_dev.ref.query([])
         print 'pers_dev_1', pers_dev_1.ref.query([])
         print 'pers_dev_2', pers_dev_2.ref.query([])
-        raw_input('press any key')
         comp_1 = sb.launch('alloc_shm', host=pers_dev_1)
-        raw_input('press any key')
+        print 'comp_1', comp_1.ref.query([])
 
     def test_btd(self):
         comp = sb.launch('BasicTestDevice_cpp')

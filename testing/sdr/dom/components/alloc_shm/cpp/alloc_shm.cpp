@@ -16,19 +16,16 @@ alloc_shm_i::alloc_shm_i(const char *uuid, const char *label) :
     alloc_shm_base(uuid, label)
 {
     // Avoid placing constructor code here. Instead, use the "constructor" function.
-    std::cout<<"+++++++++++++++ instantiating the component"<<std::endl;
 
 }
 
 alloc_shm_i::~alloc_shm_i()
 {
-    std::cout<<"............... destroying the object"<<std::endl;
 }
 
 void alloc_shm_i::constructor()
 {
     //redhawk::bitbuffer buffer(1000000);
-    std::cout<<".................... hello"<<std::endl;
     sca::buffer<float> outputData(1000000);
     /***********************************************************************************
      This is the RH constructor. All properties are properly initialized before this function is called 

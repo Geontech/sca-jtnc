@@ -622,15 +622,10 @@ CF::ExecutableInterface::ExecutionID_Type* ExecutableDeviceComponent::execute (
     if (servant == NULL) {
         std::cout<<"unable to instantiate component"<<std::endl;
     }
-    
-    std::cout<<"......... checking started: "<<servant->started()<<std::endl;
-    
-    CF::ResourceComponent_ptr local_ref = servant->_this();
 
-    std::cout<<"......... checking started again: "<<local_ref->started()<<std::endl;
-    
     ComponentEntry* component = new ComponentEntry;
     component->servant = servant;
+    component->bundle.swap(bundle);
 
     int thread_id = ++_processIdIncrement;
     activeComponents[thread_id] = component;

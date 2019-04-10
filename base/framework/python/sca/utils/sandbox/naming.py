@@ -36,21 +36,13 @@ class ApplicationRegistrarStub(CF__POA.FullComponentRegistry):
         self._orb = orb
 
     def getObject(self, _id):
-        print '........... getObject 1', self._context
-        print '================= getObject:', self._context.get(_id, None)._get_started()
         with self._lock:
             return self._context.get(_id, None)
 
     def registerComponent(self, registeringComponent):
-        print '===== begin registerComponent (component)'
         with self._lock:
             _id = registeringComponent.identifier
             if _id in self._context:
                 raise CF.RegisterError()
             self._context[_id] = registeringComponent.componentObject._narrow(CF.ResourceComponent)
             resource = registeringComponent.componentObject._narrow(CF.ResourceComponent)
-            print '================= registering (id:'+_id+'):', registeringComponent.componentObject
-            print '================= registering:', registeringComponent.componentObject._get_started()
-            print self._orb.object_to_string(registeringComponent.componentObject)
-            print '================= done registering'
-        obj = self.getObject(_id)

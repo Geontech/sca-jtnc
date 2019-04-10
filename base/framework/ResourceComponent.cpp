@@ -31,7 +31,6 @@ ResourceComponent::ResourceComponent (const char* _uuid) :
     component_running(&component_running_mutex),
     _initialized(false)
 {
-    std::cout<<"............. resourcecomponent constructor 1"<<std::endl;
 }
 
 
@@ -43,12 +42,10 @@ ResourceComponent::ResourceComponent (const char* _uuid, const char *label) :
     component_running(&component_running_mutex),
     _initialized(false)
 {
-    std::cout<<"............. resourcecomponent constructor 2"<<std::endl;
 }
 
 ResourceComponent::~ResourceComponent ()
 {
-    std::cout<<"............. destroying resourcecomponent"<<std::endl;
 }
 
 
@@ -117,7 +114,6 @@ throw (CORBA::SystemException)
 
 CORBA::Boolean ResourceComponent::started () throw (CORBA::SystemException)
 {
-    std::cout<<"=============== check started"<<std::endl;
     return _started;
 }
 
@@ -249,12 +245,10 @@ ResourceComponent* ResourceComponent::create_component(ResourceComponent::ctor_t
     this_comp.identifier = identifier.c_str();
     this_comp.profile = profile_name.c_str();
     this_comp.type = CF::DEVICE_COMPONENT;
-    this_comp.componentObject = CF::ResourceComponent::_duplicate(resource->_this());
+    this_comp.componentObject = resource->_this();
     this_comp.providesPorts.length(0);
     this_comp.specializedInfo.length(0);
-    std::cout<<"============================= begin register"<<std::endl;
     _applicationRegistry->registerComponent(this_comp);
-    std::cout<<"============================= done register"<<std::endl;
 
     // Get the application naming context and bind the component into it.
     /*if (!application_registrar_ior.empty()) {

@@ -239,11 +239,9 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
             std::string personaId;
 
             // Attempt to instantiate the object contained in the shared library
-            std::cout<<"=========== instantiating "<<name<<std::endl;
             std::string string_name(name);
             //string_name = std::getenv("SCAROOT")+std::string("/dev")+string_name;
             string_name = std::string("/sdr/dev")+string_name;
-            std::cout<<"=========== instantiating "<<string_name<<std::endl;
             persona = instantiatePersona(string_name.c_str(), options, parameters);
             if (persona == NULL) {
                 throw (CF::ExecutableInterface::ExecuteFail());
@@ -287,7 +285,6 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
             PersonaMapIter personaIter;
             PersonaId personaId;
             
-            std::cout<<"........... terminate call"<<std::endl;
             std::cout<<"exec_arg.processId: "<<exec_arg.processId<<std::endl;
             std::cout<<"exec_arg.threadId: "<<exec_arg.threadId<<std::endl;
             std::cout<<"exec_arg.processCollocation: "<<exec_arg.processCollocation<<std::endl;

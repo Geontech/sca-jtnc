@@ -51,6 +51,7 @@
 #endif
 
 struct ComponentEntry {
+    boost::scoped_ptr<sca::ModuleBundle> bundle;
     ResourceComponent* servant;
 };
 
