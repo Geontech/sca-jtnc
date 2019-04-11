@@ -31,4 +31,6 @@ SUBDIRS = sdr/dev/devices/BasicTestDevice_cpp/BasicTestDevice_cpp_impl1 \
           sdr/dom/components/alloc_shm/cpp \
           sdr/dev/devices/PersonaDevice/cpp \
           sdr/dev/devices/PersonaExecutableDevice/cpp \
-          sdr/dev/devices/ProgrammableDevice/cpp
+          sdr/dev/devices/ProgrammableDevice/cpp \
+          sdr/dev/devices/BasicFEI/cpp
+
