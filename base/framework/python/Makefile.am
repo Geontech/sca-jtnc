@@ -36,8 +36,8 @@ clean-local:
 	python setup.py clean
 	rm -rf build
 
-sca/cf/%_idl.py : $(top_srcdir)/idl/sca/*/%.idl
-	$(AM_V_GEN)$(IDL) -bpython -Wbpackage=sca.cf -Wbextern=CosNaming -Wbextern=CosEventComm -Wbextern=CosEventChannelAdmin -I $(IDLDIR) -I $(OMNICOS_IDLDIR) -I $(top_srcdir)/idl $<
+sca/cf/%_idl.py : $(top_srcdir)/idl/sca/CF/%.idl
+	$(AM_V_GEN)$(IDL) -bpython -Wbpackage=sca.cf -I $(IDLDIR) -I $(OMNICOS_IDLDIR) -I $(top_srcdir)/idl $<
 
 sca/bulkio/%_idl.py : $(top_srcdir)/idl/sca/BULKIO/%.idl
 	$(AM_V_GEN)$(IDL) -bpython -Wbpackage=sca.bulkio -Wbextern=QueryablePort:sca.cf -Wbextern=NegotiablePort:sca.cf -Wbextern=Port:sca.cf -Wbextern=CFBooleanSeq:sca.cf -Wbextern=CFDoubleSeq:sca.cf -Wbextern=CFLongLongSeq:sca.cf -Wbextern=CFOctetSeq:sca.cf -Wbextern=CFStringSeq:sca.cf -Wbextern=CFULongSeq:sca.cf -Wbextern=CFCharSeq:sca.cf -Wbextern=CFFloatSeq:sca.cf -Wbextern=CFLongSeq:sca.cf -Wbextern=CFShortSeq:sca.cf -Wbextern=CFULongLongSeq:sca.cf -Wbextern=CFUShortSeq:sca.cf -Wbextern=CFProperties:sca.cf -Wbextern=CFCommonTypes:sca.cf -Wbextern=CFPortAccessor:sca.cf -Wbextern=AdditionalTypes:sca.cf -Wbextern=CFPrimitiveTypes:sca.cf -Wbextern=CosNaming -Wbextern=CosEventComm -Wbextern=CosEventChannelAdmin -I $(IDLDIR) -I $(OMNICOS_IDLDIR) -I $(top_srcdir)/idl $<
