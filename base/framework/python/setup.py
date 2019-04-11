@@ -45,7 +45,7 @@ import sca.version
 
 setup(name='scapy',
       version=sca.version.__version__,
-      description='OSSIE Python',
+      description='SCA Python',
       packages=['sca',
                 'sca/apps',
                 'sca/apps/qtbrowse',
