@@ -20,7 +20,7 @@
 
 import time
 import struct
-from ossie.cf import CF
+from sca.cf import CF
 from omniORB import CORBA
 from sca.bulkio.BULKIO import PortStatistics
 from sca.bulkio.BULKIO import UsesPortStatistics
