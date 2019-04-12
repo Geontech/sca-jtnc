@@ -1255,21 +1255,21 @@ class QueryableBase(object):
                     structDefValue[prop.get_id()] = defValue
                     if defValue != None:
                         hasNonNilSimple = True
-                for prop in structProp.get_simplesequence():
-                    propType = self._getPropType(prop)
-                    vals = prop.get_values()
-                    if vals:
-                        defValue = [_convertType(propType, val) for val in vals.get_value()]
-                    else:
-                        defValue = None
-                    id_clean = _prop_helpers._cleanId(prop)
-                    # Add individual property
-                    id_clean = _prop_helpers.addCleanName(id_clean, prop.get_id(), _displayNames, _duplicateNames, namesp=structProp.get_id())
-                    members.append((prop.get_id(), propType, defValue, id_clean))
-                    structDefValue[prop.get_id()] = defValue
-                    if defValue == None:
-                        hasNilSeq = True
-                        noneSeqElements.append(prop.get_id())
+                # for prop in structProp.get_simplesequence():
+                #     propType = self._getPropType(prop)
+                #     vals = prop.get_values()
+                #     if vals:
+                #         defValue = [_convertType(propType, val) for val in vals.get_value()]
+                #     else:
+                #         defValue = None
+                #     id_clean = _prop_helpers._cleanId(prop)
+                #     # Add individual property
+                #     id_clean = _prop_helpers.addCleanName(id_clean, prop.get_id(), _displayNames, _duplicateNames, namesp=structProp.get_id())
+                #     members.append((prop.get_id(), propType, defValue, id_clean))
+                #     structDefValue[prop.get_id()] = defValue
+                #     if defValue == None:
+                #         hasNilSeq = True
+                #         noneSeqElements.append(prop.get_id())
                 if hasNilSeq and hasNonNilSimple:
                     for prop_key in noneSeqElements:
                         structDefValue[prop_key] = []
@@ -1282,12 +1282,13 @@ class QueryableBase(object):
                 if not hasDefault:
                     structDefValue = None
                 kindList = []
-                for k in structProp.get_configurationkind():
-                    kindList.append(k.get_kindtype())
+                kindList.append(structProp.get_configurationkind().get_kindtype())
+                # for k in structProp.get_configurationkind():
+                #     kindList.append(k.get_kindtype())
                 p = _prop_helpers.structProperty(id=structProp.get_id(),
                                                  valueType=members,
                                                  kinds=kindList,
-                                                 props=structProp.get_simple()+structProp.get_simplesequence(),
+                                                 props=structProp.get_simple(), # +structProp.get_simplesequence(),
                                                  compRef=weakref.proxy(self),
                                                  defValue=structDefValue,
                                                  mode=structProp.get_mode())
