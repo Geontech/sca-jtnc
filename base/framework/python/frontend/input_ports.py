@@ -19,9 +19,8 @@
 #
 
 import threading
-from sca.frontendInterfaces import FRONTEND__POA
-from sca.frontendInterfaces import FRONTEND
-from sca.bulkioInterfaces import BULKIO
+from sca.frontend import FRONTEND, FRONTEND__POA
+from sca.bulkio import BULKIO
 import copy
 
 

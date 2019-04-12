@@ -24,7 +24,7 @@ from sca.utils.sandbox.helper import SandboxHelper
 from redhawk.bitbuffer import bitbuffer
 
 import bulkio
-from bulkio.bulkioInterfaces import BULKIO
+from sca.bulkio import BULKIO
 from bulkio.output_ports import *
 from bulkio.output_streams import OutputStream, OutXMLStream
 

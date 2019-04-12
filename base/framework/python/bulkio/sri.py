@@ -23,7 +23,7 @@ import omniORB.any
 from ossie.cf import CF
 import ossie.properties
 
-from bulkio.bulkioInterfaces import BULKIO
+from sca.bulkio import BULKIO
 
 # Bit flags for SRI fields
 NONE     = 0

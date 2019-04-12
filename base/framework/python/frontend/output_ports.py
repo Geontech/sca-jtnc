@@ -23,7 +23,7 @@ from sca.cf.CF import Port
 from sca.utils import uuid
 
 import threading
-from sca.frontendInterfaces import FRONTEND
+from sca.frontend import FRONTEND
 from sca.resource import PortCallError
 
 

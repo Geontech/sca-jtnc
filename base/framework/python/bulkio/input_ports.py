@@ -37,7 +37,7 @@ import bulkio.timestamp
 from bulkio.const import BLOCKING, NON_BLOCKING
 from bulkio.input_streams import InputStream, BufferedInputStream
 from bulkio.datablock import DataBlock
-from bulkio.bulkioInterfaces import BULKIO, BULKIO__POA
+from sca.bulkio import BULKIO, BULKIO__POA
 
 class InPort(object):
     DATA_BUFFER=0

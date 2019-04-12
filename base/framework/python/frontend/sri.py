@@ -20,7 +20,7 @@
 from omniORB import CORBA
 from omniORB import any as _any
 from sca.cf import CF
-from sca.bulkioInterfaces import BULKIO
+from sca.bulkio import BULKIO
 
 def create(stream_id, frontend_status, identifier = 'my_id', collector_frequency = -1.0 ):
 

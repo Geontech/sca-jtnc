@@ -19,7 +19,7 @@
 #
 
 import bulkio
-from sca.frontendInterfaces import FRONTEND
+from sca.frontend import FRONTEND
 from sca.cf import CF
 from sca.properties import simple_property, simpleseq_property
 from omniORB import any as _any

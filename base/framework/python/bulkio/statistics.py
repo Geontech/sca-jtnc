@@ -22,8 +22,8 @@ import time
 import struct
 from ossie.cf import CF
 from omniORB import CORBA
-from bulkio.bulkioInterfaces.BULKIO import PortStatistics
-from bulkio.bulkioInterfaces.BULKIO import UsesPortStatistics
+from sca.bulkio.BULKIO import PortStatistics
+from sca.bulkio.BULKIO import UsesPortStatistics
 
 class InStats:
     class statPoint:

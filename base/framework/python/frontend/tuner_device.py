@@ -31,8 +31,8 @@ from sca.properties import struct_to_props
 from sca.utils import model
 
 import threading
-from sca.bulkioInterfaces import BULKIO
-from sca.frontendInterfaces import FRONTEND
+from sca.bulkio import BULKIO
+from sca.frontend import FRONTEND
 from sca.cf import ExtendedCF
 from fe_types import *
 
