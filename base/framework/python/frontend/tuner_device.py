@@ -590,9 +590,9 @@ class FrontendTunerDevice(Device):
         """
         This is called automatically after allocateCapacity or deallocateCapacity are called.
         Your implementation should determine the current state of the device:
-           self._usageState = CF.Device.IDLE   # not in use
-           self._usageState = CF.Device.ACTIVE # in use, with capacity remaining for allocation
-           self._usageState = CF.Device.BUSY   # in use, with no capacity remaining for allocation
+           self._usageState = CF.DeviceComponent.IDLE   # not in use
+           self._usageState = CF.DeviceComponent.ACTIVE # in use, with capacity remaining for allocation
+           self._usageState = CF.DeviceComponent.BUSY   # in use, with no capacity remaining for allocation
         """
         tunerAllocated = 0
         self.allocation_id_mapping_lock.acquire()
@@ -603,14 +603,14 @@ class FrontendTunerDevice(Device):
 
             # If no tuners are allocated, device is idle
             if tunerAllocated == 0:
-                return CF.Device.IDLE
+                return CF.DeviceComponent.IDLE
             # If all tuners are allocated, device is busy
             if tunerAllocated == len(self.tuner_allocation_ids):
-                return CF.Device.BUSY
+                return CF.DeviceComponent.BUSY
         finally:
             self.allocation_id_mapping_lock.release()
         # Else, device is active
-        return CF.Device.ACTIVE
+        return CF.DeviceComponent.ACTIVE
 
     # This sets the number of entries in the frontend_tuner_status struct sequence property
     # as well as the tuner_allocation_ids vector. Call this function during initialization
