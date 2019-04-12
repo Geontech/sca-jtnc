@@ -36,9 +36,9 @@ from sca.frontend import FRONTEND
 from sca.cf import ExtendedCF
 from fe_types import *
 
-class AllocationAlreadyExists(CF.Device.InvalidCapacity):
+class AllocationAlreadyExists(CF.CapacityManagement.InvalidCapacity):
     def __init__(self, msg, props):
-        CF.Device.InvalidCapacity(msg,props)
+        CF.CapacityManagement.InvalidCapacity(msg,props)
 
 def zeroSRI(sri):
     if sri:
@@ -639,11 +639,11 @@ class FrontendTunerDevice(Device):
         self._has_scanner = False
         for prop_key in propdict:
             if prop_key == "FRONTEND::scanner_allocation":
-                raise CF.Device.InvalidCapacity("FRONTEND::scanner_allocation found in allocation; this is not a scanning device", [CF.DataType(id=prop_key,value=any.to_any(propdict[prop_key]))])
+                raise CF.CapacityManagement.InvalidCapacity("FRONTEND::scanner_allocation found in allocation; this is not a scanning device", [CF.DataType(id=prop_key,value=any.to_any(propdict[prop_key]))])
 
         for prop_key in propdict:
             if prop_key != "FRONTEND::tuner_allocation" and prop_key != "FRONTEND::listener_allocation":
-                raise CF.Device.InvalidCapacity("UNKNOWN ALLOCATION PROPERTY "+prop_key, [CF.DataType(id=prop_key,value=any.to_any(propdict[prop_key]))])
+                raise CF.CapacityManagement.InvalidCapacity("UNKNOWN ALLOCATION PROPERTY "+prop_key, [CF.DataType(id=prop_key,value=any.to_any(propdict[prop_key]))])
             self._props[prop_key] = propdict[prop_key]
 
     def allocateCapacity(self, properties):
@@ -666,7 +666,7 @@ class FrontendTunerDevice(Device):
         if propdict.has_key('FRONTEND::listener_allocation'):
             return self._allocate_frontend_listener_allocation(propdict['FRONTEND::listener_allocation'])
 
-        raise CF.Device.InvalidCapacity("Unable to allocate this FEI device because FRONTEND::tuner_allocation and FRONTEND::listener_allocation not present", properties)
+        raise CF.CapacityManagement.InvalidCapacity("Unable to allocate this FEI device because FRONTEND::tuner_allocation and FRONTEND::listener_allocation not present", properties)
 
     def _allocate_frontend_tuner_allocation(self, frontend_tuner_allocation, scanner_prop = None):
         exception_raised = False
@@ -674,12 +674,12 @@ class FrontendTunerDevice(Device):
             # Check allocation_id
             if not frontend_tuner_allocation.allocation_id:
                 self._deviceLog.info("allocate_frontend_tuner_allocation: MISSING ALLOCATION_ID")
-                raise CF.Device.InvalidCapacity("MISSING ALLOCATION_ID", struct_to_props(frontend_tuner_allocation))
+                raise CF.CapacityManagement.InvalidCapacity("MISSING ALLOCATION_ID", struct_to_props(frontend_tuner_allocation))
 
             # Check if allocation ID has already been used
             if  self.getTunerMapping(frontend_tuner_allocation.allocation_id) >= 0:
                 self._deviceLog.info("allocate_frontend_tuner_allocation: ALLOCATION_ID "+frontend_tuner_allocation.allocation_id+" ALREADY IN USE")
-                raise CF.Device.InvalidCapacity("ALLOCATION_ID "+frontend_tuner_allocation.allocation_id+" ALREADY IN USE", struct_to_props(frontend_tuner_allocation))
+                raise CF.CapacityManagement.InvalidCapacity("ALLOCATION_ID "+frontend_tuner_allocation.allocation_id+" ALREADY IN USE", struct_to_props(frontend_tuner_allocation))
 
             self.allocation_id_mapping_lock.acquire()
             # Next, try to allocate a new tuner
@@ -737,7 +737,7 @@ class FrontendTunerDevice(Device):
                         if frontend_tuner_allocation.tuner_type == "CHANNELIZER" or frontend_tuner_allocation.tuner_type == "TX":
                             eout = str(frontend_tuner_allocation.tuner_type) + " allocation with device_control=false is invalid."
                             self._deviceLog.debug(eout)
-                            raise CF.Device.InvalidCapacity(eout, struct_to_props(frontend_tuner_allocation))
+                            raise CF.CapacityManagement.InvalidCapacity(eout, struct_to_props(frontend_tuner_allocation))
                         # listener
                         if len(self.tuner_allocation_ids[tuner_id].control_allocation_id) == 0 or not self.listenerRequestValidation(frontend_tuner_allocation, tuner_id):
                             # either not allocated or can't support listener request
@@ -795,9 +795,9 @@ class FrontendTunerDevice(Device):
         except AllocationAlreadyExists, e:
             # Don't call deallocateCapacity if the allocationId already exists
             #   - Would end up deallocating a valid tuner/listener
-            raise CF.Device.InvalidCapacity(e)
+            raise CF.CapacityManagement.InvalidCapacity(e)
         
-        except CF.Device.InvalidCapacity, e:
+        except CF.CapacityManagement.InvalidCapacity, e:
             raise e
         
         except FRONTEND.BadParameterException, e:
@@ -816,7 +816,7 @@ class FrontendTunerDevice(Device):
         tuner_id = self.getTunerMapping(frontend_tuner_allocation.allocation_id)
         if tuner_id < 0:
             self._deviceLog.debug("deallocate_frontend_tuner_allocation: ALLOCATION_ID NOT FOUND: [" + str(frontend_tuner_allocation.allocation_id) + "]")
-            raise CF.Device.InvalidCapacity("ALLOCATION_ID NOT FOUND: [" + str(frontend_tuner_allocation.allocation_id) + "]",struct_to_props(frontend_tuner_allocation))
+            raise CF.CapacityManagement.InvalidCapacity("ALLOCATION_ID NOT FOUND: [" + str(frontend_tuner_allocation.allocation_id) + "]",struct_to_props(frontend_tuner_allocation))
         
         self.allocation_id_mapping_lock.acquire()
         try:
@@ -864,11 +864,11 @@ class FrontendTunerDevice(Device):
             # Check validity of allocation_id's
             if not frontend_listener_allocation.existing_allocation_id:
                 self._deviceLog.info("allocate_frontend_listener_allocation: MISSING EXISTING ALLOCATION ID")
-                raise CF.Device.InvalidCapacity("MISSING EXISTING ALLOCATION ID", struct_to_props(frontend_listener_allocation))
+                raise CF.CapacityManagement.InvalidCapacity("MISSING EXISTING ALLOCATION ID", struct_to_props(frontend_listener_allocation))
             
             if not frontend_listener_allocation.listener_allocation_id:
                 self._deviceLog.info("allocate_frontend_listener_allocation: MISSING LISTENER ALLOCATION ID")
-                raise CF.Device.InvalidCapacity("MISSING LISTENER ALLOCATION ID", struct_to_props(frontend_listener_allocation))
+                raise CF.CapacityManagement.InvalidCapacity("MISSING LISTENER ALLOCATION ID", struct_to_props(frontend_listener_allocation))
             
             # Check if listener allocation ID has already been used
             if self.getTunerMapping(frontend_listener_allocation.listener_allocation_id) >= 0:
@@ -885,7 +885,7 @@ class FrontendTunerDevice(Device):
             if self.frontend_tuner_status[tuner_id].tuner_type == "CHANNELIZER" or self.frontend_tuner_status[tuner_id].tuner_type == "TX":
                 eout = "allocate_frontend_listener_allocation: listener allocations are not permitted for " + str(self.frontend_tuner_status[tuner_id].tuner_type) + " tuner type"
                 self._deviceLog.debug(eout)
-                raise CF.Device.InvalidCapacity(eout, struct_to_props(frontend_listener_allocation))
+                raise CF.CapacityManagement.InvalidCapacity(eout, struct_to_props(frontend_listener_allocation))
 
             self.allocation_id_mapping_lock.acquire()
             try:
@@ -903,9 +903,9 @@ class FrontendTunerDevice(Device):
         except AllocationAlreadyExists, e:
             # Don't call deallocateCapacity if the allocationId already exists
             #   - Would end up deallocating a valid tuner/listener
-            raise CF.Device.InvalidCapacity(str(e), struct_to_props(frontend_listener_allocation))
+            raise CF.CapacityManagement.InvalidCapacity(str(e), struct_to_props(frontend_listener_allocation))
         
-        except CF.Device.InvalidCapacity, e:
+        except CF.CapacityManagement.InvalidCapacity, e:
             raise e
         
         except FRONTEND.BadParameterException, e:
@@ -931,12 +931,12 @@ class FrontendTunerDevice(Device):
             self._deviceLog.debug("ALLOCATION_ID NOT FOUND: [" + str(frontend_listener_allocation.listener_allocation_id) + "]")
             retval_struct = [CF.DataType(id='FRONTEND::listener_allocation::existing_allocation_id',value=any.to_any(frontend_listener_allocation.existing_allocation_id)),CF.DataType(id='FRONTEND::listener_allocation::listener_allocation_id',value=any.to_any(frontend_listener_allocation.existing_allocation_id))]
             retval = CF.DataType(id='FRONTEND::listener_allocation',value=any.to_any(retval_struct))
-            raise CF.Device.InvalidCapacity("ALLOCATION_ID NOT FOUND", [retval])
+            raise CF.CapacityManagement.InvalidCapacity("ALLOCATION_ID NOT FOUND", [retval])
         if self.tuner_allocation_ids[tuner_id].control_allocation_id == frontend_listener_allocation.listener_allocation_id:
             self._deviceLog.debug("Controlling allocation id cannot be used as a listener id in a deallocation: [" + str(frontend_listener_allocation.listener_allocation_id) + "]")
             retval_struct = [CF.DataType(id='FRONTEND::listener_allocation::existing_allocation_id',value=any.to_any(frontend_listener_allocation.existing_allocation_id)),CF.DataType(id='FRONTEND::listener_allocation::listener_allocation_id',value=any.to_any(frontend_listener_allocation.existing_allocation_id))]
             retval = CF.DataType(id='FRONTEND::listener_allocation',value=any.to_any(retval_struct))
-            raise CF.Device.InvalidCapacity("Controlling allocation id cannot be used as a listener id", [retval])
+            raise CF.CapacityManagement.InvalidCapacity("Controlling allocation id cannot be used as a listener id", [retval])
         # send EOS to listener connection only
         self.removeTunerMappingByAllocationId(frontend_listener_allocation.listener_allocation_id)
         self.removeListenerId(tuner_id, frontend_listener_allocation.listener_allocation_id)
@@ -1188,7 +1188,7 @@ class FrontendScannerDevice(FrontendTunerDevice):
         self._has_scanner = False
         for prop_key in propdict:
             if prop_key != "FRONTEND::tuner_allocation" and prop_key != "FRONTEND::listener_allocation" and prop_key != "FRONTEND::scanner_allocation":
-                raise CF.Device.InvalidCapacity("UNKNOWN ALLOCATION PROPERTY "+prop_key, [CF.DataType(id=prop_key,value=any.to_any(propdict[prop_key]))])
+                raise CF.CapacityManagement.InvalidCapacity("UNKNOWN ALLOCATION PROPERTY "+prop_key, [CF.DataType(id=prop_key,value=any.to_any(propdict[prop_key]))])
             if prop_key == "FRONTEND::scanner_allocation":
                 self._has_scanner = True
             self._props[prop_key] = propdict[prop_key]
