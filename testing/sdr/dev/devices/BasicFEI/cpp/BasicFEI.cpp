@@ -14,25 +14,30 @@ PREPARE_LOGGING(BasicFEI_i)
 BasicFEI_i::BasicFEI_i(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl) :
     BasicFEI_base(devMgr_ior, id, lbl, sftwrPrfl)
 {
+    constructor();
 }
 
 BasicFEI_i::BasicFEI_i(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl, char *compDev) :
     BasicFEI_base(devMgr_ior, id, lbl, sftwrPrfl, compDev)
 {
+    constructor();
 }
 
 BasicFEI_i::BasicFEI_i(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl, CF::Properties capacities) :
     BasicFEI_base(devMgr_ior, id, lbl, sftwrPrfl, capacities)
 {
+    constructor();
 }
 
 BasicFEI_i::BasicFEI_i(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl, CF::Properties capacities, char *compDev) :
     BasicFEI_base(devMgr_ior, id, lbl, sftwrPrfl, capacities, compDev)
 {
+    constructor();
 }
 
 BasicFEI_i::~BasicFEI_i()
 {
+    constructor();
 }
 
 void BasicFEI_i::constructor()
