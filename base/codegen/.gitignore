@@ -1,0 +1,6 @@
+build
+dist
+sca_codegen.egg-info/
+*.pyc
+*.swp
+*~
