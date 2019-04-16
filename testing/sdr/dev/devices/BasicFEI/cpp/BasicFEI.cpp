@@ -14,36 +14,36 @@ PREPARE_LOGGING(BasicFEI_i)
 BasicFEI_i::BasicFEI_i(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl) :
     BasicFEI_base(devMgr_ior, id, lbl, sftwrPrfl)
 {
-    constructor();
+    construct();
 }
 
 BasicFEI_i::BasicFEI_i(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl, char *compDev) :
     BasicFEI_base(devMgr_ior, id, lbl, sftwrPrfl, compDev)
 {
-    constructor();
+    construct();
 }
 
 BasicFEI_i::BasicFEI_i(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl, CF::Properties capacities) :
     BasicFEI_base(devMgr_ior, id, lbl, sftwrPrfl, capacities)
 {
-    constructor();
+    construct();
 }
 
 BasicFEI_i::BasicFEI_i(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl, CF::Properties capacities, char *compDev) :
     BasicFEI_base(devMgr_ior, id, lbl, sftwrPrfl, capacities, compDev)
 {
-    constructor();
+    construct();
 }
 
 BasicFEI_i::~BasicFEI_i()
 {
-    constructor();
+    construct();
 }
 
-void BasicFEI_i::constructor()
+void BasicFEI_i::construct()
 {
     /***********************************************************************************
-     This is the RH constructor. All properties are properly initialized before this function is called 
+     This is the construct(or). All properties are properly initialized before this function is called 
 
      For a tuner device, the structure frontend_tuner_status needs to match the number
      of tuners that this device controls and what kind of device it is.

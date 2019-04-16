@@ -13,8 +13,6 @@ class BasicFEI_i : public BasicFEI_base
         BasicFEI_i(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl, CF::Properties capacities, char *compDev);
         ~BasicFEI_i();
 
-        void constructor();
-
         int serviceFunction();
 
     protected:
@@ -45,6 +43,7 @@ class BasicFEI_i : public BasicFEI_base
         ////////////////////////////////////////
         // Required device specific functions // -- to be implemented by device developer
         ////////////////////////////////////////
+        void construct();
 
         // these are pure virtual, must be implemented here
         void deviceEnable(frontend_tuner_status_struct_struct &fts, size_t tuner_id);
