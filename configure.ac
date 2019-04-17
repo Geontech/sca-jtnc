@@ -43,6 +43,9 @@ AC_SUBST([LIBOSSIECFJNI_VERSION_INFO], [1:0:0])
 AC_SUBST([LIBREDHAWK_LOGGING_VERSION_INFO], [1:0:0])
 AC_SUBST([BULKIO_API_VERSION], [2.2])
 AC_SUBST([BULKIO_SO_VERSION], [0:0:0])
+AC_SUBST([CODEGEN_API_VERSION], [2.2])
+AC_SUBST([CODEGEN_SO_VERSION], [0:0:0])
+
 
 dnl AC_CONFIG_MACRO_DIR([m4])
 dnl LT_INIT
@@ -214,6 +217,7 @@ AM_PATH_PYTHON([2.4])
 AC_CHECK_PYMODULE(logging ,[], [AC_MSG_ERROR([the python logging module is required])])
 AC_CHECK_PYMODULE(subprocess, [], [AC_MSG_ERROR([the python subprocess module is required])])
 AC_CHECK_PYMODULE(omniORB, [], [AC_MSG_ERROR([the python omniORB module is required])])
+AC_CHECK_PYMODULE(jinja2, [], [AC_MSG_ERROR([the python jinja2 module is required])])
 if test -d /usr/lib/omniidl; then # for debian-based systems
   export PYTHONPATH=${PYTHONPATH}:/usr/lib/omniidl
 fi
@@ -258,6 +262,7 @@ CPPFLAGS="${CPPFLAGS} -UPACKAGE_NAME -UPACKAGE_BUGREPORT -UPACKAGE_TARNAME -UPAC
 AC_CONFIG_FILES(Makefile \
                 base/Makefile \
                 base/bulkio/Makefile \
+                base/codegen/Makefile \
                 base/framework/Makefile \
                 base/framework/python/Makefile \
                 base/framework/idl/CF/Makefile \
