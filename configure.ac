@@ -37,7 +37,7 @@ dnl 3. If any interfaces have been addded then increment age
 dnl 4. If any interfaces have been removed or changed, then set
 dnl    age to 0
 AC_SUBST([LIBSCACF_VERSION_INFO], [4:1:0])
-AC_SUBST([LIBOSSIEPARSER_VERSION_INFO], [3:0:0])
+AC_SUBST([LIBSCAPARSER_VERSION_INFO], [4:1:0])
 AC_SUBST([LIBOMNIJNI_VERSION_INFO], [1:0:1])
 AC_SUBST([LIBOSSIECFJNI_VERSION_INFO], [1:0:0])
 AC_SUBST([LIBREDHAWK_LOGGING_VERSION_INFO], [1:0:0])
@@ -47,6 +47,7 @@ AC_SUBST([FRONTEND_API_VERSION], [2.2])
 AC_SUBST([FRONTEND_SO_VERSION], [0:0:0])
 AC_SUBST([CODEGEN_API_VERSION], [2.2])
 AC_SUBST([CODEGEN_SO_VERSION], [0:0:0])
+
 
 
 dnl AC_CONFIG_MACRO_DIR([m4])
@@ -271,7 +272,9 @@ AC_CONFIG_FILES(Makefile \
                 base/framework/idl/CF/Makefile \
                 base/framework/idl/BULKIO/Makefile \
                 base/framework/idl/FRONTEND/Makefile \
-                idl/Makefile )
+                idl/Makefile \
+                xml/Makefile \
+                base/parser/Makefile )
 
 AM_COND_IF( [BUILD_TESTS], [
 AC_CONFIG_FILES( [testing/Makefile \

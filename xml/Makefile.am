@@ -18,29 +18,33 @@
 # along with this program.  If not, see http://www.gnu.org/licenses/.
 #
 
-dtddir = $(datadir)/xml/sca/2.2.2/dtd
-xsddir = $(datadir)/xml/sca/2.2.2/xsd
-dist_dtd_DATA = dtd/deviceconfiguration.dtd \
-                dtd/devicepkg.dtd \
-		dtd/domainmanagerconfiguration.dtd \
-		dtd/profile.dtd \
-		dtd/properties.dtd \
-		dtd/softpkg.dtd \
-		dtd/softwareassembly.dtd \
-		dtd/softwarecomponent.dtd \
+dtddir = $(datadir)/xml/sca/4.1.0/dtd
+xsddir = $(datadir)/xml/sca/4.1.0/xsd
+dist_dtd_DATA = \
+		dtd/applicationdeployment.4.1.dtd \
+		dtd/deviceconfiguration.4.1.dtd \
+		dtd/devicepkg.4.1.dtd \
+		dtd/domainmanagerconfiguration.4.1.dtd \
+		dtd/platformdeployment.4.1.dtd \
+		dtd/properties.4.1.dtd \
+		dtd/softpkg.4.1.dtd \
+		dtd/softwareassembly.4.1.dtd \
+		dtd/softwarecomponent.4.1.dtd \
 		dtd/catalog.xml
 
-dist_xsd_DATA = xsd/dcd.xsd \
-                xsd/dmd.xsd \
-		xsd/dpd.xsd \
-		xsd/prf.xsd \
-		xsd/profile.xsd \
-		xsd/sad.xsd \
-		xsd/scd.xsd \
-		xsd/spd.xsd
+dist_xsd_DATA = \
+		xsd/applicationdeployment.4.1.xsd \
+		xsd/deviceconfiguration.4.1.xsd \
+		xsd/devicepkg.4.1.xsd \
+		xsd/domainmanagerconfiguration.4.1.xsd \
+		xsd/platformdeployment.4.1.xsd \
+		xsd/properties.4.1.xsd \
+		xsd/softpkg.4.1.xsd \
+		xsd/softwareassembly.4.1.xsd \
+		xsd/softwarecomponent.4.1.xsd
 
 if HAVE_XMLCATALOG
 install-exec-hook:
-	-xmlcatalog --noout --add delegatePublic "-//JTRS//DTD SCA V2.2.2" "$(datadir)/xml/sca/2.2.2/dtd/catalog.xml" /etc/xml/catalog
+	-xmlcatalog --noout --add delegatePublic "-//JTNC//DTD SCA V4.1.0" "$(datadir)/xml/sca/4.1.0/dtd/catalog.xml" /etc/xml/catalog
 
 endif

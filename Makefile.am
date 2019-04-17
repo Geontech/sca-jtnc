@@ -30,4 +30,4 @@ docs :
 
 EXTRA_DIST = sca.pc.in LICENSE
 
-SUBDIRS = base idl testing
+SUBDIRS = base idl testing xml
