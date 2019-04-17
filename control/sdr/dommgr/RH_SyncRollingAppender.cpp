@@ -1,1 +1,0 @@
-../../../base/framework/logging/RH_SyncRollingAppender.cpp

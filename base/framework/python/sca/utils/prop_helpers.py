@@ -185,16 +185,16 @@ def getPropNameDict(prf):
 
             nameDict[str(tagbase + str(name))] = str(prop.get_id())
             
-        for prop in struct.get_simplesequence():
-            if prop.get_name() == None:
-                name = prop.get_id()
-            else:
-                name = prop.get_name()
-            if nameDict.has_key( tagbase + str(name) ):
-                print "WARN: struct element with duplicate name %s" % tagbase
-                continue
+        # for prop in struct.get_simplesequence():
+        #     if prop.get_name() == None:
+        #         name = prop.get_id()
+        #     else:
+        #         name = prop.get_name()
+        #     if nameDict.has_key( tagbase + str(name) ):
+        #         print "WARN: struct element with duplicate name %s" % tagbase
+        #         continue
 
-            nameDict[str(tagbase + str(name))] = str(prop.get_id())
+        #     nameDict[str(tagbase + str(name))] = str(prop.get_id())
 
     # do it for all 'struct' sequences
     tagbase = ""
@@ -225,17 +225,17 @@ def getPropNameDict(prf):
                     continue
 
                 nameDict[str(tagbase + str(name))] = str(prop.get_id())
-            for prop in struct.get_simplesequence():
-                # make sure this struct element's name is unique
-                if prop.get_name() == None:
-                    name = prop.get_id()
-                else:
-                    name = prop.get_name()
-                if nameDict.has_key( tagbase + str(name)):
-                    print "WARN: property with non-unique name %s" % name
-                    continue
+            # for prop in struct.get_simplesequence():
+            #     # make sure this struct element's name is unique
+            #     if prop.get_name() == None:
+            #         name = prop.get_id()
+            #     else:
+            #         name = prop.get_name()
+            #     if nameDict.has_key( tagbase + str(name)):
+            #         print "WARN: property with non-unique name %s" % name
+            #         continue
 
-                nameDict[str(tagbase + str(name))] = str(prop.get_id())
+            #     nameDict[str(tagbase + str(name))] = str(prop.get_id())
           
     return nameDict
 

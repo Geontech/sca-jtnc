@@ -24,7 +24,7 @@ from sca.cf import CF
 from redhawk.bitbuffer import bitbuffer
 
 import bulkio
-from bulkio.bulkioInterfaces import BULKIO
+from sca.bulkio import BULKIO
 from bulkio.stream_base import StreamBase
 
 class OutputStream(StreamBase):

@@ -50,13 +50,13 @@ import containers
 
 
 if hasEvents:
-    # Map CF.Device states to StandardEvent states for sending state change messages.
-    stateMap = { CF.Device.IDLE          : StandardEvent.IDLE,
-                 CF.Device.ACTIVE        : StandardEvent.ACTIVE,
-                 CF.Device.BUSY          : StandardEvent.BUSY,
-                 CF.Device.LOCKED        : StandardEvent.LOCKED,
-                 CF.Device.UNLOCKED      : StandardEvent.UNLOCKED,
-                 CF.Device.SHUTTING_DOWN : StandardEvent.SHUTTING_DOWN }
+    # Map CF.DeviceComponent states to StandardEvent states for sending state change messages.
+    stateMap = { CF.DeviceComponent.IDLE          : StandardEvent.IDLE,
+                 CF.DeviceComponent.ACTIVE        : StandardEvent.ACTIVE,
+                 CF.DeviceComponent.BUSY          : StandardEvent.BUSY,
+                 CF.DeviceComponent.LOCKED        : StandardEvent.LOCKED,
+                 CF.DeviceComponent.UNLOCKED      : StandardEvent.UNLOCKED,
+                 CF.DeviceComponent.SHUTTING_DOWN : StandardEvent.SHUTTING_DOWN }
 
     class Supplier_i(CosEventComm__POA.PushSupplier):
         def disconnect_push_supplier (self):
@@ -550,8 +550,8 @@ class Device(resource.Resource):
 
     # Legal state transitions for _set_adminState
     _adminStateTransitions = (
-        (CF.Device.LOCKED, CF.Device.UNLOCKED),
-        (CF.Device.UNLOCKED, CF.Device.LOCKED)
+        (CF.DeviceComponent.LOCKED, CF.DeviceComponent.UNLOCKED),
+        (CF.DeviceComponent.UNLOCKED, CF.DeviceComponent.LOCKED)
     )
 
     def _set_adminState(self, state):

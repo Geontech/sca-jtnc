@@ -34,7 +34,7 @@ from redhawk.bitbuffer import bitbuffer
 from bulkio.statistics import OutStats
 import bulkio.sri
 from bulkio import timestamp
-from bulkio.bulkioInterfaces import BULKIO, BULKIO__POA 
+from sca.bulkio import BULKIO, BULKIO__POA 
 from bulkio.const import MAX_TRANSFER_BYTES
 from bulkio.output_streams import *
 import traceback

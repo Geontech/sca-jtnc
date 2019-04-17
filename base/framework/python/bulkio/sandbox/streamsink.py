@@ -25,7 +25,7 @@ import time
 
 from sca.utils.sandbox.helper import SandboxHelper
 
-from bulkio.bulkioInterfaces import BULKIO
+from sca.bulkio import BULKIO
 from bulkio.input_ports import *
 
 _PORT_MAP = {

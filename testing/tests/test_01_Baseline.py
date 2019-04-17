@@ -47,6 +47,8 @@ import traceback
 
 import time
 
+from frontend import tuner_device
+
 from sca.bulkio import BULKIO
 from sca.cf import CF
 from omniORB import any as _any
@@ -59,6 +61,21 @@ class SBTestTest(scatest.CorbaTestCase):
 
     def tearDown(self):
         sb.release()
+
+    def test_frontend(self):
+        allocation_id = "TEST"
+        sample_rate=1.0e6
+        bandwidth=0.5e6
+        center_frequency=500.0e6
+
+        fei_dev = sb.launch('BasicFEI')
+        fei_alloc = tuner_device.createTunerAllocation(
+            allocation_id=allocation_id,
+            sample_rate=sample_rate,
+            bandwidth=bandwidth,
+            center_frequency=center_frequency
+        )
+        self.assertTrue(fei_dev.allocateCapacity(fei_alloc))
 
     def test_programmable(self):
         prog_dev = sb.launch('ProgrammableDevice')

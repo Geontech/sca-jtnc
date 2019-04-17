@@ -20,10 +20,10 @@
 
 import omniORB.any
 
-from ossie.cf import CF
-import ossie.properties
+from sca.cf import CF
+import sca.properties
 
-from bulkio.bulkioInterfaces import BULKIO
+from sca.bulkio import BULKIO
 
 # Bit flags for SRI fields
 NONE     = 0
@@ -162,7 +162,7 @@ def setKeyword(sri, name, value, format=None):
     if format is None:
         value = omniORB.any.to_any(value)
     else:
-        value = ossie.properties.to_tc_value(value, format)
+        value = sca.properties.to_tc_value(value, format)
 
     for dt in sri.keywords:
         if dt.id == name:

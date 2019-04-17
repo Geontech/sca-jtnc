@@ -36,11 +36,14 @@ clean-local:
 	python setup.py clean
 	rm -rf build
 
-sca/cf/%_idl.py : $(top_srcdir)/idl/sca/*/%.idl
+sca/cf/%_idl.py : $(top_srcdir)/idl/sca/CF/%.idl
 	$(AM_V_GEN)$(IDL) -bpython -Wbpackage=sca.cf -Wbextern=CosNaming -Wbextern=CosEventComm -Wbextern=CosEventChannelAdmin -I $(IDLDIR) -I $(OMNICOS_IDLDIR) -I $(top_srcdir)/idl $<
 
 sca/bulkio/%_idl.py : $(top_srcdir)/idl/sca/BULKIO/%.idl
-	$(AM_V_GEN)$(IDL) -bpython -Wbpackage=sca.bulkio -Wbextern=QueryablePort:sca.cf -Wbextern=NegotiablePort:sca.cf -Wbextern=Port:sca.cf -Wbextern=CFBooleanSeq:sca.cf -Wbextern=CFDoubleSeq:sca.cf -Wbextern=CFLongLongSeq:sca.cf -Wbextern=CFOctetSeq:sca.cf -Wbextern=CFStringSeq:sca.cf -Wbextern=CFULongSeq:sca.cf -Wbextern=CFCharSeq:sca.cf -Wbextern=CFFloatSeq:sca.cf -Wbextern=CFLongSeq:sca.cf -Wbextern=CFShortSeq:sca.cf -Wbextern=CFULongLongSeq:sca.cf -Wbextern=CFUShortSeq:sca.cf -Wbextern=CFProperties:sca.cf -Wbextern=CFCommonTypes:sca.cf -Wbextern=CFPortAccessor:sca.cf -Wbextern=AdditionalTypes:sca.cf -Wbextern=CFPrimitiveTypes:sca.cf -Wbextern=CosNaming -Wbextern=CosEventComm -Wbextern=CosEventChannelAdmin -I $(IDLDIR) -I $(OMNICOS_IDLDIR) -I $(top_srcdir)/idl $<
+	$(AM_V_GEN)$(IDL) -bpython -Wbpackage=sca.bulkio -Wbextern=CosNaming -Wbextern=CosEventComm -Wbextern=CosEventChannelAdmin -Wbextern=QueryablePort:sca.cf -Wbextern=NegotiablePort:sca.cf -Wbextern=Port:sca.cf -Wbextern=CFBooleanSeq:sca.cf -Wbextern=CFDoubleSeq:sca.cf -Wbextern=CFLongLongSeq:sca.cf -Wbextern=CFOctetSeq:sca.cf -Wbextern=CFStringSeq:sca.cf -Wbextern=CFULongSeq:sca.cf -Wbextern=CFCharSeq:sca.cf -Wbextern=CFFloatSeq:sca.cf -Wbextern=CFLongSeq:sca.cf -Wbextern=CFShortSeq:sca.cf -Wbextern=CFULongLongSeq:sca.cf -Wbextern=CFUShortSeq:sca.cf -Wbextern=CFProperties:sca.cf -Wbextern=CFCommonTypes:sca.cf -Wbextern=CFPortAccessor:sca.cf -Wbextern=AdditionalTypes:sca.cf -Wbextern=CFPrimitiveTypes:sca.cf -I $(IDLDIR) -I $(OMNICOS_IDLDIR) -I $(top_srcdir)/idl $<
+
+sca/frontend/%_idl.py : $(top_srcdir)/idl/sca/FRONTEND/%.idl
+	$(AM_V_GEN)$(IDL) -bpython -Wbpackage=sca.frontend -Wbextern=CosNaming -Wbextern=CosEventComm -Wbextern=CosEventChannelAdmin -Wbextern=CFProperties:sca.cf -Wbextern=bulkioDataTypes:sca.bulkio -I $(IDLDIR) -I $(OMNICOS_IDLDIR) -I $(top_srcdir)/idl $<
 
 EXTRA_DIST = setup.py
 
@@ -118,7 +121,12 @@ BUILT_SOURCES = \
  sca/bulkio/bio_dataUlongLong_idl.py \
  sca/bulkio/bio_dataVITA49_idl.py \
  sca/bulkio/bio_runtimeStats_idl.py \
- sca/bulkio/bulkioDataTypes_idl.py
+ sca/bulkio/bulkioDataTypes_idl.py \
+ sca/frontend/Frontend_idl.py \
+ sca/frontend/GPS_idl.py \
+ sca/frontend/NavigationData_idl.py \
+ sca/frontend/RFInfo_idl.py \
+ sca/frontend/TunerControl_idl.py
 
 CLEANFILES = $(BUILT_SOURCES)
 

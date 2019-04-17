@@ -21,7 +21,7 @@ import time
 import copy
 import math
 
-from bulkio.bulkioInterfaces import BULKIO
+from sca.bulkio import BULKIO
 
 def now():
     """

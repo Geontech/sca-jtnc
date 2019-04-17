@@ -43,6 +43,8 @@ AC_SUBST([LIBOSSIECFJNI_VERSION_INFO], [1:0:0])
 AC_SUBST([LIBREDHAWK_LOGGING_VERSION_INFO], [1:0:0])
 AC_SUBST([BULKIO_API_VERSION], [2.2])
 AC_SUBST([BULKIO_SO_VERSION], [0:0:0])
+AC_SUBST([FRONTEND_API_VERSION], [2.2])
+AC_SUBST([FRONTEND_SO_VERSION], [0:0:0])
 AC_SUBST([CODEGEN_API_VERSION], [2.2])
 AC_SUBST([CODEGEN_SO_VERSION], [0:0:0])
 
@@ -50,7 +52,7 @@ AC_SUBST([CODEGEN_SO_VERSION], [0:0:0])
 dnl AC_CONFIG_MACRO_DIR([m4])
 dnl LT_INIT
 
-AC_PREFIX_DEFAULT([/usr/local/redhawk/core])
+AC_PREFIX_DEFAULT([/usr/local/sca/core])
 OSSIE_SCAHOME_AS_PREFIX
 OSSIE_SCAROOT_IGNORE_PREFIX
 
@@ -262,11 +264,13 @@ CPPFLAGS="${CPPFLAGS} -UPACKAGE_NAME -UPACKAGE_BUGREPORT -UPACKAGE_TARNAME -UPAC
 AC_CONFIG_FILES(Makefile \
                 base/Makefile \
                 base/bulkio/Makefile \
+                base/frontend/Makefile \
                 base/codegen/Makefile \
                 base/framework/Makefile \
                 base/framework/python/Makefile \
                 base/framework/idl/CF/Makefile \
                 base/framework/idl/BULKIO/Makefile \
+                base/framework/idl/FRONTEND/Makefile \
                 idl/Makefile )
 
 AM_COND_IF( [BUILD_TESTS], [
@@ -276,7 +280,8 @@ AC_CONFIG_FILES( [testing/Makefile \
                 testing/sdr/dev/devices/cpp_dev/cpp/Makefile \
                 testing/sdr/dev/devices/PersonaDevice/cpp/Makefile \
                 testing/sdr/dev/devices/PersonaExecutableDevice/cpp/Makefile \
-                testing/sdr/dev/devices/ProgrammableDevice/cpp/Makefile ])
+                testing/sdr/dev/devices/ProgrammableDevice/cpp/Makefile\
+                testing/sdr/dev/devices/BasicFEI/cpp/Makefile ])
 ])
 
 AC_OUTPUT
