@@ -18,4 +18,24 @@
 # along with this program.  If not, see http://www.gnu.org/licenses/.
 #
 
-SUBDIRS = framework/idl/CF framework/idl/BULKIO framework/idl/FRONTEND framework/python framework bulkio frontend codegen
+# vim: noet: softtabstop=0
+
+# Because omniidl is definitely not capable
+.NOTPARALLEL:
+
+# Mimic automake silent rules
+SCA_V_pysetup = $(sca__v_pysetup_$(V))
+sca__v_pysetup_ = $(sca__v_pysetup__$(AM_DEFAULT_VERBOSITY))
+sca__v_pysetup_0 = --quiet
+sca__v_pysetup__0 = $(sca__v_pysetup_0)
+
+all-local:
+	python setup.py $(SCA_V_pysetup) build
+
+clean-local:
+	rm -rf build
+
+EXTRA_DIST = setup.py
+
+install-exec-hook:
+	$(PYTHON) setup.py install -f --$(PYTHON_INSTALL_SCHEME)=$(DESTDIR)$(prefix) --old-and-unmanageable
