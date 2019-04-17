@@ -1,0 +1,431 @@
+#!/usr/bin/python
+#
+# This file is protected by Copyright. Please refer to the COPYRIGHT file
+# distributed with this source distribution.
+#
+# This file is part of SCA-JTNC core.
+#
+# SCA-JTNC core is free software: you can redistribute it and/or modify it under
+# the terms of the GNU Lesser General Public License as published by the Free
+# Software Foundation, either version 3 of the License, or (at your option) any
+# later version.
+#
+# SCA-JTNC core is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+# details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program.  If not, see http://www.gnu.org/licenses/.
+#
+
+import os
+import sys
+import copy
+from getopt import getopt
+
+from sca.codegen.model.softpkg import SoftPkg
+from sca.codegen.model.softwarecomponent import ComponentTypes
+from sca.codegen.utils import strenum
+from sca.codegen.settings import ImplementationSettings, importWavedevSettings
+from sca.codegen.generate import importTemplate
+
+# Check for Jinja2 up front
+try:
+    import sca.codegen.jinja
+except ImportError, e:
+    raise SystemExit(os.path.basename(sys.argv[0]) + " " + str(e))
+
+#
+# dict: for each resource type :  ( [ list of maps: impl:template name ], help text )
+#
+TemplateSetup = {
+    "frontend": ( [ {"cpp" : "sca.codegen.jinja.cpp.component.frontend"} ], "Generate a frontend compliant device" ),
+    "persona"  : ( [ {"cpp": "sca.codegen.jinja.cpp.component.persona"} ], "Generate a persona device" ),
+    "pgdevice" : ( [ { "cpp": "sca.codegen.jinja.cpp.component.programmable"} ], "Generate programmable device"),
+    "component" : ( [ {"cpp": "sca.codegen.jinja.cpp.component.pull"}, {"python": "sca.codegen.jinja.python.component.pull"} ], "Generate a component or device" ),
+    "device" : ( [ {"cpp": "sca.codegen.jinja.cpp.component.pull"}, {"python": "sca.codegen.jinja.python.component.pull"} ], "Generate a component or device" )
+}
+
+usage = """%s [options] <SPD file> [filenames...]
+
+Arguments:
+    <SPD file>          Path to component .spd.xml
+    [filenames]         Optional list of specific filenames to generate
+
+Options:
+    -i                  ignore wavedev file, requires resource type option
+    -l                  List the files that would be generated
+    -f                  Overwrite existing files even if modified
+    -C <dir>            Put output files in directory <dir>
+    --impl <id>         Generate implementation <id> [default: all]
+    --variant           Variant tag to be appended to the directory name
+    --version           Display codegen version
+    --check-template <id> Check whether template <id> is supported; exit status
+                        is 0 if yes, non-zero if no
+
+Options only valid with a single implementation (if a component contains
+multiple implementations, must use --impl to specify which):
+    --impldir <dir>     Put implementation-specific files in <dir>
+                        (relative to -C if given)
+    --template <id>     Use template <id> for generation
+    -B <name[=value]>   Pass option 'name' (with optional value) to template
+
+Select from one of the following resource types when generating output:
+%s
+""" % (os.path.basename(sys.argv[0]), "\n".join( [ "    --" + x[0]+"\t\t"+x[1][1] for x in TemplateSetup.items() ] ) )
+
+Function = strenum('list', 'generate')
+
+def recoverLanguage(template):
+    if template==None:
+        return None
+    return template[len('sca.codegen.jinja.'):].split('.')[0]
+
+if __name__ == '__main__':
+
+    shortopts = 'filC:B:'
+    # Deprecated options
+    shortopts += 'm:'
+  
+    longopts = ['help', 'template=', 'impl=', 'impldir=', 'lang=', 'variant=',
+                'check-template=', 'header=', 'version']
+    # add predefined template settings a full word options
+    longopts.extend(TemplateSetup.keys())
+    # Deprecated options
+    longopts += ['checkSupport']
+
+    opts, args = getopt(sys.argv[1:], shortopts, longopts)
+    outputdir = None
+    action = Function.GENERATE
+    overwrite = False
+    overrides = ImplementationSettings()
+    implId = None
+    ignoreWavedev=False
+    resource_type=None
+    language=None
+    variant=""
+    headerFile = None
+    checkSupport = False
+    for key, value in opts:
+        if key == '--help':
+            raise SystemExit(usage)
+        elif key == '-C':
+            outputdir = value
+        elif key == '-m':
+            pass
+        elif key == '-i':
+            ignoreWavedev=True
+        elif key == '--impl':
+            implId = value
+        elif key == '--template':
+            overrides.template = value
+        elif key[2:] in TemplateSetup.keys():
+            resource_type=key[2:]
+        elif key == '--impldir':
+            overrides.outputDir = value
+        elif key == '--lang':
+            language = value
+        elif key == '--checkSupport':
+            # Deprecated: use --check-template <id>
+            checkSupport = True
+        elif key == '--check-template':
+            checkSupport = True
+            overrides.template = value
+            break
+        elif key == '--variant':
+            variant = value
+        elif key == '--header':
+            headerFile = value
+        elif key == '-l':
+            action = Function.LIST
+        elif key == '-f':
+            overwrite = True
+        elif key == '-B':
+            if '=' in value:
+                name, value = value.split('=')
+            else:
+                name = value
+                value = True
+            overrides.properties[name] = value
+        elif key == '--version':
+            from sca.codegen import versions
+            print 'SCA Code Generator', versions.codegen
+            sys.exit(0)
+
+    if checkSupport:
+        # If the template has a check() function, and it succeeds, or if it
+        # does not have one, exit with a status of 0 (no error); otherwise,
+        # a exit with a status of 1 to indicate the template is not
+        # supported.
+        try:
+            generator = importTemplate(overrides.template)
+        except:
+            raise SystemExit('Invalid template ' + overrides.template)
+
+        if generator.check():
+            status = 0
+        else:
+            status = 1
+
+        sys.exit(status)
+
+    try:
+        spdFile = args[0]
+    except:
+        raise SystemExit(usage)
+
+    if not os.path.isfile(spdFile):
+        raise SystemExit('Invalid SPD file '+spdFile)
+
+    if resource_type and overrides.template:
+        raise SystemExit, '--template cannot be selected with a predefined resource type.'
+
+    if ignoreWavedev and ( resource_type==None or implId ==None ):
+        raise SystemExit, 'Ignore wavedev option, requires resource type and --impl options.'
+
+    # Any remaining arguments are filenames to be generated; place into bins
+    # based on the first path component.
+    # NB: This does not work with implementation directories more than 1
+    #     level deep.
+    filelist = {}
+    for filename in args[1:]:
+        if filename.count('/'):
+            dirname, filename = filename.split('/', 1)
+        else:
+            dirname = ''
+        if not dirname in filelist:
+            filelist[dirname] = []
+        filelist[dirname].append(filename)
+
+    if not outputdir:
+        # Default to the same location as the SPD unless told otherwise.
+        outputdir = os.path.dirname(spdFile)
+
+    # Parse the component profile
+    softpkg = SoftPkg(spdFile)
+
+    # Read existing WaveDev settings file
+    if variant:
+        spdFile = spdFile.replace("_"+str(variant),"")
+    wavedev = '.' + os.path.basename(spdFile).replace('.spd.xml', '.wavedev')     
+    wavedev = os.path.join(os.path.dirname(spdFile), wavedev)
+
+    if os.path.exists(wavedev) and not ignoreWavedev:
+        settings = importWavedevSettings(wavedev)
+    else:
+        settings = {}
+
+    # Determine the list of implementations to generate.
+    if implId:
+        # An implementation was specified; verify that it exists and only
+        # generate that.
+        try:
+            softpkg.getImplementation(implId)
+        except KeyError:
+            raise SystemExit("No implementation '%s'" % implId)
+        implList = [implId]
+    elif settings:
+        # Settings are available, generate all implementations with settings.
+        implList = settings.keys()
+    else:
+        # Generate all implementations in the SPD; this will fail without a
+        # template argument, or with multiple implementations,
+        implList = [impl.identifier() for impl in softpkg.implementations()]
+
+    # Check that at least one implementation has been selected.
+    if len(implList) < 1:
+        raise SystemExit, 'No implementation specified and implementation(s) cannot be automatically determined.  Use --impl option.'
+
+    # Disallow invalid combinations of command-line arguments.
+    if len(implList) > 1:
+        if overrides.template:
+            raise SystemExit, 'Cannot specify template for multiple implementations'
+        if overrides.outputDir:
+            raise SystemExit, 'Cannot override implementation directory for multiple implementations'
+        if overrides.properties:
+            raise SystemExit, 'Cannot override template-specific options for multiple implementations'
+
+    # Change to the output directory; all XML should have been processed, so
+    # there are no worries about relative paths.
+    if outputdir:
+        os.chdir(outputdir)
+
+    # Pull out CRCs for top-level files.
+    toplevelCRCs = {}
+    for implSettings in settings.itervalues():
+        # Iterate through all items using a copy, because the source dictionary
+        # will be modified.
+        for filename, checksum in implSettings.generatedFileCRCs.items():
+            if not filename.startswith('../'):
+                continue
+            # Remove from implementation CRC list and put into top-level list.
+            del implSettings.generatedFileCRCs[filename]
+            filename = filename[3:]
+            toplevelCRCs[filename] = checksum
+
+    generators = []
+
+    # Top-level code generation
+    # NB: There is currently no way to disable or specify alternate generators
+    if softpkg.type() == ComponentTypes.SHAREDPACKAGE:
+        projectTemplate = 'sca.codegen.jinja.project.softPackageDependency'
+    else:
+        projectTemplate = 'sca.codegen.jinja.project.component'
+
+
+    header = None
+    if headerFile:
+        try:
+            with open(headerFile, 'r') as fp:
+                header = fp.read().rstrip()
+        except Exception as exc:
+            raise SystemExit("Unable to read license header file '%s': %s" % (headerFile, exc.strerror))
+
+    try:
+        package = importTemplate(projectTemplate)
+    except:
+        raise SystemExit("Fatal Error: Unsupported project type.  This should never happen")
+    projectGenerator = package.factory(
+        outputdir='',
+        overwrite=overwrite,
+        crcs=toplevelCRCs,
+        variant=variant,
+        header=header)
+    generators.append(('Component '+softpkg.name(), projectGenerator))
+    
+    if softpkg.type() != ComponentTypes.SHAREDPACKAGE:
+        # Generate unit tests
+        from sca.codegen.jinja.unitTests.resource import sca
+        generator = sca.factory(outputdir='tests', overwrite=overwrite, header=header)
+        generators.append(('Tests '+softpkg.name(), generator))
+
+    # Set up generation for each requested implementation.
+    
+    for implementation in softpkg.implementations():
+        implId = implementation.identifier()
+
+        # look up template if resource type was given
+        if resource_type and overrides.template==None:
+           if implId :
+              try:
+                 tkey = implId
+                 if language :
+                    tkey = language
+                 else:
+                     tkey=None
+                     # get programming language from implementation
+                     pl = implementation.programminglanguage()
+                     if pl.upper() == 'C++' :
+                        tkey="cpp"
+                     elif pl.upper() == 'PYTHON' :
+                        tkey="python"
+
+                     overrides.template = filter( lambda  x: tkey in x.keys(), TemplateSetup[resource_type][0]  )[0][tkey]
+
+              except:
+                 raise SystemExit, 'Template override does not exist or --impl missing'
+           else :
+                 raise SystemExit, 'Template override requires missing --impl option'
+
+        # Get generation settings, from a combination of the command line and (optionally)
+        # the .wavedev configuration file; the former has higher precedence.
+        implSettings = settings.get(implId, ImplementationSettings())
+        # only apply the template override if the template language matches
+        orig_language = recoverLanguage(implSettings.template)
+        orig_template = implSettings.template
+        orig_properties = copy.deepcopy(implSettings.properties)
+        override_language = recoverLanguage(overrides.template)
+
+        # Give the implementation a meaningful name; pre-1.8 projects use UUIDs
+        # for the identifier and have a separate symbolic name in the project
+        # settings.
+        implName = implSettings.name
+        if not implName:
+            implName = implId
+
+        # If no implementation directory was given at all, infer it from the
+        # implementation name
+        # NB: Prior versions used the entry point, but this did not work for
+        #     libraries, where the localfile cannot include anything that is
+        #     dependent on the implementation
+        implOutputDir = implSettings.outputDir
+        if implOutputDir is None:
+            implOutputDir = implName
+            
+        implSettings.override(overrides)
+        if orig_language != override_language and orig_language != None:
+            implSettings.template = orig_template
+            implSettings.properties = orig_properties
+
+        # Check that a template was given, either from the configuration file or the
+        # command line.
+        implTemplate = implSettings.template
+        if not implTemplate:
+            availableTemplates = [ y.values()[0] for x in TemplateSetup.values()  for y in x[0] ]
+            raise SystemExit, "No generator template given for implementation '%s'\n" % implId + \
+                              "Use --template option with one of the following:\n\t" + \
+                              "\n\t".join(availableTemplates)
+
+        # Find the code generator module from the template argument.
+        try:
+            package = importTemplate(implTemplate)
+        except:
+            raise SystemExit('Invalid template ' + implTemplate)
+
+        # Give the implementation a meaningful name; pre-1.8 projects use UUIDs
+        # for the identifier and have a separate symbolic name in the project
+        # settings.
+        implName = implSettings.name
+        if not implName:
+            implName = implId
+
+        generator = package.factory(
+            implId = implId,
+            outputdir = implOutputDir,
+            overwrite = overwrite,
+            crcs = implSettings.generatedFileCRCs,
+            variant = variant,
+            header = header,
+            **implSettings.properties)
+
+        # Add this generator to the top-level project generator, so that it can
+        # get information about the generated code and its requirements
+        projectGenerator.addImplGenerator(generator)
+
+        # If this implementation was selected, queue it to run
+        if implId in implList:
+            generators.append(('Implementation: '+implName, generator))
+
+    # Run all generators.
+    for header, generator in generators:
+        path = generator.getOutputDir()
+        if action == Function.GENERATE:
+            if filelist:
+                if not path in filelist:
+                    continue
+                implFiles = filelist[path]
+            else:
+                implFiles = []
+            
+            print header
+            generated, skipped = generator.generate(softpkg, *implFiles)
+            for filename, verb in skipped:
+                print >>sys.stderr, 'WARNING:', os.path.join(path, filename), 'has been modified or is a user file that must be explicitly updated, use -f to', verb
+            for filename, verb in generated:
+                print ' ', os.path.join(path, filename), verb
+        elif action == Function.LIST:
+            for fileinfo in generator.fileinfo(softpkg):
+                # Convert file attributes to annotations; if the attribute is
+                # true, add the corresponding character to the string
+                attrmap = (('user',     'U'),
+                           ('modified', 'M'),
+                           ('new',      'A'),
+                           ('remove',   'D'))
+                attrs = ''
+                for key, mark in attrmap:
+                    if fileinfo[key]:
+                        attrs += mark
+                    else:
+                        attrs += ' '
+                print attrs, os.path.join(path, fileinfo['filename'])
