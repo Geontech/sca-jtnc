@@ -125,7 +125,7 @@ ${self.constructorBody()}
     These functions are generally called by the framework to perform housekeeping.
 *******************************************************************************************/
 /*{% block start %}*/
-void ${className}::start() throw (CORBA::SystemException, CF::Resource::StartError)
+void ${className}::start() throw (CORBA::SystemException, CF::ControllableInterface::StartError)
 {
     ${baseClass}::start();
     ThreadedComponent::startThread();
@@ -133,7 +133,7 @@ void ${className}::start() throw (CORBA::SystemException, CF::Resource::StartErr
 /*{% endblock %}*/
 
 /*{% block stop %}*/
-void ${className}::stop() throw (CORBA::SystemException, CF::Resource::StopError)
+void ${className}::stop() throw (CORBA::SystemException, CF::ControllableInterface::StopError)
 {
     ${baseClass}::stop();
     if (!ThreadedComponent::stopThread()) {

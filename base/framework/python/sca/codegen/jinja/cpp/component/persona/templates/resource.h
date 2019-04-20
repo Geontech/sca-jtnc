@@ -12,7 +12,7 @@
 #include "${component.reprogclass.header}"
 /*{% else %}*/
 #include "${component.baseclass.header}"
-#include "Device_impl.h"
+#include "DeviceComponent.h"
 /*{% endif %}*/
 
 class ${className};
@@ -42,11 +42,11 @@ class ${className} : public ${baseClass}
         void hwLoadRequest(CF::Properties& request);
 
 //% else 
-        virtual void setParentDevice(Device_impl* parentDevice) { _parentDevice = parentDevice; };
-        virtual Device_impl* getParentDevice() { return _parentDevice; };
+        virtual void setParentDevice(DeviceComponent* parentDevice) { _parentDevice = parentDevice; };
+        virtual DeviceComponent* getParentDevice() { return _parentDevice; };
     
     private:
-        Device_impl* _parentDevice;
+        DeviceComponent* _parentDevice;
 //% endif
 
 //% if component is executabledevice

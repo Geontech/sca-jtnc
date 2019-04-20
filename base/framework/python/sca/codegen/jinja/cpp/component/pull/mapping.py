@@ -32,7 +32,7 @@ class PullComponentMapper(BaseComponentMapper):
         if softpkg.type() == ComponentTypes.RESOURCE:
             name = 'Component'
         elif softpkg.type() == ComponentTypes.DEVICE:
-            name = 'Device_impl'
+            name = 'DeviceComponent'
             aggregate = 'virtual POA_CF::AggregatePlainDevice'
         elif softpkg.type() == ComponentTypes.LOADABLEDEVICE:
             name = 'LoadableDevice_impl'

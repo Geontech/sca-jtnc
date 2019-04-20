@@ -185,9 +185,9 @@ class SoftpkgMapper(object):
     def mapImplementation(self, impl):
         impldict = {}
         impldict['id'] = impl.identifier()
-        impldict['entrypoint'] = impl.entrypoint().valueOf_
+        impldict['entrypoint'] = impl.entrypoint()
         impldict['softpkgdeps'] = [self._mapSoftpkgDependency(dep) for dep in impl.softpkgdeps()]
-        impldict['outputdir'] = impl.entrypoint().valueOf_
+        impldict['outputdir'] = impl.entrypoint()
         impldict.update(self._mapImplementation(impl))
         return impldict
 
@@ -244,7 +244,7 @@ class ProjectMapper(SoftpkgMapper):
     def mapImplementation(self, impl, generator):
         impldict = {}
         impldict['id'] = impl.identifier()
-        impldict['entrypoint'] = impl.entrypoint().valueOf_
+        impldict['entrypoint'] = impl.entrypoint()
         impldict['localfile'] = impl.localfile()
         impldict['language'] = impl.programminglanguage()
         impldict['generator'] = generator
@@ -254,7 +254,7 @@ class ProjectMapper(SoftpkgMapper):
         else:
             # NB: Fall back to inferring the output directory from the entry
             #     point
-            outputdir = os.path.dirname(impl.entrypoint().valueOf_)
+            outputdir = os.path.dirname(impl.entrypoint())
         impldict['outputdir'] = outputdir
         impldict.update(self._mapImplementation(impl, generator))
         return impldict

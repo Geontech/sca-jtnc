@@ -38,7 +38,7 @@ class Implementation(object):
     def entrypoint(self):
         if not self.__impl.code.entrypoint:
             return self.__impl.code.localfile.name
-        return self.__impl.code.entrypoint
+        return self.__impl.code.entrypoint.valueOf_
 
     def isModule(self):
         return self.__impl.code.get_type() == 'SharedLibrary'

@@ -38,7 +38,7 @@ int main(int argc, char* argv[])
     sa.sa_flags = 0;
     devicePtr = 0;
 
-    Device_impl::start_device(&devicePtr, sa, argc, argv);
+    DeviceComponent::start_device(&devicePtr, sa, argc, argv);
 /*{% else %}*/
 /*{%   set servant = component.basename + '_servant' %}*/
     ${component.userclass.name}* ${servant};

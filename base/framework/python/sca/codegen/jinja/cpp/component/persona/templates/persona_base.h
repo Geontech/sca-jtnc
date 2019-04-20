@@ -10,7 +10,7 @@
 
 #include "${component.baseclass.header}"
 //% if component is device
-#include "sca/Device_impl.h"
+#include "sca/DeviceComponent.h"
 //% if component is executabledevice
 #include "sca/ExecutableDevice_impl.h"
 #include "sca/prop_helpers.h"
@@ -40,8 +40,8 @@ class ${className} : public ${baseClass}
         ${className}(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl, CF::Properties capacities, char *compDev);
 //% endif
         virtual void construct();
-        virtual void setParentDevice(Device_impl* parentDevice) { _parentDevice = parentDevice; };
-        virtual Device_impl* getParentDevice() { return _parentDevice; };
+        virtual void setParentDevice(DeviceComponent* parentDevice) { _parentDevice = parentDevice; };
+        virtual DeviceComponent* getParentDevice() { return _parentDevice; };
 
 //% if component is device
         virtual void adminState(CF::Device::AdminType adminState) 
@@ -78,7 +78,7 @@ class ${className} : public ${baseClass}
 //% endif
 
     private:
-        Device_impl*            _parentDevice;
+        DeviceComponent*            _parentDevice;
         bool                    _parentAllocated;
         CF::Properties          _previousRequestProps;
 //% if component is executabledevice

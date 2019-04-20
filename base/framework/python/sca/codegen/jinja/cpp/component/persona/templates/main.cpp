@@ -5,14 +5,14 @@
 ${super()}
 /*{% if component is device %}*/
 extern "C" {
-    Device_impl* construct(int argc, char* argv[], Device_impl* parentDevice) {
+    DeviceComponent* construct(int argc, char* argv[], DeviceComponent* parentDevice) {
 
         struct sigaction sa;
         sa.sa_handler = signal_catcher;
         sa.sa_flags = 0;
         devicePtr = 0;
 
-        Device_impl::start_device(&devicePtr, sa, argc, argv);
+        DeviceComponent::start_device(&devicePtr, sa, argc, argv);
 
         // Any addition parameters passed into construct can now be
         // set directly onto devicePtr since it is the instantiated
@@ -27,7 +27,7 @@ extern "C" {
 /*{% else %}*/
 /*{% set servant = component.basename + '_servant' %}*/
 extern "C" {
-    Resource_impl* construct(int argc, char* argv[], Device_impl* parentDevice) {
+    Resource_impl* construct(int argc, char* argv[], DeviceComponent* parentDevice) {
 
         ${component.userclass.name}* ${servant};
         Resource_impl::start_component(${servant}, argc, argv);
