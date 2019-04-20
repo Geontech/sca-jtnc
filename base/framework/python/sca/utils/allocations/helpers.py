@@ -164,25 +164,25 @@ def matchTypes(props, prop_ids=[], prf=None):
     structs = parsedPrf.get_struct()# + [_prop.get_struct() for _prop in parsedPrf.get_structsequence()]
     structsseq = [_prop.get_struct() for _prop in parsedPrf.get_structsequence()]
     for _prop in parsedPrf.get_struct():
-        name = _prop.id_
+        name = _prop._id
         if _prop.name:
             name = _prop.name
         clazz = properties.xml_to_class(_prop)
         classes[name] = clazz
     for _prop in parsedPrf.get_structsequence():
-        name = _prop.id_
+        name = _prop._id
         if _prop.name:
             name = _prop.name
         clazz = properties.xml_to_class(_prop.struct)
         # mark as structseq by setting to length 1 list
         classes[name] = [clazz]
     for _prop in parsedPrf.get_simple():
-        name = _prop.id_
+        name = _prop._id
         if _prop.name:
             name = _prop.name
         classes[name] = _prop
     for _prop in parsedPrf.get_simplesequence():
-        name = _prop.id_
+        name = _prop._id
         if _prop.name:
             name = _prop.name
         classes[name] = _prop
@@ -207,12 +207,12 @@ def matchTypes(props, prop_ids=[], prf=None):
                 item_idx = 0
                 for item in props[_idx].value._v:
                     for field in classes[_prop.id][0].__fields:
-                        props[_idx].value._v[item_idx]._v = setType(props[_idx].value._v[item_idx]._v, field.id_, field.type_, typeCheck=False)
+                        props[_idx].value._v[item_idx]._v = setType(props[_idx].value._v[item_idx]._v, field._id, field.type_, typeCheck=False)
                     item_idx += 1
             else:
                 _idx = __getPropIdx(props, _prop.id)
                 for field in classes[_prop.id].__fields:
-                    props[_idx].value._v = setType(props[_idx].value._v, field.id_, field.type_, typeCheck=False)
+                    props[_idx].value._v = setType(props[_idx].value._v, field._id, field.type_, typeCheck=False)
 
     return props
 

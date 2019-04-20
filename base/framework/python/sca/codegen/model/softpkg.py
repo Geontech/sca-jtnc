@@ -221,11 +221,6 @@ class SoftPkg(object):
 
     def getSdrPath(self):
         comptype = self.type()
-        print '............', dir(comptype)
-        print '............', type(comptype)
-        print '............', comptype.lower()
-        print ComponentTypes
-        print ComponentTypes.RESOURCE, ComponentTypes.DEVICE
         if comptype == ComponentTypes.RESOURCE:
             return 'dom/components'
         elif comptype == ComponentTypes.DEVICE or comptype == ComponentTypes.LOADABLEDEVICE or comptype == ComponentTypes.EXECUTABLEDEVICE:

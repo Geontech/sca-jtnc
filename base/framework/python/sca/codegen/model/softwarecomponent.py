@@ -91,10 +91,10 @@ class Port(object):
             return [PortTypes.CONTROL]
 
     def hasDescription(self):
-        return self.__xml.description is not None
+        return False
 
     def description(self):
-        return self.__xml.description
+        return None
 
 def UsesPort(port):
     return Port(port.usesname, port, uses=True)

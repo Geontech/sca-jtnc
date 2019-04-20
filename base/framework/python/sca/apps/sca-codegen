@@ -120,7 +120,6 @@ if __name__ == '__main__':
         elif key == '--impl':
             implId = value
         elif key == '--template':
-            print '.................. setting value', value
             overrides.template = value
         elif key[2:] in TemplateSetup.keys():
             resource_type=key[2:]

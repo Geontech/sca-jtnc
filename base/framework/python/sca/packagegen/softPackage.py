@@ -24,7 +24,7 @@ class SoftPackage(object):
         self.wavedevContent = None
 
     def _setNameInSpd(self):
-        self.spd.id_ = self.name
+        self.spd._id = self.name
         self.spd.name = self.name
 
     def runCompileRpm(self):

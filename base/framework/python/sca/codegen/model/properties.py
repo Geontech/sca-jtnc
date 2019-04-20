@@ -19,7 +19,7 @@ class Property(object):
             return set((Kinds.CONFIGURE,))
 
     def identifier(self):
-        return self.xml.id_
+        return self.xml._id
 
     def hasName(self):
         return self.xml.name is not None
@@ -28,7 +28,7 @@ class Property(object):
         if self.xml.name:
             return self.xml.name
         else:
-            return self.xml.id_
+            return self.xml._id
 
     def mode(self):
         if not self.xml.mode:
@@ -71,16 +71,10 @@ class _Simple(object):
        return self.xml.type_
 
     def isComplex(self):
-        if self.xml.complex.lower() == "true":
-            return True
-        else:
-            return False
+        return False
 
     def isOptional(self):
-        if self.xml.optional.lower() == "true":
-            return True
-        else:
-            return False
+        return False
 
     def action(self):
         if not self.xml.action or not self.xml.action.type_:
