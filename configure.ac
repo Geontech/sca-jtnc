@@ -262,6 +262,7 @@ CPPFLAGS="${CPPFLAGS} -UPACKAGE_NAME -UPACKAGE_BUGREPORT -UPACKAGE_TARNAME -UPAC
 
 
 AC_CONFIG_FILES(Makefile \
+                sca.pc \
                 acinclude/Makefile \
                 base/Makefile \
                 base/bulkio/Makefile \
