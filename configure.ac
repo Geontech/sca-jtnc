@@ -265,6 +265,8 @@ AC_CONFIG_FILES(Makefile \
                 sca.pc \
                 acinclude/Makefile \
                 base/Makefile \
+                base/include/Makefile \
+                base/include/sca/Makefile \
                 base/bulkio/Makefile \
                 base/frontend/Makefile \
                 base/framework/Makefile \
