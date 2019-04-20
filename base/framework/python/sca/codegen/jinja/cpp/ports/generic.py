@@ -9,7 +9,7 @@ from sca.codegen.jinja.cpp import CppTemplate
 
 from generator import CppPortGenerator
 
-from sca.utils.sca.importIDL import SequenceType, BaseType
+from sca.utils.verifyspec.importIDL import SequenceType, BaseType
 
 if not '__package__' in locals():
     # Python 2.4 compatibility
