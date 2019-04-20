@@ -262,10 +262,10 @@ CPPFLAGS="${CPPFLAGS} -UPACKAGE_NAME -UPACKAGE_BUGREPORT -UPACKAGE_TARNAME -UPAC
 
 
 AC_CONFIG_FILES(Makefile \
+                acinclude/Makefile \
                 base/Makefile \
                 base/bulkio/Makefile \
                 base/frontend/Makefile \
-                base/codegen/Makefile \
                 base/framework/Makefile \
                 base/framework/python/Makefile \
                 base/framework/idl/CF/Makefile \
