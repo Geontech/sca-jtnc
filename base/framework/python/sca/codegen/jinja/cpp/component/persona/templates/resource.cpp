@@ -206,9 +206,6 @@ ${className}::~${className}()
         The member _baseLog is a logger whose base name is the component (or device) instance name.
         New logs should be created based on this logger name.
 
-        To create a new logger,
-            rh_logger::LoggerPtr my_logger = this->_baseLog->getChildLogger("foo");
-
         Assuming component instance name abc_1, my_logger will then be created with the 
         name "abc_1.user.foo".
 

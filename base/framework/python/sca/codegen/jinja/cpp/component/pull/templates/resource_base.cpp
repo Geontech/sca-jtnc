@@ -79,7 +79,6 @@ ${className}::${className}(const char *uuid, const char *label) :
 
 /*{%   endif %}*/
     ${port.cppname} = new ${port.constructor};
-    ${port.cppname}->setLogger(this->_baseLog->getChildLogger("${port.name}", "ports"));
 /*{%   if port.hasDescription %}*/
     addPort("${port.name}", "${port.description}", ${port.cppname});
 /*{%   else %}*/

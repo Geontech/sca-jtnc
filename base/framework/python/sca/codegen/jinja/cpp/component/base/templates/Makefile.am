@@ -72,7 +72,7 @@ include $(srcdir)/Makefile.am.ide
 #{% else %}
 {{amtarget}}_LDADD = $(SOFTPKG_LIBS) $(PROJECTDEPS_LIBS) $(BOOST_LDFLAGS) $(BOOST_THREAD_LIB) $(BOOST_REGEX_LIB) $(BOOST_SYSTEM_LIB) $(INTERFACEDEPS_LIBS) $(sca_LDADD_auto)
 #{% endif %}
-{{amtarget}}_CXXFLAGS = -Wall $(SOFTPKG_CFLAGS) $(PROJECTDEPS_CFLAGS) $(BOOST_CPPFLAGS) $(INTERFACEDEPS_CFLAGS) $(sca_INCLUDES_auto)
+{{amtarget}}_CXXFLAGS = -Wall $(SOFTPKG_CFLAGS) $(PROJECTDEPS_CFLAGS) $(BOOST_CPPFLAGS) -I${SCAHOME}/include/sca/CF $(INTERFACEDEPS_CFLAGS) $(sca_INCLUDES_auto)
 #{% if component.impl.module %}
 {{amtarget}}_LDFLAGS = -shared -module -export-dynamic -export-symbols-regex 'make_component' -avoid-version $(sca_LDFLAGS_auto)
 #{% else %}
