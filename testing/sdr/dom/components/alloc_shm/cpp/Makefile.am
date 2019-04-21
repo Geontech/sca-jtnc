@@ -32,7 +32,7 @@ lib_LTLIBRARIES = alloc_shm.la
 #noinst_LTLIBRARIES = alloc_shm.la
 
 alloc_shm_la_SOURCES = $(redhawk_SOURCES_auto)
-alloc_shm_la_LIBADD = $(BOOST_REGEX_LIB) $(BOOST_SYSTEM_LIB) $(BOOST_THREAD_LIB) $(OMNIDYNAMIC_LIBS) $(OMNICOS_LIBS) $(CFDIR)/framework/libscacf.la $(CFDIR)/framework/idl/CF/libscaidl.la $(CFDIR)/bulkio/libbulkio-2.2.la $(CFDIR)/framework/idl/BULKIO/libscabulkioidl.la
+alloc_shm_la_LIBADD = $(BOOST_REGEX_LIB) $(BOOST_SYSTEM_LIB) $(BOOST_THREAD_LIB) $(OMNIDYNAMIC_LIBS) $(OMNICOS_LIBS) $(CFDIR)/framework/libscacf.la $(CFDIR)/framework/idl/CF/libscaidl.la $(CFDIR)/bulkio/libbulkio-4.1.la $(CFDIR)/framework/idl/BULKIO/libscabulkioidl.la
 alloc_shm_la_CXXFLAGS = -Wall $(BOOST_CPPFLAGS) -I$(CFDIR)/include  -I$(CFDIR)/bulkio/cpp/include  -I$(CFDIR)/include/sca/CF
 alloc_shm_la_LDFLAGS = -shared -module -export-dynamic -export-symbols-regex 'make_component' -avoid-version $(redhawk_LDFLAGS_auto)
 

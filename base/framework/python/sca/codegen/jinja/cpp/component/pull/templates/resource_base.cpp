@@ -136,7 +136,7 @@ void ${className}::stop() throw (CORBA::SystemException, CF::ControllableInterfa
 {
     ${baseClass}::stop();
     if (!ThreadedComponent::stopThread()) {
-        throw CF::Resource::StopError(CF::CF_NOTSET, "Processing thread did not die");
+        throw CF::ControllableInterface::StopError(CF::CF_NOTSET, "Processing thread did not die");
     }
 }
 /*{% endblock %}*/
@@ -147,7 +147,7 @@ void ${className}::releaseObject() throw (CORBA::SystemException, CF::LifeCycle:
     // This function clears the ${artifactType} running condition so main shuts down everything
     try {
         stop();
-    } catch (CF::Resource::StopError& ex) {
+    } catch (CF::ControllableInterface::StopError& ex) {
         // TODO - this should probably be logged instead of ignored
     }
 

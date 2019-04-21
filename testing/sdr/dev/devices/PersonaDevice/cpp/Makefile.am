@@ -30,7 +30,7 @@ lib_LTLIBRARIES = libPersonaDevice.la
 #noinst_LTLIBRARIES = libPersonaDevice.la
 libPersonaDevice_la_SOURCES = $(redhawk_SOURCES_auto)
 libPersonaDevice_la_CXXFLAGS = -Wall $(BOOST_CPPFLAGS) -I$(CFDIR)/include  -I$(CFDIR)/bulkio/cpp/include  -I$(CFDIR)/include/sca/CF
-libPersonaDevice_la_LDFLAGS = $(BOOST_REGEX_LIB) $(BOOST_SYSTEM_LIB) $(BOOST_THREAD_LIB) $(OMNIDYNAMIC_LIBS) $(OMNICOS_LIBS) $(CFDIR)/framework/libscacf.la $(CFDIR)/framework/idl/CF/libscaidl.la $(CFDIR)/bulkio/libbulkio-2.2.la $(CFDIR)/framework/idl/BULKIO/libscabulkioidl.la
+libPersonaDevice_la_LDFLAGS = $(BOOST_REGEX_LIB) $(BOOST_SYSTEM_LIB) $(BOOST_THREAD_LIB) $(OMNIDYNAMIC_LIBS) $(OMNICOS_LIBS) $(CFDIR)/framework/libscacf.la $(CFDIR)/framework/idl/CF/libscaidl.la $(CFDIR)/bulkio/libbulkio-4.1.la $(CFDIR)/framework/idl/BULKIO/libscabulkioidl.la
 #libPersonaDevice_la_CXXFLAGS = -Wall $(BOOST_CPPFLAGS) $(redhawk_INCLUDES_auto) -I$(CFDIR)/include
 #libPersonaDevice_la_LDFLAGS = -Wall $(redhawk_LDFLAGS_auto)
 
