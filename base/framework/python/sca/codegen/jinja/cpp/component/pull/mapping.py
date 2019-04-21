@@ -32,7 +32,7 @@ class PullComponentMapper(BaseComponentMapper):
         aggregate = ''
         header = ''
         if softpkg.type() == ComponentTypes.RESOURCE:
-            name = 'Component'
+            name = 'ResourceComponent'
             header = '<sca/'+name+'.h>'
         elif softpkg.type() == ComponentTypes.DEVICE:
             name = 'DeviceComponent'
