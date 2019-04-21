@@ -246,9 +246,9 @@ void ${className}::deallocateCapacity(const CF::Properties& capacities)
 
 
 /*{% if component is executabledevice %}*/
-    if (!hasRunningResources()) {
+    //if (!hasRunningResources()) {
         attemptToUnprogramParent();
-    }
+    //}
 /*{% else %}*/
     attemptToUnprogramParent();
 /*{% endif %}*/
@@ -270,9 +270,9 @@ void ${className}::hwLoadRequest(CF::Properties& request) {
 }
 
 /*{% if component is executabledevice %}*/
-Resource_impl* ${className}::generateResource(int argc, char* argv[], ConstructorPtr resourceEntryPoint, const char* libName) 
+/*ResourceComponent* ${className}::generateResource(int argc, char* argv[], ConstructorPtr resourceEntryPoint, const char* libName) 
 {
-    return resourceEntryPoint(argc, argv, this/*, customArg1, customArg2*/);
-}
+    return resourceEntryPoint(argc, argv, this, customArg1, customArg2);
+}*/
 /*{% endif %}*/
 /*{% endif %}*/

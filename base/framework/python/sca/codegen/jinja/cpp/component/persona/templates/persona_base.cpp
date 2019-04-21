@@ -119,10 +119,10 @@ void ${className}::releaseObject()
 {
 /*{% if component is executabledevice %}*/
     // Terminate all children that were executed
-    ProcessMapIter iter;
+    /*ProcessMapIter iter;
     for (iter = _processMap.begin(); iter != _processMap.end(); iter++) {
-        this->terminate(iter->first);
-    }
+        this->terminate(iter->first->identifier());
+    }*/
 /*{% endif %}*/
     // deactivate ports
     //releaseInPorts();
@@ -213,7 +213,7 @@ CORBA::Boolean ${className}::attemptToUnprogramParent()
     std::string propId;
     std::string propValue;
     std::string resourceId;
-    Resource_impl* resourcePtr = NULL;
+    ResourceComponent* resourcePtr = NULL;
     
     // Iterate through all parameters for debugging purposes
     for (unsigned int ii = 0; ii < parameters.length(); ii++) {
@@ -274,7 +274,7 @@ bool ${className}::hasRunningResources()
     return (!_resourceMap.empty());
 }
 
-Resource_impl* ${className}::instantiateResource(
+ResourceComponent* ${className}::instantiateResource(
                         const char*                 libraryName, 
                         const CF::Properties&       options, 
                         const CF::Properties&       parameters) 
@@ -295,7 +295,7 @@ Resource_impl* ${className}::instantiateResource(
     unsigned int argCounter = 0;
     
     ConstructorPtr constructorPtr = NULL;
-    Resource_impl* resourcePtr = NULL;
+    ResourceComponent* resourcePtr = NULL;
 
 
     // Open up the cached .so file

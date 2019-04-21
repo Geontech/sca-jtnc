@@ -49,8 +49,8 @@ class ${className} : public ${baseClass}
 //% endif
 
 //% if component is executabledevice
-    private:
-        Resource_impl* generateResource(int argc, char* argv[], ConstructorPtr fnptr, const char* libName);
+    /*private:
+        ResourceComponent* generateResource(int argc, char* argv[], ConstructorPtr fnptr, const char* libName);*/
 //% endif
 };
 

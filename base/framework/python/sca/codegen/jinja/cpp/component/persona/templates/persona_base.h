@@ -18,7 +18,7 @@
 #include <dlfcn.h>
 
 typedef std::string ResourceId;
-typedef std::map<ResourceId, Resource_impl*> ResourceMap;
+typedef std::map<ResourceId, ResourceComponent*> ResourceMap;
 typedef ResourceMap::iterator ResourceMapIter;
 typedef std::map<unsigned int, ResourceId> ProcessMap;
 typedef ProcessMap::iterator ProcessMapIter;
@@ -74,7 +74,7 @@ class ${className} : public ${baseClass}
 
 //% if component is executabledevice
         /*virtual bool hasRunningResources();
-        virtual Resource_impl* generateResource(int argc, char* argv[], ConstructorPtr fnptr, const char* libraryName)=0;*/
+        virtual ResourceComponent* generateResource(int argc, char* argv[], ConstructorPtr fnptr, const char* libraryName)=0;*/
 //% endif
 
     private:
@@ -86,7 +86,7 @@ class ${className} : public ${baseClass}
         ProcessMap              _processMap;
         unsigned int            _processIdIncrement;
 
-        Resource_impl* instantiateResource(const char* libraryName, const CF::Properties& options, const CF::Properties& parameters);
+        ResourceComponent* instantiateResource(const char* libraryName, const CF::Properties& options, const CF::Properties& parameters);
 //% endif
 //% endif
         virtual void formatRequestProps(const CF::Properties& requestProps, CF::Properties& formattedProps);
