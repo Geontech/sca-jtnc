@@ -38,12 +38,12 @@ class PullComponentMapper(BaseComponentMapper):
             name = 'LoadableDevice_impl'
             aggregate = 'virtual POA_CF::AggregateLoadableDevice'
         elif softpkg.type() == ComponentTypes.EXECUTABLEDEVICE:
-            name = 'ExecutableDevice_impl'
+            name = 'ExecutableDeviceComponent'
             aggregate = 'virtual POA_CF::AggregateExecutableDevice'
         else:
             raise ValueError, 'Unsupported software component type', softpkg.type()
         classes = [{'name': name, 'header': '<sca/'+name+'.h>'}]
-        if softpkg.descriptor().supports('IDL:CF/AggregateDevice:1.0'):
-            classes.append({'name': aggregate, 'header': '<CF/AggregateDevices.h>'})
-            classes.append({'name': 'AggregateDevice_impl', 'header': '<sca/AggregateDevice_impl.h>'})
+        #if softpkg.descriptor().supports('IDL:CF/AggregateDevice:1.0'):
+        #    classes.append({'name': aggregate, 'header': '<CF/AggregateDevices.h>'})
+        #    classes.append({'name': 'AggregateDevice_impl', 'header': '<sca/AggregateDevice_impl.h>'})
         return classes

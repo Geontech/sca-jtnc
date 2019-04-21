@@ -12,7 +12,7 @@
 //% if component is device
 #include "sca/DeviceComponent.h"
 //% if component is executabledevice
-#include "sca/ExecutableDevice_impl.h"
+#include "sca/DeviceComponent.h"
 #include "sca/prop_helpers.h"
 #include "entry_point.h"
 #include <dlfcn.h>
