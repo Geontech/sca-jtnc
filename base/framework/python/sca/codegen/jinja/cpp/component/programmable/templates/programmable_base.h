@@ -8,7 +8,7 @@
 //% set executesHWComponents = component.executesHWComponents 
 //% set executesPersonaDevices = not executesHWComponents
 //% set executeType = "resource" if executesHWComponents else "persona"
-//% set executeClass = "Resource_impl" if executesHWComponents else "Device_impl"
+//% set executeClass = "ResourceComponent" if executesHWComponents else "DeviceComponent"
 #ifndef ${includeGuard}
 #define ${includeGuard}
 
@@ -234,7 +234,7 @@ class ${className} : public ${baseClass}
 /*{% if component is device %}*/
         void construct() {
 //% if executesPersonaDevices
-            setUsageState(CF::Device::BUSY);
+            setUsageState(CF::CapacityManagement::BUSY);
 
 //% endif
             _${executeType}Map.clear();
@@ -251,15 +251,15 @@ class ${className} : public ${baseClass}
 
         void load ( CF::FileSystem_ptr           fs, 
                     const char*                  fileName, 
-                    CF::LoadableDevice::LoadType loadKind )
+                    CF::LoadableInterface::LoadType loadKind )
             throw ( 
-                CF::LoadableDevice::LoadFail, 
+                CF::LoadableInterface::LoadFail, 
                 CF::InvalidFileName, 
-                CF::LoadableDevice::InvalidLoadKind,
-                CF::Device::InvalidState, 
+                CF::LoadableInterface::InvalidLoadKind,
+                CF::InvalidState, 
                 CORBA::SystemException ) 
         {
-            bool isSharedLibrary = (loadKind == CF::LoadableDevice::SHARED_LIBRARY);
+            /*bool isSharedLibrary = (loadKind == CF::LoadableDevice::SHARED_LIBRARY);
             bool existsOnDevFS   = _deviceManager->fileSys()->exists(fileName);
             
             // For ${executeType} shared librariess that already reside on the dev file 
@@ -268,27 +268,24 @@ class ${className} : public ${baseClass}
                 fs = _deviceManager->fileSys();;
                 RH_DEBUG(this->_deviceLog, __FUNCTION__ << 
                     ": File-system switched to dev");
-            }
+            }*/
 
             ${baseClass}::load(fs, fileName, loadKind);
         }
         
-        CF::ExecutableDevice::ProcessID_Type execute (
+        CF::ExecutableInterface::ExecutionID_Type* execute (
                         const char*             name, 
                         const CF::Properties&   options, 
                         const CF::Properties&   parameters )
             throw (
-                CF::ExecutableDevice::ExecuteFail, 
+                CF::ExecutableInterface::ExecuteFail, 
                 CF::InvalidFileName, 
-                CF::ExecutableDevice::InvalidOptions, 
-                CF::ExecutableDevice::InvalidParameters,
-                CF::ExecutableDevice::InvalidFunction, 
-                CF::Device::InvalidState, 
+                CF::ExecutableInterface::InvalidOptions, 
+                CF::ExecutableInterface::InvalidParameters,
+                CF::ExecutableInterface::InvalidFunction, 
+                CF::InvalidState, 
                 CORBA::SystemException )
         {
-            RH_DEBUG(this->_deviceLog, __FUNCTION__ << 
-                    ": Instantiating ${executeType} '" << name << "'... ");
-            
             // Initialize local variables
             ${executeClass}* ${executeType} = NULL; 
             std::string ${executeType}Id;
@@ -296,11 +293,9 @@ class ${className} : public ${baseClass}
             // Attempt to instantiate the object contained in the shared library
             ${executeType} = instantiate${executeType.capitalize()}(name, options, parameters);
             if (${executeType} == NULL) {
-                RH_FATAL(this->_deviceLog, __FUNCTION__ << 
-                    ": Unable to instantiate '" << name << "'");
-                throw (CF::ExecutableDevice::ExecuteFail());
+                throw (CF::ExecutableInterface::ExecuteFail());
             }
-           
+
             // Grab the name from the instantiated object 
             ${executeType}Id = sca::corba::returnString(${executeType}->identifier());
             
@@ -308,16 +303,20 @@ class ${className} : public ${baseClass}
             _${executeType}Map[${executeType}Id] = ${executeType};
             _processMap[++_processIdIncrement] = ${executeType}Id;
 
-            RH_DEBUG(this->_deviceLog, __FUNCTION__ <<
-                    ": ${executeType.capitalize()} '" << ${executeType}Id << "' has been successfully instantiated");
 
-            return _processIdIncrement;
+            CF::ExecutableInterface::ExecutionID_Type_var retval = new CF::ExecutableInterface::ExecutionID_Type();
+            retval->threadId = (CORBA::ULongLong) 0;
+            retval->processId = (CORBA::ULongLong) _processIdIncrement;
+            retval->processCollocation = CORBA::string_dup("none");
+            retval->cores.length(0);
+
+            return retval._retn();
         }
         
-        void terminate (CF::ExecutableDevice::ProcessID_Type processId) 
+        void terminate (CF::ExecutableInterface::ExecutionID_Type exec_arg)
             throw (
-                CF::Device::InvalidState, 
-                CF::ExecutableDevice::InvalidProcess, 
+                CF::InvalidState, 
+                CF::ExecutableInterface::InvalidProcess, 
                 CORBA::SystemException ) 
         {
             // Initialize local variables
@@ -326,14 +325,14 @@ class ${className} : public ${baseClass}
             ${executeType.capitalize()}Id ${executeType}Id;
 
             // Search for the ${executeType}Id that related to the incoming terminate request
-            processIter = _processMap.find(processId);
+            processIter = _processMap.find(exec_arg.processId);
             if (processIter != _processMap.end()) {
 
                 /// Search for the ${executeType} that related to the found ${executeType}Id
                 ${executeType}Iter = _${executeType}Map.find(processIter->second);
                 if (${executeType}Iter != _${executeType}Map.end()) {
 /*{% if executesPersonaDevices %}*/
-                    ${executeType}Iter->second->setAdminState(CF::Device::UNLOCKED);
+                    ${executeType}Iter->second->setAdminState(CF::AdministratableInterface::UNLOCKED);
 /*{% endif %}*/
                     ${executeType}Iter->second->releaseObject();
                     _processMap.erase(processIter); // Erase process mapping here to minimize collisions with non-persona processIds
@@ -341,15 +340,12 @@ class ${className} : public ${baseClass}
                     return;
                 }
             }
-            RH_WARN(this->_deviceLog, __FUNCTION__ << 
-                    ": Unable to locate ${executeType} using pid '" << processId <<"'");
         }
         
         CORBA::Boolean allocateCapacity(const CF::Properties& capacities) 
             throw (
-                CF::Device::InvalidState, 
-                CF::Device::InvalidCapacity, 
-                CF::Device::InsufficientCapacity, 
+                CF::InvalidState, 
+                CF::CapacityManagement::InvalidCapacity, 
                 CORBA::SystemException ) 
         {
             boost::mutex::scoped_lock lock(_allocationMutex);
@@ -428,15 +424,14 @@ class ${className} : public ${baseClass}
         
         void deallocateCapacity(const CF::Properties& capacities) 
             throw (
-                CF::Device::InvalidState, 
-                CF::Device::InvalidCapacity, 
+                CF::InvalidState, 
+                CF::CapacityManagement::InvalidCapacity, 
                 CORBA::SystemException ) 
         {
             // Initialize local variables
             bool deallocationSuccess = false;
             std::string id;
             std::string valueStr;
-            std::string errorMsg;
             HwLoadStatusVec* statusVecPtr;
             CORBA::AnySeq* anySeqPtr;
             CF::Properties* cfPropsPtr;
@@ -486,7 +481,7 @@ class ${className} : public ${baseClass}
 
             updateAdminStates();
             if (deallocationSuccess == false) {
-                throw CF::Device::InvalidCapacity("Unable to deallocation capacities", capacities);
+                throw CF::CapacityManagement::InvalidCapacity("Unable to deallocation capacities", capacities);
             }
         }
         
@@ -500,10 +495,18 @@ class ${className} : public ${baseClass}
 
             // Terminate all children that were executed
             for (processIter = _processMap.begin(); processIter != _processMap.end(); processIter++) {
-                this->terminate(processIter->first);
+                _deviceManagerFullRegistry->unregisterComponent(_${executeType}Map[processIter->second]->identifier());
+                _${executeType}Map[processIter->second]->releaseObject();
+            }
+
+            // Clean up all children that were executed
+            for (${executeType}Iter = _${executeType}Map.begin(); ${executeType}Iter != _${executeType}Map.end(); ${executeType}Iter++) {
+                delete ${executeType}Iter->second;
+                ${executeType}Iter->second = NULL;
             }
 
             ${baseClass}::releaseObject();
+            setAdminState(CF::AdministratableInterface::SHUTTING_DOWN);
         }
         
         HwLoadRequestVec* getHwLoadRequests() { 
@@ -559,9 +562,6 @@ class ${className} : public ${baseClass}
             absPath.append(libraryName);
             void* pHandle = dlopen(absPath.c_str(), RTLD_NOW);
             if (!pHandle) {
-                char* errorMsg = dlerror();
-                RH_FATAL(this->_deviceLog, __FUNCTION__ << 
-                    ": Unable to open library '" << absPath.c_str() << "': " << errorMsg);
                 return NULL;
             }  
             
@@ -600,9 +600,6 @@ class ${className} : public ${baseClass}
             const char* symbol = "construct";
             void* fnPtr = dlsym(pHandle, symbol);
             if (!fnPtr) {
-                char* errorMsg = dlerror();
-                RH_FATAL(this->_deviceLog, __FUNCTION__ << 
-                    ": Unable to find symbol '" << symbol << "': " << errorMsg);
                 return NULL;
             }
 
@@ -760,10 +757,10 @@ class ${className} : public ${baseClass}
                 // Unlock all devices if there is capacity for more loads
                 ${executeType.capitalize()}MapIter iter;
                 for (iter = _${executeType}Map.begin(); iter != _${executeType}Map.end(); iter++) {
-                    iter->second->adminState(CF::Device::UNLOCKED);
+                    iter->second->adminState(CF::AdministratableInterface::UNLOCKED);
                 }
 //% endif
-                setAdminState(CF::Device::UNLOCKED);
+                setAdminState(CF::AdministratableInterface::UNLOCKED);
             } else {
 /*{% if executesPersonaDevices %}*/
                 // Lock all personas that are not loaded onto the device
@@ -791,10 +788,10 @@ class ${className} : public ${baseClass}
                     }
                     RH_DEBUG(this->_deviceLog, __FUNCTION__ <<
                         ": Locking device '" << sca::corba::returnString(iter->second->identifier()) << "'");
-                    iter->second->adminState(CF::Device::LOCKED);
+                    iter->second->adminState(CF::AdministratableInterface::LOCKED);
                 }
 /*{% endif %}*/
-                setAdminState(CF::Device::LOCKED);
+                setAdminState(CF::AdministratableInterface::LOCKED);
             }
         }
 
@@ -835,9 +832,5 @@ class ${className} : public ${baseClass}
 
 //% endif
 };
-
-template <typename HW_LOAD_REQUEST, typename HW_LOAD_STATUS>
-PREPARE_ALT_LOGGING(${className}<HW_LOAD_REQUEST BOOST_PP_COMMA() 
-                                 HW_LOAD_STATUS>, ${className});
 
 #endif // ${includeGuard}

@@ -29,21 +29,35 @@ class PullComponentMapper(BaseComponentMapper):
 
     @staticmethod
     def superClasses(softpkg):
+        aggregate = ''
+        header = ''
         if softpkg.type() == ComponentTypes.RESOURCE:
             name = 'Component'
+            header = '<sca/'+name+'.h>'
         elif softpkg.type() == ComponentTypes.DEVICE:
             name = 'DeviceComponent'
             aggregate = 'virtual POA_CF::AggregatePlainDevice'
+            header = '<sca/'+name+'.h>'
         elif softpkg.type() == ComponentTypes.LOADABLEDEVICE:
             name = 'LoadableDevice_impl'
             aggregate = 'virtual POA_CF::AggregateLoadableDevice'
+            header = '<sca/'+name+'.h>'
         elif softpkg.type() == ComponentTypes.EXECUTABLEDEVICE:
             name = 'ExecutableDeviceComponent'
             aggregate = 'virtual POA_CF::AggregateExecutableDevice'
+            header = '<sca/'+name+'.h>'
         else:
             raise ValueError, 'Unsupported software component type', softpkg.type()
-        classes = [{'name': name, 'header': '<sca/'+name+'.h>'}]
-        #if softpkg.descriptor().supports('IDL:CF/AggregateDevice:1.0'):
-        #    classes.append({'name': aggregate, 'header': '<CF/AggregateDevices.h>'})
-        #    classes.append({'name': 'AggregateDevice_impl', 'header': '<sca/AggregateDevice_impl.h>'})
+        if softpkg.descriptor().supports('IDL:CF/AggregateDevice:1.0'):
+            if 'Executable' in aggregate:
+                name = 'AggregateExecutableDeviceComponent'
+                header = '<sca/AggregateDeviceComponent.h>'
+            else:
+                name = 'AggregateDeviceComponent'
+                header = '<sca/AggregateDeviceComponent.h>'
+
+        classes = [{'name': name, 'header': header}]
+
+        if softpkg.descriptor().supports('IDL:CF/AggregateDevice:1.0'):
+            classes.append({'name': aggregate, 'header': '<CF/AggregateDevices.h>'})
         return classes
