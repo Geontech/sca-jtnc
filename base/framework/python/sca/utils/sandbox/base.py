@@ -57,7 +57,7 @@ class SdrRoot(object):
 
     def _getObjectType(self, scd):
         if scd is not None:
-            componentType = scd.get_componenttype().valueOf_
+            componentType = scd.get_componenttype()
             if componentType in ('device', 'loadabledevice', 'executabledevice'):
                 return 'devices'
             elif componentType == 'resource':
@@ -229,7 +229,7 @@ class Sandbox(object):
             raise RuntimeError, 'Cannot launch softpkg with no SCD'
 
         # Check that we can launch the component.
-        comptype = scd.get_componenttype().valueOf_
+        comptype = scd.get_componenttype()
         if comptype == 'resource':
             clazz = SandboxComponent
         elif comptype in ('device', 'loadabledevice', 'executabledevice'):
