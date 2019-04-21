@@ -27,9 +27,6 @@
 /*{% if component is device %}*/
 ${className}::${className}(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl) :
     ${baseClass}(devMgr_ior, id, lbl, sftwrPrfl),
-/*{% if component is aggregatedevice %}*/
-    AggregateDevice_impl(),
-/*{% endif %}*/
     ThreadedComponent()
 {
     construct();
@@ -37,9 +34,6 @@ ${className}::${className}(char *devMgr_ior, char *id, char *lbl, char *sftwrPrf
 
 ${className}::${className}(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl, char *compDev) :
     ${baseClass}(devMgr_ior, id, lbl, sftwrPrfl, compDev),
-/*{% if component is aggregatedevice %}*/
-    AggregateDevice_impl(),
-/*{% endif %}*/
     ThreadedComponent()
 {
     construct();
@@ -47,9 +41,6 @@ ${className}::${className}(char *devMgr_ior, char *id, char *lbl, char *sftwrPrf
 
 ${className}::${className}(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl, CF::Properties capacities) :
     ${baseClass}(devMgr_ior, id, lbl, sftwrPrfl, capacities),
-/*{% if component is aggregatedevice %}*/
-    AggregateDevice_impl(),
-/*{% endif %}*/
     ThreadedComponent()
 {
     construct();
@@ -57,9 +48,6 @@ ${className}::${className}(char *devMgr_ior, char *id, char *lbl, char *sftwrPrf
 
 ${className}::${className}(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl, CF::Properties capacities, char *compDev) :
     ${baseClass}(devMgr_ior, id, lbl, sftwrPrfl, capacities, compDev),
-/*{% if component is aggregatedevice %}*/
-    AggregateDevice_impl(),
-/*{% endif %}*/
     ThreadedComponent()
 {
     construct();
