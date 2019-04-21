@@ -5,7 +5,7 @@
 #% set executesHWComponents = component.executesHWComponents                    
 #% set executesPersonaDevices = not executesHWComponents
 #% set executeType = "resource" if executesHWComponents else "persona"
-#% set executeClass = "Resource_impl" if executesHWComponents else "Device_impl"
+#% set executeClass = "Resource_impl" if executesHWComponents else "DeviceComponent"
 
 import os
 import sys

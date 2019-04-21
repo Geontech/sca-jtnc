@@ -93,18 +93,18 @@ void ${className}::construct()
 }
 
 // TODO: This was overriden since setting admin state is not accessible via the current IDL
-void ${className}::adminState(CF::Device::AdminType adminState) 
+void ${className}::adminState(CF::AdministratableInterface::AdminType adminState) 
     throw (CORBA::SystemException)
 {
     // Force admin state to change usage state since usage state is currently protected
     switch (adminState) {
-        case CF::Device::LOCKED:
-            setUsageState(CF::Device::BUSY);
+        case CF::AdministratableInterface::LOCKED:
+            setUsageState(CF::CapacityManagement::BUSY);
             break;
-        case CF::Device::UNLOCKED:
-            setUsageState(CF::Device::IDLE);
+        case CF::AdministratableInterface::UNLOCKED:
+            setUsageState(CF::CapacityManagement::IDLE);
             break;
-        case CF::Device::SHUTTING_DOWN:
+        case CF::AdministratableInterface::SHUTTING_DOWN:
             // Do nothing
             break;
     }
@@ -119,31 +119,27 @@ void ${className}::releaseObject()
 {
 /*{% if component is executabledevice %}*/
     // Terminate all children that were executed
-    ProcessMapIter iter;
+    /*ProcessMapIter iter;
     for (iter = _processMap.begin(); iter != _processMap.end(); iter++) {
-        this->terminate(iter->first);
-    }
+        this->terminate(iter->first->identifier());
+    }*/
 /*{% endif %}*/
     // deactivate ports
-    releaseInPorts();
-    releaseOutPorts();
+    //releaseInPorts();
+    //releaseOutPorts();
 
     // SR:419
-    RH_DEBUG(this->_deviceLog, __FUNCTION__ << ": Receive releaseObject call");
-    if (_adminState == CF::Device::UNLOCKED) {
-        RH_DEBUG(this->_deviceLog, __FUNCTION__ << ": Releasing Device")
-        setAdminState(CF::Device::SHUTTING_DOWN);
+    if (_adminState == CF::AdministratableInterface::UNLOCKED) {
+        setAdminState(CF::AdministratableInterface::SHUTTING_DOWN);
 
         // SR:418
         // TODO Release aggregate devices if more than one exists
         if (!CORBA::is_nil(_aggregateDevice)) {
             try {
-                _aggregateDevice->removeDevice(this->_this());
+                _aggregateDevice->removeDevice(this->identifier());
             } catch (...) {
             }
         }
-
-        RH_DEBUG(this->_deviceLog, __FUNCTION__ << ": Done Releasing Device")
     }
 }
 
@@ -152,16 +148,10 @@ CORBA::Boolean ${className}::attemptToProgramParent()
 {
     // Return false if there is no reference to the parent
     if (_parentDevice == NULL) {
-        RH_ERROR(this->_deviceLog, __FUNCTION__ << 
-            ": No reference to parent exists!");
         return false;
     }
 
     if (_parentAllocated == false) {
-
-        RH_DEBUG(this->_deviceLog, __FUNCTION__ << 
-            ": About to allocate parent device");
-        
         beforeHardwareProgrammed();
 
         // Grab user-defined allocation request and format them properly
@@ -187,7 +177,6 @@ CORBA::Boolean ${className}::attemptToUnprogramParent()
 {
     // Return false if there is no reference to the parent
     if (_parentDevice == NULL) {
-        RH_ERROR(this->_deviceLog, __FUNCTION__ << ": No reference to parent exists!");
         return false;
     }
     
@@ -196,7 +185,6 @@ CORBA::Boolean ${className}::attemptToUnprogramParent()
         
         // Grab previous user-defined allocation request
         if (_previousRequestProps.length() == 0) {
-            RH_ERROR(this->_deviceLog, __FUNCTION__ << ": Previously requested hw_load Props empty!");
             return false;
         }
 
@@ -208,7 +196,7 @@ CORBA::Boolean ${className}::attemptToUnprogramParent()
 }
 
 /*{% if component is executabledevice %}*/
-CF::ExecutableDevice::ProcessID_Type ${className}::execute (
+/*CF::ExecutableDevice::ProcessID_Type ${className}::execute (
                         const char*                 name, 
                         const CF::Properties&       options, 
                         const CF::Properties&       parameters )
@@ -225,7 +213,7 @@ CF::ExecutableDevice::ProcessID_Type ${className}::execute (
     std::string propId;
     std::string propValue;
     std::string resourceId;
-    Resource_impl* resourcePtr = NULL;
+    ResourceComponent* resourcePtr = NULL;
     
     // Iterate through all parameters for debugging purposes
     for (unsigned int ii = 0; ii < parameters.length(); ii++) {
@@ -286,7 +274,7 @@ bool ${className}::hasRunningResources()
     return (!_resourceMap.empty());
 }
 
-Resource_impl* ${className}::instantiateResource(
+ResourceComponent* ${className}::instantiateResource(
                         const char*                 libraryName, 
                         const CF::Properties&       options, 
                         const CF::Properties&       parameters) 
@@ -307,7 +295,7 @@ Resource_impl* ${className}::instantiateResource(
     unsigned int argCounter = 0;
     
     ConstructorPtr constructorPtr = NULL;
-    Resource_impl* resourcePtr = NULL;
+    ResourceComponent* resourcePtr = NULL;
 
 
     // Open up the cached .so file
@@ -367,7 +355,7 @@ Resource_impl* ${className}::instantiateResource(
     }
 
     return resourcePtr;
-}
+}*/
 /*{% endif %}*/
 
 // Transforms user-supplied properties into safe-usable CF::Properties
@@ -383,8 +371,6 @@ void ${className}::formatRequestProps(
 
     // Sanity check - Kick out if properties are empty
     if (requestProps.length() == 0) {
-        RH_ERROR(this->_deviceLog, __FUNCTION__ << 
-            ": Unable to format hw_load_request properties.  Properties are empty!");
         return;
     }
 
@@ -392,8 +378,6 @@ void ${className}::formatRequestProps(
     if (requestProps.length() == 1) {
         propId = requestProps[0].id;
         if (propId == "hw_load_requests") {
-            RH_DEBUG(this->_deviceLog, __FUNCTION__ <<
-                ": No formatting occurred - Request properties are properly formatted!");
             formattedProps = requestProps;
             return;
         }
@@ -411,8 +395,6 @@ void ${className}::formatRequestProps(
   
     // Case 2 - Properties are multiple hw_load_request structs
     if (allPropsAreHwLoadRequest) {
-        RH_DEBUG(this->_deviceLog, __FUNCTION__ << 
-            ": Found hw_load_request array - Formatting to structseq");
         formattedProps.length(1);
         formattedProps[0].id = "hw_load_requests";
         formattedProps[0].value <<= requestProps;
@@ -421,9 +403,6 @@ void ${className}::formatRequestProps(
 
     // Case 3 - Properties reprensent the contents of a single hw_load_request
     if (foundRequestId) {
-        RH_DEBUG(this->_deviceLog, __FUNCTION__ <<
-            ": Found hw_load_request contents - Formatting to struct and structseq");
-        
         hwLoadRequest.length(1);
         hwLoadRequest[0].id = "hw_load_request";
         hwLoadRequest[0].value <<= requestProps;
@@ -433,7 +412,4 @@ void ${className}::formatRequestProps(
         formattedProps[0].value <<= hwLoadRequest;
         return;
     }
-    
-    RH_ERROR(this->_deviceLog, __FUNCTION__ <<
-        ": Unable to format hw_load_request properties - Format unknown!");
 }

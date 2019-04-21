@@ -82,7 +82,7 @@ class PropertyEventSupplier:
             return
 
         if ids is None:
-            ids = [prop.id_ for prop in self._component._props.values() if prop.isSendEventChange()]
+            ids = [prop._id for prop in self._component._props.values() if prop.isSendEventChange()]
         self._component._log.debug("sendPropertiesEvent %s", ids)
         
         properties = []

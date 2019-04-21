@@ -41,11 +41,11 @@ AC_SUBST([LIBOSSIEPARSER_VERSION_INFO], [3:0:0])
 AC_SUBST([LIBOMNIJNI_VERSION_INFO], [1:0:1])
 AC_SUBST([LIBOSSIECFJNI_VERSION_INFO], [1:0:0])
 AC_SUBST([LIBREDHAWK_LOGGING_VERSION_INFO], [1:0:0])
-AC_SUBST([BULKIO_API_VERSION], [2.2])
+AC_SUBST([BULKIO_API_VERSION], [4.1])
 AC_SUBST([BULKIO_SO_VERSION], [0:0:0])
-AC_SUBST([FRONTEND_API_VERSION], [2.2])
+AC_SUBST([FRONTEND_API_VERSION], [4.1])
 AC_SUBST([FRONTEND_SO_VERSION], [0:0:0])
-AC_SUBST([CODEGEN_API_VERSION], [2.2])
+AC_SUBST([CODEGEN_API_VERSION], [4.1])
 AC_SUBST([CODEGEN_SO_VERSION], [0:0:0])
 
 
@@ -262,10 +262,15 @@ CPPFLAGS="${CPPFLAGS} -UPACKAGE_NAME -UPACKAGE_BUGREPORT -UPACKAGE_TARNAME -UPAC
 
 
 AC_CONFIG_FILES(Makefile \
+                sca.pc \
+                base/bulkio/bulkio.pc \
+                base/framework/idl/BULKIO/bulkioInterfaces.pc \
+                acinclude/Makefile \
                 base/Makefile \
+                base/include/Makefile \
+                base/include/sca/Makefile \
                 base/bulkio/Makefile \
                 base/frontend/Makefile \
-                base/codegen/Makefile \
                 base/framework/Makefile \
                 base/framework/python/Makefile \
                 base/framework/idl/CF/Makefile \

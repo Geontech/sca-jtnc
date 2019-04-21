@@ -367,7 +367,7 @@ def struct_fields(value):
         if isinstance(member[1], simple_property) or isinstance(member[1], simpleseq_property):
             foundMatch = False
             for field in fields:
-                if member[1].id_ == field.id_:
+                if member[1]._id == field._id:
                     foundMatch = True
                     break
             if not foundMatch:
@@ -383,9 +383,9 @@ def struct_values(value):
         field_value = attr.get(value)
         if type(field_value) == dict:
             for key in field_value.keys():
-                result.append((attr.id_+key, field_value[key]))
+                result.append((attr._id+key, field_value[key]))
         else:
-            result.append((attr.id_, field_value))
+            result.append((attr._id, field_value))
     return result
 
 def struct_to_props(value, fields=None):
@@ -393,7 +393,7 @@ def struct_to_props(value, fields=None):
         # Try to get the correct field ordering, if it is available, otherwise
         # just look at the class dictionary to find the fields.
         fields = struct_fields(value)
-    return [CF.DataType(attr.id_, attr._toAny(attr.get(value))) for attr in fields]
+    return [CF.DataType(attr._id, attr._toAny(attr.get(value))) for attr in fields]
 
 def struct_to_any(value, fields=None):
     return props_to_any(struct_to_props(value, fields))
@@ -410,13 +410,13 @@ def struct_from_props(value, structdef, strictComplete=True):
         if type(attr) is not simple_property and type(attr) is not simpleseq_property:
             continue
         if attr.optional == True:
-            if attr.id_ not in newvalues:
-                newvalues[attr.id_] = None
+            if attr._id not in newvalues:
+                newvalues[attr._id] = None
         try:
-            value = newvalues[attr.id_]
+            value = newvalues[attr._id]
         except: 
             if strictComplete:
-                raise ValueError, "provided value is missing element " + attr.id_
+                raise ValueError, "provided value is missing element " + attr._id
             else:
                 continue
         else:
@@ -629,7 +629,7 @@ class _property(object):
 
         self._complex = complex
 
-        self.id_ = id_
+        self._id = id_
         if type_ != None and type_ not in _SCA_TYPES:
             raise ValueError, "type %s is invalid" % type_
 
@@ -640,7 +640,7 @@ class _property(object):
             self.type_ = type_
 
         if name == None:
-            self.name = self.id_
+            self.name = self._id
         else:
             self.name = name
         self.units = units
@@ -652,7 +652,7 @@ class _property(object):
         self.fval = fval
         self.sendPropertyChangeEvent = None
          
-        self._attrname = "__%s__" % self.id_
+        self._attrname = "__%s__" % self._id
 
         self._query_cbname = "query_prop_%s" % self.name.replace(" ", "_")
         self._val_cbname = "validate_prop_%s" % self.name.replace(" ", "_")
@@ -663,7 +663,7 @@ class _property(object):
         elif fget != None:
             self.__doc__ = fget.__doc__
         else:
-            self.__doc__ = "SCA property %s" % self.id_
+            self.__doc__ = "SCA property %s" % self._id
 
     # Subclasses of _property are expected to provide these behaviors
     def rebind(self, fget=None, fset=None, fval=None):
@@ -776,7 +776,7 @@ class _property(object):
         
         elif type(self) == sca.properties.struct_property:
             # Gets the members of the current resources struct
-            members = obj._props._PropertyStorage__properties[self.id_].fields.items()
+            members = obj._props._PropertyStorage__properties[self._id].fields.items()
             # Finds matching struct members to compare
             for id, prop in members:
                 name, val = prop
@@ -796,7 +796,7 @@ class _property(object):
                     
         elif type(self) == sca.properties.structseq_property:
             # Gets the members of the current resources struct
-            members = obj._props._PropertyStorage__properties[self.id_].fields.items()     
+            members = obj._props._PropertyStorage__properties[self._id].fields.items()     
             # Loops through each structure in the sequence
             for currStruct in value:
                 # Finds matching struct members to compare
@@ -873,7 +873,7 @@ class _property(object):
         raise AttributeError, "can't delete SCA property"
 
     def __str__(self):
-        #return "%s %s" % (self.id_, self.name)
+        #return "%s %s" % (self._id, self.name)
         data = """\n
                     ID:     %s
                     Type:   %s
@@ -885,7 +885,7 @@ class _property(object):
                     Fget:   %s
                     Fset:   %s
                     Fval:   %s""" % \
-                    (self.id_,
+                    (self._id,
                      self.type_,
                      self.name,
                      self.units,
@@ -901,7 +901,7 @@ class _property(object):
         if other == None:
             return False
         else:
-            return (self.id_ == other.id_ and \
+            return (self._id == other._id and \
                     self.units == other.units and \
                     self.name == other.name and \
                     self.mode == other.mode and \
@@ -962,7 +962,7 @@ class _property(object):
         valueChanged = self.compareValues(oldvalue, value)
         if valueChanged and self.isSendEventChange():
             if self.sendPropertyChangeEvent:
-                self.sendPropertyChangeEvent(self.id_)
+                self.sendPropertyChangeEvent(self._id)
             else:
                 #there is no PropertyEventSupplier so we don't have a function to call
                 pass
@@ -1193,7 +1193,7 @@ class simple_property(_property):
         self.optional = optional
 
     def rebind(self, fget=None, fset=None, fval=None):
-        return simple_property(self.id_, 
+        return simple_property(self._id, 
                                self.type_, 
                                self.name, 
                                self.defvalue, 
@@ -1211,7 +1211,7 @@ class simple_property(_property):
         if self.defvalue != None:
             value = to_xmlvalue(self.defvalue, self.type_)
 
-        simp = sca.parsers.prf.simple(id_=self.id_, 
+        simp = sca.parsers.prf.simple(id_=self._id, 
                                         type_=self.type_,
                                         name=self.name, 
                                         mode=self.mode,
@@ -1284,7 +1284,7 @@ class simpleseq_property(_sequence_property):
         self.optional = optional
         
     def rebind(self, fget=None, fset=None, fval=None):
-        return simpleseq_property(self.id_,  
+        return simpleseq_property(self._id,  
                                   self.type_, 
                                   self.name, 
                                   self.defvalue, 
@@ -1299,7 +1299,7 @@ class simpleseq_property(_sequence_property):
 
     def toXML(self, level=0, version="2.2.2"):
         simpseq = sca.parsers.prf.simpleSequence(
-            id_=self.id_, 
+            id_=self._id, 
             type_=self.type_,
             name=self.name, 
             mode=self.mode,
@@ -1396,12 +1396,12 @@ class struct_property(_property):
         self.fields = {} # Map field id's to attribute names
         for name, attr in self.structdef.__dict__.items():
             if type(attr) is simple_property:
-                self.fields[attr.id_] = (name, attr)
+                self.fields[attr._id] = (name, attr)
             elif type(attr) is simpleseq_property:
-                self.fields[attr.id_] = (name, attr)
+                self.fields[attr._id] = (name, attr)
     
     def rebind(self, fget=None, fset=None, fval=None):
-        return struct_property(self.id_, 
+        return struct_property(self._id, 
                                self.structdef, 
                                self.name, 
                                self.mode,
@@ -1412,7 +1412,7 @@ class struct_property(_property):
                                fval)
                                
     def toXML(self, level=0, version="2.2.2"):
-        struct = sca.parsers.prf.struct(id_=self.id_, 
+        struct = sca.parsers.prf.struct(id_=self._id, 
                                           name=self.name, 
                                           mode=self.mode,
                                           description=self.__doc__)
@@ -1422,7 +1422,7 @@ class struct_property(_property):
 
         for name, attr in self.structdef.__dict__.items():
             if type(attr) is simple_property: 
-                simp = sca.parsers.prf.simple(id_=attr.id_, 
+                simp = sca.parsers.prf.simple(id_=attr._id, 
                                                 type_=attr.type_,
                                                 name=attr.name, 
                                                 description=attr.__doc__,
@@ -1430,7 +1430,7 @@ class struct_property(_property):
                                                 units=attr.units)
                 struct.add_simple(simp)
             elif type(attr) is simpleseq_property:
-                simpseq = sca.parsers.prf.simpleSequence(id_=attr.id_,
+                simpseq = sca.parsers.prf.simpleSequence(id_=attr._id,
                                                            type_=attr.type_,
                                                            name=attr.name,
                                                            description=attr.__doc__,
@@ -1499,16 +1499,16 @@ class structseq_property(_sequence_property):
         self.fields = {} # Map field id's to attribute names
         for name, attr in self.structdef.__dict__.items():
             if type(attr) is simple_property:
-                self.fields[attr.id_] = (name, attr)
+                self.fields[attr._id] = (name, attr)
             elif type(attr) is simpleseq_property:
-                self.fields[attr.id_] = (name, attr)                
+                self.fields[attr._id] = (name, attr)                
         self.defvalue = defvalue
 
     def __getattribute__(self, name):
         return object.__getattribute__(self,name)
         
     def rebind(self, fget=None, fset=None, fval=None):
-        return structseq_property(self.id_,
+        return structseq_property(self._id,
                                   self.structdef,
                                   self.name,
                                   self.defvalue,
@@ -1520,7 +1520,7 @@ class structseq_property(_sequence_property):
                                   fval)
                                
     def toXML(self, level=0, version="2.2.2"):
-        structseq = sca.parsers.prf.structSequence(id_=self.id_,
+        structseq = sca.parsers.prf.structSequence(id_=self._id,
                                                      name=self.name,
                                                      mode=self.mode,
                                                      description=self.__doc__)
@@ -1531,14 +1531,14 @@ class structseq_property(_sequence_property):
         struct = sca.parsers.prf.struct(id_="")
         for name, attr in self.structdef.__dict__.items():
             if type(attr) is simple_property: 
-                simp = sca.parsers.prf.simple(id_=attr.id_, 
+                simp = sca.parsers.prf.simple(id_=attr._id, 
                                                 type_=attr.type_,
                                                 name=attr.name, 
                                                 description=attr.__doc__,
                                                 units=attr.units)
                 struct.add_simple(simp)
             elif type(attr) is simpleseq_property: 
-                simpseq = sca.parsers.prf.simpleSequence(id_=attr.id_, 
+                simpseq = sca.parsers.prf.simpleSequence(id_=attr._id, 
                                                            type_=attr.type_,
                                                            name=attr.name, 
                                                            description=attr.__doc__,
@@ -1551,11 +1551,11 @@ class structseq_property(_sequence_property):
                 structval = sca.parsers.prf.structValue()
                 for name, attr in self.structdef.__dict__.items():
                     if type(attr) is simple_property:
-                        id_=attr.id_
+                        id_=attr._id
                         value = to_xmlvalue(attr.get(v), attr.type_)
                         structval.add_simpleref(sca.parsers.prf.simpleRef(id_, value))
                     elif type(attr) is simpleseq_property:
-                        id_=attr.id_
+                        id_=attr._id
                         values = [to_xmlvalue(val, attr.type_) for val in attr.defvalue]
                         structval.add_simpleseqref(sca.parsers.prf.simpleSequenceRef(id_, values))
                 structseq.add_structvalue(structval)
@@ -1691,7 +1691,7 @@ class PropertyStorage:
     def _addProperty(self, property):
         property.sendPropertyChangeEvent = self.__propertyChangeEvent
         # Don't add things if they are already defined
-        id_ = str(property.id_)
+        id_ = str(property._id)
         name_ = str(property.name)
         if self.__properties.has_key(id_):
             raise KeyError("Duplicate Property ID %s found", id_)

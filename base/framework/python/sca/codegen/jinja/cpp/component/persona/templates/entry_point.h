@@ -23,6 +23,6 @@
 //          Within this cpp file:
 //          void* personaPtr = construct(argc, argv, SharedAPIObject);
 //
-typedef Resource_impl* (*ConstructorPtr)(int, char*[], Device_impl* parentDevice);
+typedef ResourceComponent* (*ConstructorPtr)(int, char*[], DeviceComponent* parentDevice);
 
 #endif // ${includeGuard}

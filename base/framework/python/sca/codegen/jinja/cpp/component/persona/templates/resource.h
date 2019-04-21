@@ -12,14 +12,13 @@
 #include "${component.reprogclass.header}"
 /*{% else %}*/
 #include "${component.baseclass.header}"
-#include "Device_impl.h"
+#include "DeviceComponent.h"
 /*{% endif %}*/
 
 class ${className};
 
 class ${className} : public ${baseClass}
 {
-    ENABLE_LOGGING
     public:
 //% if component is not device
         ${className}(const char *uuid, const char *label);
@@ -34,24 +33,24 @@ class ${className} : public ${baseClass}
         int serviceFunction();
 //% if component is device
         CORBA::Boolean allocateCapacity(const CF::Properties& capacities) 
-            throw (CF::Device::InvalidState, CF::Device::InvalidCapacity, CF::Device::InsufficientCapacity, CORBA::SystemException);
+            throw (CF::InvalidState, CF::CapacityManagement::InvalidCapacity, CORBA::SystemException);
         void deallocateCapacity(const CF::Properties& capacities) 
-            throw (CF::Device::InvalidState, CF::Device::InvalidCapacity, CORBA::SystemException);
+            throw (CF::InvalidState, CF::CapacityManagement::InvalidCapacity, CORBA::SystemException);
 
     protected:
         void hwLoadRequest(CF::Properties& request);
 
 //% else 
-        virtual void setParentDevice(Device_impl* parentDevice) { _parentDevice = parentDevice; };
-        virtual Device_impl* getParentDevice() { return _parentDevice; };
+        virtual void setParentDevice(DeviceComponent* parentDevice) { _parentDevice = parentDevice; };
+        virtual DeviceComponent* getParentDevice() { return _parentDevice; };
     
     private:
-        Device_impl* _parentDevice;
+        DeviceComponent* _parentDevice;
 //% endif
 
 //% if component is executabledevice
-    private:
-        Resource_impl* generateResource(int argc, char* argv[], ConstructorPtr fnptr, const char* libName);
+    /*private:
+        ResourceComponent* generateResource(int argc, char* argv[], ConstructorPtr fnptr, const char* libName);*/
 //% endif
 };
 

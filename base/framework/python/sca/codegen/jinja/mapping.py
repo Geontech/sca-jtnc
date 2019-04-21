@@ -91,7 +91,7 @@ class PropertyMapper(object):
         structsequence = [self._mapStructSequence(s) for s in softpkg.getStructSequenceProperties()]
 
         properties = simple+simplesequence+structs+structsequence
-        structdefs = structs + [p['structdef'] for p in structsequence]
+        structdefs = structs# + [p['structdef'] for p in structsequence]
         events = [prop for prop in properties if Kinds.EVENT in prop['kinds']]
         messages = [prop for prop in properties if Kinds.MESSAGE in prop['kinds']]
 

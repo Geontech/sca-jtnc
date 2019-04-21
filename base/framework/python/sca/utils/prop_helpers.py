@@ -376,7 +376,7 @@ class Property(object):
         value = None
         defVal = None
         for i in self.compRef._properties:
-            if i.clean_name == prop.id_:
+            if i.clean_name == prop._id:
                 for k in prop.get_configurationkind():
                     kinds.append(k.get_kindtype())
                 mname = _cleanId(simple)
@@ -396,7 +396,7 @@ class Property(object):
         values = None
         defVal = None
         for i in self.compRef._properties:
-            if i.clean_name == prop.id_:
+            if i.clean_name == prop._id:
                 for k in prop.get_configurationkind():
                     kinds.append(k.get_kindtype())
                 cname = _cleanId(sprop)
@@ -443,7 +443,7 @@ class Property(object):
             structTable.limit_column(3,15)
             structTable.limit_column(4,40)
             for prop in self.compRef._prf.get_struct():
-                if prop.id_ == self.id:
+                if prop._id == self.id:
                     first = True
                     for sprop in prop.get_simple():
                         defVal,value, type, kinds,enums = self._getStructsSimpleProps(sprop,prop)
@@ -468,11 +468,11 @@ class Property(object):
             for prop in self.compRef._prf.get_structsequence():
                 for kind in prop.get_configurationkind():
                     kinds.append(kind.get_kindtype())
-                if prop.id_ == self.id and prop.get_struct() != None:
+                if prop._id == self.id and prop.get_struct() != None:
                     for prop in prop.get_struct().get_simple():
-                        structTable.append(prop.id_, prop.get_type())
+                        structTable.append(prop._id, prop.get_type())
                     for prop in prop.get_struct().get_simplesequence():
-                        structTable.append(prop.id_, prop.get_type())
+                        structTable.append(prop._id, prop.get_type())
             print >>destfile, "% -*s %s" % (17,"Kinds: ", ', '.join(kinds))
             print >>destfile, "\nStruct\n======"
             structTable.write()
@@ -492,7 +492,7 @@ class Property(object):
 
         elif simpleOrSequence:
             for prop in self.compRef._prf.get_simple() + self.compRef._prf.get_simplesequence():
-                if prop.id_ == self.id:
+                if prop._id == self.id:
                     for kind in prop.get_kind():
                         kinds.append(kind.get_kindtype())
             print >>destfile, "% -*s %s" % (17,"Kinds: ", ', '.join(kinds))

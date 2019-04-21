@@ -1,4 +1,4 @@
-/*#
+/*
  * This file is protected by Copyright. Please refer to the COPYRIGHT file 
  * distributed with this source distribution.
  * 
@@ -16,28 +16,13 @@
  * 
  * You should have received a copy of the GNU Lesser General Public License 
  * along with this program.  If not, see http://www.gnu.org/licenses/.
- #*/
-#ifndef PORT_H
-#define PORT_H
+ */
 
-/*{% filter lines|unique|join('\n') %}*/
-/*{% for portgen in component.portgenerators %}*/
-/*{%   for header in portgen.dependencies() %}*/
-#include ${header}
-/*{%   endfor %}*/
-/*{% endfor %}*/
-/*{% endfilter %}*/
 
-class ${component.baseclass.name};
-class ${component.userclass.name};
+#ifndef EXECUTABLEDEVICECOMPONENT_H
+#define EXECUTABLEDEVICECOMPONENT_H
 
-#define CORBA_MAX_TRANSFER_BYTES omniORB::giopMaxMsgSize()
+#include "DeviceComponent.h"
 
-/*{% for portgen in component.portgenerators if portgen.hasDeclaration() %}*/
-// ----------------------------------------------------------------------------------------
-// ${portgen.className()} declaration
-// ----------------------------------------------------------------------------------------
-/*{% include portgen.declaration() %}*/
+#endif
 
-/*{% endfor %}*/
-#endif // PORT_H

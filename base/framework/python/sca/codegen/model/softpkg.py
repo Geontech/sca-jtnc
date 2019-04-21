@@ -21,10 +21,10 @@ class Implementation(object):
     def __init__(self, impl):
         self.__impl = impl
         self.__softpkgdeps = []
-        for dep in self.__impl.dependency:
-            if not dep.softpkgref:
-                continue
-            self.__softpkgdeps.append(SoftpkgRef(dep.softpkgref))
+        #for dep in self.__impl.dependency:
+            #if not dep.softpkgref:
+                #continue
+            #self.__softpkgdeps.append(SoftpkgRef(dep.softpkgref))
 
     def prfFile(self):
         if self.__impl.propertyfile:
@@ -33,12 +33,12 @@ class Implementation(object):
             return None
 
     def identifier(self):
-        return self.__impl.id_
+        return self.__impl._id
 
     def entrypoint(self):
         if not self.__impl.code.entrypoint:
             return self.__impl.code.localfile.name
-        return self.__impl.code.entrypoint
+        return self.__impl.code.entrypoint.valueOf_
 
     def isModule(self):
         return self.__impl.code.get_type() == 'SharedLibrary'
@@ -62,24 +62,24 @@ def softPkgRef(root_impl, name, localfile, implref):
 
 def resolveSoftPkgDeps(spd=None, root_impl=None):
     softpkgdeps = []
-    if spd == None:
-        return softpkgdeps
-    for impl in spd.get_implementation():
-        if root_impl != None:
-            troot = root_impl
-        else:
-            troot = impl.get_id()
-        for dep in impl.get_dependency():
-            if dep.get_softpkgref() != None:
-                localfile = dep.get_softpkgref().get_localfile().name
-                implref=None
-                try:
-                    implref = dep.get_softpkgref().get_implref().get_refid()
-                except:
-                    pass
-                pkg_name = localfile.split('/')[-1].split('.')[0]
-                softpkgdeps.append(softPkgRef(troot, pkg_name, localfile,implref))
-                softpkgdeps += resolveSoftPkgDeps(softpkgdeps[-1]['spd'], troot)
+    #if spd == None:
+        #return softpkgdeps
+    #for impl in spd.get_implementation():
+        #if root_impl != None:
+            #troot = root_impl
+        #else:
+            #troot = impl.get_id()
+        #for dep in impl.get_dependency():
+            #if dep.get_softpkgref() != None:
+                #localfile = dep.get_softpkgref().get_localfile().name
+                #implref=None
+                #try:
+                    #implref = dep.get_softpkgref().get_implref().get_refid()
+                #except:
+                    #pass
+                #pkg_name = localfile.split('/')[-1].split('.')[0]
+                #softpkgdeps.append(softPkgRef(troot, pkg_name, localfile,implref))
+                #softpkgdeps += resolveSoftPkgDeps(softpkgdeps[-1]['spd'], troot)
     return softpkgdeps
 
 
@@ -88,7 +88,7 @@ class SoftPkg(object):
         self.__spdFile = os.path.basename(spdFile)
         self.__spd = sca.parsers.spd.parse(spdFile)
         self.__softpkgdeps = resolveSoftPkgDeps(self.__spd)
-        self.__impls = dict((impl.id_, Implementation(impl)) for impl in self.__spd.implementation)
+        self.__impls = dict((impl._id, Implementation(impl)) for impl in self.__spd.implementation)
 
         self.__path = os.path.dirname(os.path.abspath(spdFile))
 

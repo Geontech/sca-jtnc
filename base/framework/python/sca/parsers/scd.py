@@ -838,7 +838,7 @@ class softwarecomponent(GeneratedsSuper):
         elif nodeName_ == 'componenttype':
             obj_ = componenttype.factory(parent_object_=self)
             obj_.build(child_)
-            self.componenttype = obj_
+            self.componenttype = obj_.valueOf_
             obj_.original_tagname_ = 'componenttype'
         elif nodeName_ == 'componentfeatures':
             obj_ = componentfeatures.factory(parent_object_=self)

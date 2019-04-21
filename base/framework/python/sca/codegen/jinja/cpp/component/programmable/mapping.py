@@ -23,7 +23,7 @@ class ProgrammableComponentMapper(PullComponentMapper):
         for superclass in comp['superclasses']:
             if not superclass.has_key('name'):
                 continue
-            if superclass['name'] == "AggregateDevice_impl":
+            if "Aggregate" in superclass['name']:
                 missingAggDevice = False
                 break
         if missingAggDevice:

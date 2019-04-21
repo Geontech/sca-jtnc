@@ -13,13 +13,19 @@ class Property(object):
 
     def kinds(self):
         kinds = self.kinds_()
-        if len(kinds) > 0:
-            return set(str(k.kindtype) for k in kinds)
+        if kinds == None:
+            return set((Kinds.CONFIGURE,))
+        if type(kinds) != list:
+            _kinds = [kinds]
+        else:
+            _kinds = kinds
+        if len(_kinds) > 0:
+            return set(str(k.kindtype) for k in _kinds)
         else:
             return set((Kinds.CONFIGURE,))
 
     def identifier(self):
-        return self.xml.id_
+        return self.xml._id
 
     def hasName(self):
         return self.xml.name is not None
@@ -28,7 +34,7 @@ class Property(object):
         if self.xml.name:
             return self.xml.name
         else:
-            return self.xml.id_
+            return self.xml._id
 
     def mode(self):
         if not self.xml.mode:
@@ -71,16 +77,10 @@ class _Simple(object):
        return self.xml.type_
 
     def isComplex(self):
-        if self.xml.complex.lower() == "true":
-            return True
-        else:
-            return False
+        return False
 
     def isOptional(self):
-        if self.xml.optional.lower() == "true":
-            return True
-        else:
-            return False
+        return False
 
     def action(self):
         if not self.xml.action or not self.xml.action.type_:
@@ -158,7 +158,7 @@ class StructProperty(Property, _Struct, _Single):
 
     def fields(self):
         f = [SimpleProperty(s) for s in self.xml.simple]
-        f += [SimpleSequenceProperty(s) for s in self.xml.simplesequence]
+        #f += [SimpleSequenceProperty(s) for s in self.xml.simplesequence]
         return f
 
     def hasValue(self):
@@ -175,6 +175,9 @@ class StructSequenceProperty(Property, _Struct, _Sequence):
         return 'structsequence'
 
     def struct(self):
+        for _struct in self.xml.parent_object_.get_struct():
+            if self.xml.get_structrefid() == _struct.get_id():
+                return StructProperty(_struct)
         return StructProperty(self.xml.struct)
 
     def hasValue(self):

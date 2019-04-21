@@ -25,6 +25,6 @@ noinst_PROGRAMS = BasicFEI
 
 BasicFEI_SOURCES = BasicFEI.cpp BasicFEI.h BasicFEI_base.cpp BasicFEI_base.h main.cpp struct_props.h template_impl.cpp
 BasicFEI_CXXFLAGS = -Wall $(BOOST_CPPFLAGS) -I$(CFDIR) -I$(CFDIR)/include -I$(CFDIR)/bulkio/cpp/include -I$(CFDIR)/frontend/cpp -I$(CFDIR)/include/sca -I$(CFDIR)/include/sca/CF -I$(CFDIR)/include/sca/BULKIO -I$(CFDIR)/include/sca/FRONTEND
-BasicFEI_LDADD = $(BOOST_LDFLAGS) $(BOOST_THREAD_LIB) $(BOOST_SYSTEM_LIB) $(BOOST_REGEX_LIB) $(OMNICOS_LIBS) $(OMNITHREAD_LIBS) $(OMNIDYNAMIC_LIBS) $(CFDIR)/framework/libscacf.la $(CFDIR)/bulkio/libbulkio-2.2.la $(CFDIR)/frontend/libfrontend-2.2.la $(CFDIR)/framework/idl/CF/libscaidl.la $(CFDIR)/framework/idl/BULKIO/libscabulkioidl.la $(CFDIR)/framework/idl/FRONTEND/libscafrontendidl.la
+BasicFEI_LDADD = $(BOOST_LDFLAGS) $(BOOST_THREAD_LIB) $(BOOST_SYSTEM_LIB) $(BOOST_REGEX_LIB) $(OMNICOS_LIBS) $(OMNITHREAD_LIBS) $(OMNIDYNAMIC_LIBS) $(CFDIR)/framework/libscacf.la $(CFDIR)/bulkio/libbulkio-4.1.la $(CFDIR)/frontend/libfrontend-4.1.la $(CFDIR)/framework/idl/CF/libscaidl.la $(CFDIR)/framework/idl/BULKIO/libscabulkioidl.la $(CFDIR)/framework/idl/FRONTEND/libscafrontendidl.la
 BasicFEI_LDFLAGS = -Wall
 

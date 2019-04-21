@@ -18,4 +18,4 @@
 # along with this program.  If not, see http://www.gnu.org/licenses/.
 #
 
-SUBDIRS = framework/idl/CF framework/idl/BULKIO framework/idl/FRONTEND framework/python framework bulkio frontend
+SUBDIRS = framework/idl/CF framework/idl/BULKIO framework/idl/FRONTEND framework/python framework bulkio frontend include

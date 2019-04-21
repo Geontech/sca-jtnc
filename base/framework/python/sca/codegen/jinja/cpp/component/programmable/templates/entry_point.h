@@ -3,7 +3,7 @@
 /*# Allow child templates to include license #*/
 /*{% endblock %}*/
 //% set includeGuard = component.name.upper().replace('.','') + '_ENTRY_POINTS_H'
-//% set executeClass = "Resource_impl" if component.executesHWComponents else "Device_impl"
+//% set executeClass = "ResourceComponent" if component.executesHWComponents else "DeviceComponent"
 #ifndef ${includeGuard}
 #define ${includeGuard}
 
@@ -24,6 +24,6 @@
 //          Within 'generatePersona' method located in the resource cpp file:
 //          ${executeClass}* personaPtr = personaEntryPoint(argc, argv, SharedAPIObject);
 //
-typedef ${executeClass}* (*ConstructorPtr)(int, char*[], Device_impl* parentDevice);
+typedef ${executeClass}* (*ConstructorPtr)(int, char*[], DeviceComponent* parentDevice);
 
 #endif // ${includeGuard}

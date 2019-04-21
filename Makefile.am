@@ -30,4 +30,7 @@ docs :
 
 EXTRA_DIST = sca.pc.in LICENSE
 
-SUBDIRS = base idl testing
+SUBDIRS = acinclude base idl testing
+
+pkgconfigdir = $(libdir)/pkgconfig
+dist_pkgconfig_DATA = sca.pc

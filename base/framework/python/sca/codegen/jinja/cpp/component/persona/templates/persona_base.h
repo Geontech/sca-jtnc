@@ -10,15 +10,15 @@
 
 #include "${component.baseclass.header}"
 //% if component is device
-#include "sca/Device_impl.h"
+#include "sca/DeviceComponent.h"
 //% if component is executabledevice
-#include "sca/ExecutableDevice_impl.h"
+#include "sca/DeviceComponent.h"
 #include "sca/prop_helpers.h"
 #include "entry_point.h"
 #include <dlfcn.h>
 
 typedef std::string ResourceId;
-typedef std::map<ResourceId, Resource_impl*> ResourceMap;
+typedef std::map<ResourceId, ResourceComponent*> ResourceMap;
 typedef ResourceMap::iterator ResourceMapIter;
 typedef std::map<unsigned int, ResourceId> ProcessMap;
 typedef ProcessMap::iterator ProcessMapIter;
@@ -40,19 +40,19 @@ class ${className} : public ${baseClass}
         ${className}(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl, CF::Properties capacities, char *compDev);
 //% endif
         virtual void construct();
-        virtual void setParentDevice(Device_impl* parentDevice) { _parentDevice = parentDevice; };
-        virtual Device_impl* getParentDevice() { return _parentDevice; };
+        virtual void setParentDevice(DeviceComponent* parentDevice) { _parentDevice = parentDevice; };
+        virtual DeviceComponent* getParentDevice() { return _parentDevice; };
 
 //% if component is device
-        virtual void adminState(CF::Device::AdminType adminState) 
+        virtual void adminState(CF::AdministratableInterface::AdminType adminState) 
             throw (CORBA::SystemException);
 //% if component is executabledevice
-        virtual CF::ExecutableDevice::ProcessID_Type execute (const char* name, const CF::Properties& options, const CF::Properties& parameters)
+        /*virtual CF::ExecutableDevice::ProcessID_Type execute (const char* name, const CF::Properties& options, const CF::Properties& parameters)
             throw ( CF::ExecutableDevice::ExecuteFail, CF::InvalidFileName, CF::ExecutableDevice::InvalidOptions, 
-                    CF::ExecutableDevice::InvalidParameters, CF::ExecutableDevice::InvalidFunction, CF::Device::InvalidState, 
+                    CF::ExecutableDevice::InvalidParameters, CF::ExecutableDevice::InvalidFunction, CF::AdministratableInterface::InvalidState, 
                     CORBA::SystemException);
         virtual void terminate (CF::ExecutableDevice::ProcessID_Type processId) 
-            throw ( CF::Device::InvalidState, CF::ExecutableDevice::InvalidProcess, CORBA::SystemException);
+            throw ( CF::AdministratableInterface::InvalidState, CF::ExecutableDevice::InvalidProcess, CORBA::SystemException);*/
 //% endif
         virtual void releaseObject() 
             throw (CF::LifeCycle::ReleaseError, CORBA::SystemException);
@@ -73,12 +73,12 @@ class ${className} : public ${baseClass}
         virtual void afterHardwareUnprogrammed() {};
 
 //% if component is executabledevice
-        virtual bool hasRunningResources();
-        virtual Resource_impl* generateResource(int argc, char* argv[], ConstructorPtr fnptr, const char* libraryName)=0;
+        /*virtual bool hasRunningResources();
+        virtual ResourceComponent* generateResource(int argc, char* argv[], ConstructorPtr fnptr, const char* libraryName)=0;*/
 //% endif
 
     private:
-        Device_impl*            _parentDevice;
+        DeviceComponent*            _parentDevice;
         bool                    _parentAllocated;
         CF::Properties          _previousRequestProps;
 //% if component is executabledevice
@@ -86,7 +86,7 @@ class ${className} : public ${baseClass}
         ProcessMap              _processMap;
         unsigned int            _processIdIncrement;
 
-        Resource_impl* instantiateResource(const char* libraryName, const CF::Properties& options, const CF::Properties& parameters);
+        ResourceComponent* instantiateResource(const char* libraryName, const CF::Properties& options, const CF::Properties& parameters);
 //% endif
 //% endif
         virtual void formatRequestProps(const CF::Properties& requestProps, CF::Properties& formattedProps);
