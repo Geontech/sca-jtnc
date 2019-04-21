@@ -16,8 +16,6 @@
 
 #include "${component.userclass.header}"
 
-PREPARE_LOGGING(${className})
-
 /*{% if component is device %}*/
 ${className}::${className}(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl) :
     ${baseClass}(devMgr_ior, id, lbl, sftwrPrfl)
@@ -213,20 +211,16 @@ ${className}::~${className}()
 ************************************************************************************************/
 int ${className}::serviceFunction()
 {
-    RH_DEBUG(this->_baseLog, "serviceFunction() example log message");
-    
     return NOOP;
 }
 
 /*{% if component is device %}*/
 CORBA::Boolean ${className}::allocateCapacity(const CF::Properties& capacities)
-        throw (CF::Device::InvalidState, CF::Device::InvalidCapacity, CF::Device::InsufficientCapacity, CORBA::SystemException) 
+        throw (CF::InvalidState, CF::CapacityManagement::InvalidCapacity, CORBA::SystemException) 
 {
     bool allocationSuccess = false;
 
     if (isBusy() || isLocked()) {
-        RH_WARN(this->_baseLog, __FUNCTION__ << 
-            ": Cannot allocate capacities... Device state is locked and/or busy");
         return false;
     }
 
@@ -243,7 +237,7 @@ CORBA::Boolean ${className}::allocateCapacity(const CF::Properties& capacities)
 }
 
 void ${className}::deallocateCapacity(const CF::Properties& capacities)
-        throw (CF::Device::InvalidState, CF::Device::InvalidCapacity, CORBA::SystemException) 
+        throw (CF::InvalidState, CF::CapacityManagement::InvalidCapacity, CORBA::SystemException) 
 {
 
     /*

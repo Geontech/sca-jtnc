@@ -44,15 +44,15 @@ class ${className} : public ${baseClass}
         virtual DeviceComponent* getParentDevice() { return _parentDevice; };
 
 //% if component is device
-        virtual void adminState(CF::Device::AdminType adminState) 
+        virtual void adminState(CF::AdministratableInterface::AdminType adminState) 
             throw (CORBA::SystemException);
 //% if component is executabledevice
-        virtual CF::ExecutableDevice::ProcessID_Type execute (const char* name, const CF::Properties& options, const CF::Properties& parameters)
+        /*virtual CF::ExecutableDevice::ProcessID_Type execute (const char* name, const CF::Properties& options, const CF::Properties& parameters)
             throw ( CF::ExecutableDevice::ExecuteFail, CF::InvalidFileName, CF::ExecutableDevice::InvalidOptions, 
-                    CF::ExecutableDevice::InvalidParameters, CF::ExecutableDevice::InvalidFunction, CF::Device::InvalidState, 
+                    CF::ExecutableDevice::InvalidParameters, CF::ExecutableDevice::InvalidFunction, CF::AdministratableInterface::InvalidState, 
                     CORBA::SystemException);
         virtual void terminate (CF::ExecutableDevice::ProcessID_Type processId) 
-            throw ( CF::Device::InvalidState, CF::ExecutableDevice::InvalidProcess, CORBA::SystemException);
+            throw ( CF::AdministratableInterface::InvalidState, CF::ExecutableDevice::InvalidProcess, CORBA::SystemException);*/
 //% endif
         virtual void releaseObject() 
             throw (CF::LifeCycle::ReleaseError, CORBA::SystemException);
@@ -73,8 +73,8 @@ class ${className} : public ${baseClass}
         virtual void afterHardwareUnprogrammed() {};
 
 //% if component is executabledevice
-        virtual bool hasRunningResources();
-        virtual Resource_impl* generateResource(int argc, char* argv[], ConstructorPtr fnptr, const char* libraryName)=0;
+        /*virtual bool hasRunningResources();
+        virtual Resource_impl* generateResource(int argc, char* argv[], ConstructorPtr fnptr, const char* libraryName)=0;*/
 //% endif
 
     private:

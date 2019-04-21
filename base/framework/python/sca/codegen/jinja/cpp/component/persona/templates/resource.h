@@ -19,7 +19,6 @@ class ${className};
 
 class ${className} : public ${baseClass}
 {
-    ENABLE_LOGGING
     public:
 //% if component is not device
         ${className}(const char *uuid, const char *label);
@@ -34,9 +33,9 @@ class ${className} : public ${baseClass}
         int serviceFunction();
 //% if component is device
         CORBA::Boolean allocateCapacity(const CF::Properties& capacities) 
-            throw (CF::Device::InvalidState, CF::Device::InvalidCapacity, CF::Device::InsufficientCapacity, CORBA::SystemException);
+            throw (CF::InvalidState, CF::CapacityManagement::InvalidCapacity, CORBA::SystemException);
         void deallocateCapacity(const CF::Properties& capacities) 
-            throw (CF::Device::InvalidState, CF::Device::InvalidCapacity, CORBA::SystemException);
+            throw (CF::InvalidState, CF::CapacityManagement::InvalidCapacity, CORBA::SystemException);
 
     protected:
         void hwLoadRequest(CF::Properties& request);
