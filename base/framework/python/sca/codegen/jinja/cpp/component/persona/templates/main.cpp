@@ -4,15 +4,15 @@
 /*{% block main %}*/
 ${super()}
 /*{% if component is device %}*/
+${component.userclass.name} *devicePtr;
+
 extern "C" {
     DeviceComponent* construct(int argc, char* argv[], DeviceComponent* parentDevice) {
 
         struct sigaction sa;
-        sa.sa_handler = signal_catcher;
-        sa.sa_flags = 0;
         devicePtr = 0;
 
-        DeviceComponent::start_device(&devicePtr, sa, argc, argv);
+        DeviceComponent::start_lib_device(&devicePtr, sa, argc, argv);
 
         // Any addition parameters passed into construct can now be
         // set directly onto devicePtr since it is the instantiated

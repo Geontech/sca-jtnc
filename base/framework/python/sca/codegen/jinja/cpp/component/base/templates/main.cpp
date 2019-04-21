@@ -10,6 +10,7 @@
 /*{% endblock %}*/
 /*{% block main %}*/
 /*{% if component is device %}*/
+/*{% if not component.impl.module %}*/
 
 ${component.userclass.name} *devicePtr;
 
@@ -22,6 +23,7 @@ void signal_catcher(int sig)
     }
 }
 /*{% endif %}*/
+/*{% endif %}*/
 /*{% if not component is device and component.impl.module %}*/
 extern "C" {
     Resource_impl* make_component(const std::string& uuid, const std::string& identifier)
@@ -30,6 +32,7 @@ extern "C" {
     }
 }
 /*{% else %}*/
+/*{% if not component.impl.module %}*/
 int main(int argc, char* argv[])
 {
 /*{% if component is device %}*/
@@ -46,5 +49,6 @@ int main(int argc, char* argv[])
 /*{% endif %}*/
     return 0;
 }
+/*{% endif %}*/
 /*{% endif %}*/
 /*{% endblock %}*/
