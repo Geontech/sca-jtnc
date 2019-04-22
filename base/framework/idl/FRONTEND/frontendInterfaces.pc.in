@@ -1,0 +1,11 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: frontendInterfaces
+Description: frontendInterfaces for SCA
+Requires: bulkioInterfaces >= 4.1.0
+Version: @PACKAGE_VERSION@
+Libs: -L${libdir} -lscafrontendidl
+Cflags: -I${includedir}/sca/FRONTEND

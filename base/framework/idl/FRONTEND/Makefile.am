@@ -52,6 +52,9 @@ BUILT_SOURCES =	FrontendSK.cpp \
 
 CLEANFILES = $(BUILT_SOURCES)
 
+pkgconfigdir = $(libdir)/pkgconfig
+dist_pkgconfig_DATA = frontendInterfaces.pc
+
 frontendheaderdir = $(pkgincludedir)/FRONTEND
 dist_frontendheader_HEADERS = Frontend.h GPS.h NavigationData.h RFInfo.h TunerControl.h
 

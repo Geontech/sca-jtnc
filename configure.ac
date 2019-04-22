@@ -265,6 +265,8 @@ AC_CONFIG_FILES(Makefile \
                 sca.pc \
                 base/bulkio/bulkio.pc \
                 base/framework/idl/BULKIO/bulkioInterfaces.pc \
+                base/frontend/frontend.pc \
+                base/framework/idl/FRONTEND/frontendInterfaces.pc \
                 acinclude/Makefile \
                 base/Makefile \
                 base/include/Makefile \
