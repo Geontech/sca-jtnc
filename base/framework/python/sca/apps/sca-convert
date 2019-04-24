@@ -1,0 +1,174 @@
+#!/usr/bin/env python
+# This file is protected by Copyright. Please refer to the COPYRIGHT file
+# distributed with this source distribution.
+#
+# This file is part of SCA-JTNC core.
+#
+# SCA-JTNC core is free software: you can redistribute it and/or modify it under
+# the terms of the GNU Lesser General Public License as published by the Free
+# Software Foundation, either version 3 of the License, or (at your option) any
+# later version.
+#
+# SCA-JTNC core is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+# details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program.  If not, see http://www.gnu.org/licenses/.
+#
+import logging
+import os
+import re
+import shutil
+import sys
+
+from sca.utils.converters import spd as convert_spd
+from sca.utils.converters import scd as convert_scd
+from sca.utils.converters import prf as convert_prf
+
+# Various exit codes
+EXIT_OKAY = 0
+EXIT_CONVERSION_FAILED = EXIT_OKAY + 1
+EXIT_BAD_PATHS = EXIT_CONVERSION_FAILED + 1
+EXIT_NO_WAVEDEV_FOUND = EXIT_BAD_PATHS + 1
+EXIT_NO_SPD_FOUND = EXIT_NO_WAVEDEV_FOUND + 1
+EXIT_NO_IN_PLACE = EXIT_NO_SPD_FOUND + 1
+EXIT_INVALID_OUTPUT_PATH = EXIT_NO_IN_PLACE + 1
+
+def convert(rh_wavedev_path, output_path):
+    from ossie.parsers import scd, spd, prf
+    (input_path, wavedev_fn) = os.path.split(rh_wavedev_path)
+    project_name = wavedev_fn.split('.')[1]
+
+    _log.debug('Input path: %s' % input_path)
+    _log.debug('Project name: %s' % project_name)
+
+    _log.debug('Starting SPD')
+    spd_fn = project_name + '.spd.xml'
+    input_spd_path = os.path.join(input_path, spd_fn)
+    sca_spd = convert_spd(spd.parse(input_spd_path))
+    _log.debug('Finished SPD')
+
+    _log.debug('Starting SCD')
+    scd_fn = project_name + '.scd.xml'
+    input_scd_path = os.path.join(input_path, scd_fn)
+    sca_scd = convert_scd(scd.parse(input_scd_path))
+    _log.debug('Finished SCD')
+
+    _log.debug('Starting PRF')
+    prf_fn = project_name + '.prf.xml'
+    input_prf_path = os.path.join(input_path, prf_fn)
+    sca_prf = convert_prf(prf.parse(input_prf_path))
+    _log.debug('Finished PRF')
+
+    # Output all files.
+    output_spd_path = os.path.join(output_path, spd_fn)
+    _clean_export(output_spd_path, sca_spd)
+    _log.info('Wrote: %s' % output_spd_path)
+
+    output_scd_path = os.path.join(output_path, scd_fn)
+    _clean_export(output_scd_path, sca_scd)
+    _log.info('Wrote: %s' % output_scd_path)
+
+    output_prf_path = os.path.join(output_path, prf_fn)
+    _clean_export(output_prf_path, sca_prf)
+    _log.info('Wrote: %s' % output_prf_path)
+
+def _clean_export(out_file_path, xml):
+    '''
+    Exports the XML to a file and follows it up with
+    a scrubbing process to remove extraneous XML meta.
+    '''
+    with open(out_file_path, 'w') as f:
+        xml.export(f, 0)
+
+    content = None
+    with open(out_file_path, 'r') as f:
+        content = f.read()
+
+    FINDREPLACE_LIST = [
+        ( re.compile(r'(\</*)(t:)', re.M), r'\1' ),
+        ( re.compile( r'(xmlns:t=\".+?/\"\s?)', re.M), r'' ),
+    ]
+    for pair in FINDREPLACE_LIST:
+        tem = re.subn(pair[0], pair[1], content)
+        content = tem[0]
+
+    with open(out_file_path, 'w') as f:
+        f.write(content)
+
+
+if __name__ == '__main__':
+    global _log
+    LOGGER_NAME = 'SCA Convert'
+    logging.basicConfig(format='%(funcName)s(%(lineno)d):%(levelname)-8s: %(message)s', level=logging.INFO)
+    _log = logging.getLogger(LOGGER_NAME)
+
+    from optparse import OptionParser
+    parser = OptionParser()
+    parser.usage = 'usage: %prog [options] wavedev_path output_path'
+    parser.add_option('-v','--verbose',
+        action='store_true',
+        dest='verbose',
+        default=False,
+        help='Verbose output')
+    parser.add_option('-r','--replace',
+        action='store_true',
+        dest='replace',
+        default=False,
+        help='Replace output path contents (if any)')
+    (options, args) = parser.parse_args()
+
+    if options.verbose:
+        _log.setLevel(logging.DEBUG)
+        _log.debug('Debug output enabled')
+    
+    if len(args) != 2:
+        _log.error("You must specify only a path to the project and output path")
+        sys.exit(EXIT_BAD_PATHS)
+    
+    wavedev_path = os.path.abspath(args[0])
+    output_path = os.path.abspath(args[1])
+
+    # Check paths
+    if not wavedev_path.endswith('.wavedev'):
+        _log.debug('Path does not contain the wavedev file.  Searching now starting at the path')
+        wavedev_proj_path = wavedev_path
+        wavedev_path = None
+        for root, dirs, files in os.walk(wavedev_proj_path):
+            for name in files:
+                _log.debug('Checking: %s/%s' % (root, name))
+                if re.match(r'^.+?\.(wavedev)', name):
+                    _log.debug('Found: %s' % name)
+                    wavedev_path = os.path.join(root, name)
+                    break
+            if wavedev_path:
+                break
+        if not wavedev_path:
+            _log.error('Provided path did not contain a ".wavedev".')
+            sys.exit(EXIT_NO_WAVEDEV_FOUND)
+    elif not os.path.isfile(wavedev_path):
+        _log.error('Provided project file name does not exist')
+        sys.exit(EXIT_NO_WAVEDEV_FOUND)
+
+    if os.path.isdir(output_path):
+        if output_path is os.path.dirname(wavedev_path):
+            _log.error('Unable to convert a project "in place".  Please choose a different output directory.')
+            sys.exit(EXIT_NO_IN_PLACE)
+        if options.replace:
+            _log.debug('Replacing existing output directory: %s' % output_path)
+            shutil.rmtree(output_path)
+        else:
+            _log.error('Output path exists.  Please try a different path or choose replace ("-r" or "--replace")')
+            sys.exit(EXIT_INVALID_OUTPUT_PATH)
+
+    # Copy source tree to output
+    _log.debug('Creating output path')
+    (input_path, _) = os.path.split(wavedev_path)
+    shutil.copytree(input_path, output_path)
+
+    # Run the converter
+    _log.debug('Running converter')
+    convert(wavedev_path, output_path)
+    sys.exit(EXIT_OKAY)
