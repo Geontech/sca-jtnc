@@ -150,7 +150,8 @@ if __name__ == '__main__':
             overrides.properties[name] = value
         elif key == '--version':
             from sca.codegen import versions
-            print 'SCA Code Generator', versions.codegen
+
+            print 'SCA-JTNC Code Generator', versions.codegen
             sys.exit(0)
 
     if checkSupport:

@@ -1,5 +1,11 @@
 
+#{% if component.impl.module %}
+#% set outputdir = generator.getOutputDir()+'/.libs'
+#% set shortoutputdir = generator.getOutputDir()
+#{% else %}
 #% set outputdir = generator.getOutputDir()
+#% set shortoutputdir = generator.getOutputDir()
+#{% endif %}
 #% set componentdir = component.name.replace('.','/')
 #% set target = component.impl.target|relpath(outputdir)
 #% set installdir = '/'.join(['$(prefix)', component.sdrpath, componentdir])
@@ -24,7 +30,7 @@ bin_PROGRAMS = {{target}}
 
 #{% block xmlInfo %}
 xmldir = {{installdir}}
-dist_xml_DATA = {{component.profile.values()|relpath(outputdir)|join(' ')}}
+dist_xml_DATA = {{component.profile.values()|relpath(shortoutputdir)|join(' ')}}
 #{% endblock %}
 
 #{% if component.impl.module %}

@@ -67,9 +67,9 @@ class ${className} : public ${component.superclasses|join(', public ', attribute
         ~${className}();
 
 /*{% block cfResource %}*/
-        void start() throw (CF::Resource::StartError, CORBA::SystemException);
+        void start() throw (CF::ControllableInterface::StartError, CORBA::SystemException);
 
-        void stop() throw (CF::Resource::StopError, CORBA::SystemException);
+        void stop() throw (CF::ControllableInterface::StopError, CORBA::SystemException);
 
         void releaseObject() throw (CF::LifeCycle::ReleaseError, CORBA::SystemException);
 /*{% endblock %}*/

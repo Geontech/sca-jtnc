@@ -9,7 +9,7 @@
 //% set executesHWComponents = component.executesHWComponents 
 //% set executesPersonaDevices = not executesHWComponents
 //% set executeType = "resource" if executesHWComponents else "persona"
-//% set executeClass = "Resource_impl" if executesHWComponents else "Device_impl"
+//% set executeClass = "ResourceComponent" if executesHWComponents else "DeviceComponent"
 /**************************************************************************
 
     This is the ${artifactType} code. This file contains the child class where

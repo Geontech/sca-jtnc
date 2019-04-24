@@ -16,8 +16,6 @@
 
 #include "${component.userclass.header}"
 
-PREPARE_LOGGING(${className})
-
 /*{% if component is device %}*/
 ${className}::${className}(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl) :
     ${baseClass}(devMgr_ior, id, lbl, sftwrPrfl)
@@ -206,9 +204,6 @@ ${className}::~${className}()
         The member _baseLog is a logger whose base name is the component (or device) instance name.
         New logs should be created based on this logger name.
 
-        To create a new logger,
-            rh_logger::LoggerPtr my_logger = this->_baseLog->getChildLogger("foo");
-
         Assuming component instance name abc_1, my_logger will then be created with the 
         name "abc_1.user.foo".
 
@@ -216,20 +211,16 @@ ${className}::~${className}()
 ************************************************************************************************/
 int ${className}::serviceFunction()
 {
-    RH_DEBUG(this->_baseLog, "serviceFunction() example log message");
-    
     return NOOP;
 }
 
 /*{% if component is device %}*/
 CORBA::Boolean ${className}::allocateCapacity(const CF::Properties& capacities)
-        throw (CF::Device::InvalidState, CF::Device::InvalidCapacity, CF::Device::InsufficientCapacity, CORBA::SystemException) 
+        throw (CF::InvalidState, CF::CapacityManagement::InvalidCapacity, CORBA::SystemException) 
 {
     bool allocationSuccess = false;
 
     if (isBusy() || isLocked()) {
-        RH_WARN(this->_baseLog, __FUNCTION__ << 
-            ": Cannot allocate capacities... Device state is locked and/or busy");
         return false;
     }
 
@@ -246,7 +237,7 @@ CORBA::Boolean ${className}::allocateCapacity(const CF::Properties& capacities)
 }
 
 void ${className}::deallocateCapacity(const CF::Properties& capacities)
-        throw (CF::Device::InvalidState, CF::Device::InvalidCapacity, CORBA::SystemException) 
+        throw (CF::InvalidState, CF::CapacityManagement::InvalidCapacity, CORBA::SystemException) 
 {
 
     /*
@@ -255,9 +246,9 @@ void ${className}::deallocateCapacity(const CF::Properties& capacities)
 
 
 /*{% if component is executabledevice %}*/
-    if (!hasRunningResources()) {
+    //if (!hasRunningResources()) {
         attemptToUnprogramParent();
-    }
+    //}
 /*{% else %}*/
     attemptToUnprogramParent();
 /*{% endif %}*/
@@ -279,9 +270,9 @@ void ${className}::hwLoadRequest(CF::Properties& request) {
 }
 
 /*{% if component is executabledevice %}*/
-Resource_impl* ${className}::generateResource(int argc, char* argv[], ConstructorPtr resourceEntryPoint, const char* libName) 
+/*ResourceComponent* ${className}::generateResource(int argc, char* argv[], ConstructorPtr resourceEntryPoint, const char* libName) 
 {
-    return resourceEntryPoint(argc, argv, this/*, customArg1, customArg2*/);
-}
+    return resourceEntryPoint(argc, argv, this, customArg1, customArg2);
+}*/
 /*{% endif %}*/
 /*{% endif %}*/

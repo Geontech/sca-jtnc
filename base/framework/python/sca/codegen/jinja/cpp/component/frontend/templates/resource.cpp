@@ -2,7 +2,7 @@
 //% extends "pull/resource.cpp"
 
 /*{% block updateUsageState %}*/
-/*{%   for sc in component.superclasses if sc.name == "Device_impl" %}*/
+/*{%   for sc in component.superclasses if sc.name == "DeviceComponent" %}*/
 ${super()}
 /*{%-  endfor %}*/
 /*{% endblock %}*/

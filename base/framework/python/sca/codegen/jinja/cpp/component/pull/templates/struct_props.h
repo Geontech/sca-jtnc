@@ -15,7 +15,7 @@
 
 /*{% block includes %}*/
 #include <sca/CorbaUtils.h>
-#include <CF/cf.h>
+#include <CF/CF.h>
 #include <sca/PropertyMap.h>
 /*{% set isSet = False %}*/
 /*{% for struct in component.structdefs %}*/

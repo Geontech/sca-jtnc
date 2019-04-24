@@ -42,7 +42,7 @@ class PersonaComponentGenerator(PullComponentGenerator):
         for superclass in component['superclasses']:
             if superclass['name'] == 'Resource_impl':
                 is_device = False
-            if superclass['name'] == 'ExecutableDevice_impl':
+            if superclass['name'] == 'ExecutableDeviceComponent':
                 is_executable = True
         
         # Append programmable files if it's a persona device

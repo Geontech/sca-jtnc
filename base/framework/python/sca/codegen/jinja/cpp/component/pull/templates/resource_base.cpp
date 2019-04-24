@@ -27,9 +27,6 @@
 /*{% if component is device %}*/
 ${className}::${className}(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl) :
     ${baseClass}(devMgr_ior, id, lbl, sftwrPrfl),
-/*{% if component is aggregatedevice %}*/
-    AggregateDevice_impl(),
-/*{% endif %}*/
     ThreadedComponent()
 {
     construct();
@@ -37,9 +34,6 @@ ${className}::${className}(char *devMgr_ior, char *id, char *lbl, char *sftwrPrf
 
 ${className}::${className}(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl, char *compDev) :
     ${baseClass}(devMgr_ior, id, lbl, sftwrPrfl, compDev),
-/*{% if component is aggregatedevice %}*/
-    AggregateDevice_impl(),
-/*{% endif %}*/
     ThreadedComponent()
 {
     construct();
@@ -47,9 +41,6 @@ ${className}::${className}(char *devMgr_ior, char *id, char *lbl, char *sftwrPrf
 
 ${className}::${className}(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl, CF::Properties capacities) :
     ${baseClass}(devMgr_ior, id, lbl, sftwrPrfl, capacities),
-/*{% if component is aggregatedevice %}*/
-    AggregateDevice_impl(),
-/*{% endif %}*/
     ThreadedComponent()
 {
     construct();
@@ -57,9 +48,6 @@ ${className}::${className}(char *devMgr_ior, char *id, char *lbl, char *sftwrPrf
 
 ${className}::${className}(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl, CF::Properties capacities, char *compDev) :
     ${baseClass}(devMgr_ior, id, lbl, sftwrPrfl, capacities, compDev),
-/*{% if component is aggregatedevice %}*/
-    AggregateDevice_impl(),
-/*{% endif %}*/
     ThreadedComponent()
 {
     construct();
@@ -79,7 +67,6 @@ ${className}::${className}(const char *uuid, const char *label) :
 
 /*{%   endif %}*/
     ${port.cppname} = new ${port.constructor};
-    ${port.cppname}->setLogger(this->_baseLog->getChildLogger("${port.name}", "ports"));
 /*{%   if port.hasDescription %}*/
     addPort("${port.name}", "${port.description}", ${port.cppname});
 /*{%   else %}*/
@@ -125,7 +112,7 @@ ${self.constructorBody()}
     These functions are generally called by the framework to perform housekeeping.
 *******************************************************************************************/
 /*{% block start %}*/
-void ${className}::start() throw (CORBA::SystemException, CF::Resource::StartError)
+void ${className}::start() throw (CORBA::SystemException, CF::ControllableInterface::StartError)
 {
     ${baseClass}::start();
     ThreadedComponent::startThread();
@@ -133,11 +120,11 @@ void ${className}::start() throw (CORBA::SystemException, CF::Resource::StartErr
 /*{% endblock %}*/
 
 /*{% block stop %}*/
-void ${className}::stop() throw (CORBA::SystemException, CF::Resource::StopError)
+void ${className}::stop() throw (CORBA::SystemException, CF::ControllableInterface::StopError)
 {
     ${baseClass}::stop();
     if (!ThreadedComponent::stopThread()) {
-        throw CF::Resource::StopError(CF::CF_NOTSET, "Processing thread did not die");
+        throw CF::ControllableInterface::StopError(CF::CF_NOTSET, "Processing thread did not die");
     }
 }
 /*{% endblock %}*/
@@ -148,7 +135,7 @@ void ${className}::releaseObject() throw (CORBA::SystemException, CF::LifeCycle:
     // This function clears the ${artifactType} running condition so main shuts down everything
     try {
         stop();
-    } catch (CF::Resource::StopError& ex) {
+    } catch (CF::ControllableInterface::StopError& ex) {
         // TODO - this should probably be logged instead of ignored
     }
 

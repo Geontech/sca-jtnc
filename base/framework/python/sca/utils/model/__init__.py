@@ -92,7 +92,7 @@ def _convertType(propType, val):
     Convert value from string form to the appropriate numeric type. 
     '''
      
-    val = val.valueOf_
+    val = val
     if propType in ['long', 'longlong', 'octet', 'short', 'ulong', 'ulonglong', 'ushort']: 
         # If value contains an x, it is a hex value (base 16)
         if val.find('x') != -1:

@@ -29,7 +29,7 @@ m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 #{% block pkgConfigPath %}
 #{% endblock %}
 #{% block projectDeps %}
-PKG_CHECK_MODULES([PROJECTDEPS], [sca >= {{versions.sca}} omniORB4 >= {{versions.omniORB4}}#{% endblock %}])
+PKG_CHECK_MODULES([PROJECTDEPS], [sca >= {{versions.sca}} bulkio >= {{versions.bulkio}} omniORB4 >= {{versions.omniORB4}}#{% endblock %}])
 #{% block interfaceDeps %}
 #{% if component.interfacedeps %}
 PKG_CHECK_MODULES([INTERFACEDEPS], [{{component.interfacedeps|join(', ')}}])

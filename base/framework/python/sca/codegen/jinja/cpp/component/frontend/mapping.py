@@ -47,11 +47,11 @@ class FrontendComponentMapper(PullComponentMapper):
         # Only plain devices are supported for FRONTEND
         if softpkg.type() == ComponentTypes.DEVICE:
             deviceinfo = FrontendComponentMapper.getImplementedInterfaces(softpkg)
-            # If this device is any type of tuner, replace the Device_impl base
+            # If this device is any type of tuner, replace the DeviceComponent base
             # class with the FRONTEND-specific tuner device class
             if 'FrontendTuner' in deviceinfo:
                 for parent in classes:
-                    if parent['name'] == 'Device_impl':
+                    if parent['name'] == 'DeviceComponent':
                         parent['name'] = 'frontend::FrontendTunerDevice<frontend_tuner_status_struct_struct>'
                         parent['header'] = '<frontend/frontend.h>'
 

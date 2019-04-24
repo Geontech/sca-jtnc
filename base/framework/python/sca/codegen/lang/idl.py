@@ -1,5 +1,5 @@
 import os
-from sca.utils.sca import importIDL
+from sca.utils.verifyspec import importIDL
 from sca.utils.idllib import IDLLibrary
 
 from sca.codegen.utils import strenum

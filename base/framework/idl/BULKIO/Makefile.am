@@ -75,6 +75,8 @@ BUILT_SOURCES =	bio_dataBitSK.cpp \
 
 CLEANFILES = $(BUILT_SOURCES)
 
+pkgconfigdir = $(libdir)/pkgconfig
+dist_pkgconfig_DATA = bulkioInterfaces.pc
 
 bulkioheaderdir = $(pkgincludedir)/BULKIO
 dist_bulkioheader_HEADERS = bio_dataBit.h bio_dataExt.h bio_dataDouble.h bio_dataFloat.h bio_dataLongLong.h bio_dataSDDS.h bio_dataUlong.h bio_dataUshort.h bio_dataXML.h bio_updateSRI.h bio_dataChar.h bio_dataFile.h bio_dataLong.h bio_dataOctet.h bio_dataShort.h bio_dataUlongLong.h bio_dataVITA49.h bio_runtimeStats.h bulkioDataTypes.h

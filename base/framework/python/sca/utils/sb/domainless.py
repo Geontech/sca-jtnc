@@ -720,7 +720,7 @@ def loadSADFile(filename, props={}):
         log.debug("Creating start order for: %s", filename )
         startorder={}
         for c in componentPlacements:
-            log.debug("COMPONENT PLACEMENT component instantiation id '%s'", c.get_componentinstantiation()[0].id_)
+            log.debug("COMPONENT PLACEMENT component instantiation id '%s'", c.get_componentinstantiation()[0]._id)
             seq = None
             try:
                 seq = c.get_componentinstantiation()[0].get_startorder()
@@ -739,14 +739,14 @@ def loadSADFile(filename, props={}):
         configurable = {}
         for component in ordered_placements:
             log.debug("COMPONENT PLACEMENT component spd file id '%s'", component.componentfileref.refid)
-            log.debug("COMPONENT PLACEMENT component instantiation id '%s'", component.get_componentinstantiation()[0].id_)
+            log.debug("COMPONENT PLACEMENT component instantiation id '%s'", component.get_componentinstantiation()[0]._id)
             log.debug("COMPONENT PLACEMENT component startorder '%s'", component.get_componentinstantiation()[0].get_startorder())
             log.debug("COMPONENT PLACEMENT component name '%s'", component.get_componentinstantiation()[0].get_usagename())
             # If component has a valid SPD file (isKickable), launch it
             refid = component.componentfileref.refid
             if validRequestedComponents.has_key(refid):
                 instanceName = component.get_componentinstantiation()[0].get_usagename()
-                instanceID = component.get_componentinstantiation()[0].id_ + waveform_modifier
+                instanceID = component.get_componentinstantiation()[0]._id + waveform_modifier
                 log.debug("launching component '%s'", instanceName)
                 properties=component.get_componentinstantiation()[0].get_componentproperties()
                 #simples
@@ -890,7 +890,7 @@ def loadSADFile(filename, props={}):
             assemblyController = False
             sandboxComponent = None
             if validRequestedComponents.has_key(refid):
-                instanceID = component.get_componentinstantiation()[0].id_ + waveform_modifier
+                instanceID = component.get_componentinstantiation()[0]._id + waveform_modifier
                 componentProps = None
                 if len(launchedComponents) > 0:
                     for comp in launchedComponents:

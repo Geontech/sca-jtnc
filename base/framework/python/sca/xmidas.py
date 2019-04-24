@@ -66,7 +66,7 @@ except ImportError:
                 self.__controlpanel = controlpanel
                 self.__component = component
                 self.__property = property
-                self.__reslabel = ResourceControlPanel.RES_PREFIX + self.__property.id_
+                self.__reslabel = ResourceControlPanel.RES_PREFIX + self.__property._id
                 # X-MIDAS doesn't like certain characters in result labels
                 self.__reslabel = self.__reslabel.replace("-", "_")
                 self.__reslabel = self.__reslabel.replace(":", "_")
@@ -77,7 +77,7 @@ except ImportError:
 
                 self.__name = self.__property.name
                 if self.__name is None:
-                    self.__name = self.__property.id_
+                    self.__name = self.__property._id
 
                 if self.__property.isWritable():
                     if self.__property.type_ in ("double"):
@@ -118,10 +118,10 @@ except ImportError:
                 self.configure(self.value)
 
             def configure(self, v):
-                self.__component.configure([CF.DataType(id=self.__property.id_, value=any.to_any(v))])
+                self.__component.configure([CF.DataType(id=self.__property._id, value=any.to_any(v))])
 
             def query(self, v):
-                val = self.__component.query([CF.DataType(id=self.__property.id_, value=any.to_any(None))])
+                val = self.__component.query([CF.DataType(id=self.__property._id, value=any.to_any(None))])
                 return any.from_any(val[0].value)
 
             def set_value(self, v):
@@ -155,7 +155,7 @@ except ImportError:
                 attr = getattr(type(self._component), name)
                 if isinstance(attr, simple_property) and (attr.isConfigurable() or attr.isQueryable()):
                     binding = ResourceControlPanel._WidgetPropertyBinding(self, self._component, attr)
-                    self._widgetBindings[attr.id_] = binding
+                    self._widgetBindings[attr._id] = binding
 
         def _resourceControl(self, v):
             if v == 1:
