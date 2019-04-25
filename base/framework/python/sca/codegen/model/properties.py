@@ -162,7 +162,6 @@ class StructProperty(Property, _Struct, _Single):
 
     def fields(self):
         f = [SimpleProperty(s) for s in self.xml.simple]
-        #f += [SimpleSequenceProperty(s) for s in self.xml.simplesequence]
         return f
 
     def hasValue(self):
@@ -196,7 +195,6 @@ class StructSequenceProperty(Property, _Struct, _Sequence):
     def mapvalue_(self, base, mapping, structval):
         value = base.copy()
         value.update((v.refid, v.value) for v in structval.simpleref)
-        value.update((v.refid, v.values.value) for v in structval.simplesequenceref)
         return value
 
 def parse(prfFile):
