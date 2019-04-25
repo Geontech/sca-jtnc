@@ -134,7 +134,9 @@ class SimpleProperty(Property, _Simple, _Single):
         return self.xml.value is not None
 
     def value(self):
-        return self.xml.value
+        if self.hasValue():
+            return self.xml.value.get_valueOf_()
+        return None
 
     def hasEnumerations(self):
         return bool(self.xml.enumerations)
@@ -165,7 +167,7 @@ class StructProperty(Property, _Struct, _Single):
 
     def hasValue(self):
         for field in self.fields():
-            if field.value is not None:
+            if field.hasValue():
                 return True
         return False
 
