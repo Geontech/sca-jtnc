@@ -119,11 +119,11 @@ def _from_ossie_interface(ossie_interface):
     # Iterate over inherited to verify they're valid.
     inherited_repids = []
     for inherited in ossie_interface.get_inheritsinterface():
-        repid = inherited.get_repid()
-        if not _filter_repid(repid):
-            inherited_repids.append(repid)
+        i_repid = inherited.get_repid()
+        if not _filter_repid(i_repid):
+            inherited_repids.append(i_repid)
         else:
-            raise UnsupportedInterface('Unsupported inherited OSSIE interface: %s' % repid)
+            raise UnsupportedInterface('Unsupported inherited OSSIE interface: %s' % i_repid)
 
     sca_interface = _sca_interface(
         repid            = repid,
