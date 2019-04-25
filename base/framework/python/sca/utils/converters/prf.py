@@ -373,4 +373,5 @@ def _add_rh_structsequence(xml, rh_structseq):
                     )
                 )
         sca_structseq.add_structvalue(sca_sv)
+    xml.add_struct(structseq_ref)
     xml.add_structsequence(sca_structseq)
