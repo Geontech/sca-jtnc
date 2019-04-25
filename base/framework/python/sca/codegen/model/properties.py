@@ -173,6 +173,9 @@ class StructProperty(Property, _Struct, _Single):
     def value(self):
         return dict((s.name(), s.value()) for s in self.fields())
 
+class MissingStructDefinition(Exception):
+    pass
+
 class StructSequenceProperty(Property, _Struct, _Sequence):
     def type(self):
         return 'structsequence'
@@ -181,7 +184,7 @@ class StructSequenceProperty(Property, _Struct, _Sequence):
         for _struct in self.xml.parent_object_.get_struct():
             if self.xml.get_structrefid() == _struct.get_id():
                 return StructProperty(_struct)
-        return StructProperty(self.xml.struct)
+        raise MissingStructDefinition('Could not find referenced struct ID: %s' % self.xml.get_structrefid())
 
     def hasValue(self):
         return len(self.xml.structvalue) > 0
