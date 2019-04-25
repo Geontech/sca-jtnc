@@ -16,10 +16,27 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program.  If not, see http://www.gnu.org/licenses/.
 #
+import logging
+import re
 
-from .spd     import convert as spd
-from .scd     import convert as scd
-from .prf     import convert as prf
-from .wavedev import convert as wavedev
+logging.basicConfig(level=logging.INFO)
+log = logging.getLogger(__name__)
 
-__all__ = ['spd', 'scd', 'prf', 'wavedev']
+def convert(wavedev_path):
+    '''
+    "Converts" a .wavedev file to SCA codegen compliance
+    '''
+    content = None
+    with open(wavedev_path, 'r') as f:
+        content = f.read()
+    
+    FINDREPLACE_LIST = [
+        ( re.compile(r'redhawk\.codegen\.jinja', re.M), r'sca.codegen.jinja' ),
+        ( re.compile(r'gov\.redhawk\.ide\.codegen', re.M), r'gov.sca.ide.codegen' )
+    ]
+    for fr in FINDREPLACE_LIST:
+        tem = re.subn(fr[0], fr[1], content)
+        content = tem[0]
+    
+    with open(wavedev_path, 'w') as f:
+        f.write(content)

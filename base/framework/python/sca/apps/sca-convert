@@ -23,9 +23,10 @@ import re
 import shutil
 import sys
 
-from sca.utils.converters import spd as convert_spd
-from sca.utils.converters import scd as convert_scd
-from sca.utils.converters import prf as convert_prf
+from sca.utils.converters import spd     as convert_spd
+from sca.utils.converters import scd     as convert_scd
+from sca.utils.converters import prf     as convert_prf
+from sca.utils.converters import wavedev as convert_wavedev
 
 # Various exit codes
 EXIT_OKAY = 0
@@ -63,6 +64,10 @@ def convert(rh_wavedev_path, output_path):
     _log.debug('Finished PRF')
 
     # Output all files.
+    output_wavedev_path = os.path.join(output_path, wavedev_fn)
+    convert_wavedev(output_wavedev_path)
+    _log.info('Wrote: %s' % output_wavedev_path)
+
     output_spd_path = os.path.join(output_path, spd_fn)
     _clean_export(output_spd_path, sca_spd)
     _log.info('Wrote: %s' % output_spd_path)
