@@ -153,7 +153,7 @@ class SimpleSequenceProperty(Property, _Simple, _Sequence):
 
     def value(self):
         if self.hasValue():
-            return self.xml.values.value
+            return [v.get_valueOf_() for v in self.xml.values.get_value()]
         return None
 
 class StructProperty(Property, _Struct, _Single):
