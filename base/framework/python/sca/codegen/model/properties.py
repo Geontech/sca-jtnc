@@ -46,7 +46,9 @@ class Property(object):
         return self.xml.description is not None
 
     def description(self):
-        return self.xml.description
+        if self.hasDescription():
+            return self.xml.description.get_valueOf_()
+        return None
 
     def isConfigure(self):
         return Kinds.CONFIGURE in self.kinds()
