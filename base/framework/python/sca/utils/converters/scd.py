@@ -44,15 +44,15 @@ def convert(ossie_scd):
     componenttype = ossie_scd.get_componenttype()
     interface_map = None
     if componenttype   == 'resource':         # REDHAWK Component
-        _set_component_repid_type(xml, _SCA_REPID_RESOURCE_COMPONENT)
+        _set_component_repid_type(xml, _SCA_REPID_RESOURCE_COMPONENT, componenttype)
         interface_map = _make_repid_interface_map(ossie_scd, _SCA_RESOURCE_COMPONENT)
 
     elif componenttype == 'device':           # REDHAWK Device
-        _set_component_repid_type(xml, _SCA_REPID_DEVICE_COMPONENT)
+        _set_component_repid_type(xml, _SCA_REPID_DEVICE_COMPONENT, componenttype)
         interface_map = _make_repid_interface_map(ossie_scd, _SCA_DEVICE_COMPONENT)
 
     elif componenttype == 'executabledevice': # REDHAWK Executable Device
-        _set_component_repid_type(xml, _SCA_REPID_EXECUTABLE_DEVICE_COMPONENT)
+        _set_component_repid_type(xml, _SCA_REPID_EXECUTABLE_DEVICE_COMPONENT, componenttype)
         interface_map = _make_repid_interface_map(ossie_scd, _SCA_EXECUTABLE_DEVICE_COMPONENT)
 
     else:
@@ -159,11 +159,16 @@ def _supportsname_from(repid):
     '''
     return _name_from(repid)
 
-def _componenttype_from(repid):
+def _componenttype_from(componenttype=None, repid=None):
     '''
     Pulls the expected 'componenttype' from a given repid
     '''
-    return scd.componenttype(valueOf_=_name_from(repid).lower())
+    val = None
+    if componenttype:
+        val = componenttype
+    elif repid:
+        val = _name_from(repid).lower()
+    return scd.componenttype(valueOf_=val)
 
 def _filter_repid(repid):
     '''
@@ -189,11 +194,11 @@ def _filter_port_repid(repid):
     result = result or repid.startswith('IDL:FRONTEND/')
     return result
 
-def _set_component_repid_type(xml, repid):
+def _set_component_repid_type(xml, repid, type_=None):
     '''
     Configures the componentrepid repid and componenttype valueOf_ to repid
     '''
-    xml.set_componenttype(_componenttype_from(repid))
+    xml.set_componenttype(_componenttype_from(componenttype=type_, repid=repid))
     xml.set_componentrepid(scd.componentrepid(repid))
 
 def _make_repid_interface_map(ossie_scd, sca_list):
