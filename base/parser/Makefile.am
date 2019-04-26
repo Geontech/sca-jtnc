@@ -21,8 +21,8 @@
 # This library is a stub to allow older code to link against it, but does not
 # provide any functionality. May be removed entirely prior to 1.9 release.
 
-lib_LTLIBRARIES = libossieparser.la
-libossieparser_la_SOURCES = stub.cpp
+lib_LTLIBRARIES = libscaparser.la
+libscaparser_la_SOURCES = stub.cpp
 
-libossieparser_la_CXXFLAGS = -Wall
-libossieparser_la_LDFLAGS = -Wall -version-info $(LIBOSSIEPARSER_VERSION_INFO)
+libscaparser_la_CXXFLAGS = -Wall
+libscaparser_la_LDFLAGS = -Wall -version-info $(LIBSCAPARSER_VERSION_INFO)

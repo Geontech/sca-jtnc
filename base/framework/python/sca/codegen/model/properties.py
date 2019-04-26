@@ -46,7 +46,9 @@ class Property(object):
         return self.xml.description is not None
 
     def description(self):
-        return self.xml.description
+        if self.hasDescription():
+            return self.xml.description.get_valueOf_()
+        return None
 
     def isConfigure(self):
         return Kinds.CONFIGURE in self.kinds()
@@ -132,7 +134,9 @@ class SimpleProperty(Property, _Simple, _Single):
         return self.xml.value is not None
 
     def value(self):
-        return self.xml.value
+        if self.hasValue():
+            return self.xml.value.get_valueOf_()
+        return None
 
     def hasEnumerations(self):
         return bool(self.xml.enumerations)
@@ -149,7 +153,7 @@ class SimpleSequenceProperty(Property, _Simple, _Sequence):
 
     def value(self):
         if self.hasValue():
-            return self.xml.values.value
+            return [v.get_valueOf_() for v in self.xml.values.get_value()]
         return None
 
 class StructProperty(Property, _Struct, _Single):
@@ -158,17 +162,19 @@ class StructProperty(Property, _Struct, _Single):
 
     def fields(self):
         f = [SimpleProperty(s) for s in self.xml.simple]
-        #f += [SimpleSequenceProperty(s) for s in self.xml.simplesequence]
         return f
 
     def hasValue(self):
         for field in self.fields():
-            if field.value is not None:
+            if field.hasValue():
                 return True
         return False
 
     def value(self):
         return dict((s.name(), s.value()) for s in self.fields())
+
+class MissingStructDefinition(Exception):
+    pass
 
 class StructSequenceProperty(Property, _Struct, _Sequence):
     def type(self):
@@ -178,7 +184,7 @@ class StructSequenceProperty(Property, _Struct, _Sequence):
         for _struct in self.xml.parent_object_.get_struct():
             if self.xml.get_structrefid() == _struct.get_id():
                 return StructProperty(_struct)
-        return StructProperty(self.xml.struct)
+        raise MissingStructDefinition('Could not find referenced struct ID: %s' % self.xml.get_structrefid())
 
     def hasValue(self):
         return len(self.xml.structvalue) > 0
@@ -192,7 +198,6 @@ class StructSequenceProperty(Property, _Struct, _Sequence):
     def mapvalue_(self, base, mapping, structval):
         value = base.copy()
         value.update((v.refid, v.value) for v in structval.simpleref)
-        #value.update((v.refid, v.values.value) for v in structval.simplesequenceref)
         return value
 
 def parse(prfFile):

@@ -44,8 +44,7 @@ TemplateSetup = {
     "persona"  : ( [ {"cpp": "sca.codegen.jinja.cpp.component.persona"} ], "Generate a persona device" ),
     "pgdevice" : ( [ { "cpp": "sca.codegen.jinja.cpp.component.programmable"} ], "Generate programmable device"),
     "component" : ( [ {"cpp": "sca.codegen.jinja.cpp.component.pull"}, {"python": "sca.codegen.jinja.python.component.pull"} ], "Generate a component or device" ),
-    "device" : ( [ {"cpp": "sca.codegen.jinja.cpp.component.pull"}, {"python": "sca.codegen.jinja.python.component.pull"} ], "Generate a component or device" ),
-    "service" : ([ {"cpp": "sca.codegen.jinja.cpp.service.pull"}, {"python": "sca.codegen.jinja.python.service.pull"}  ], "Generate a service" )
+    "device" : ( [ {"cpp": "sca.codegen.jinja.cpp.component.pull"}, {"python": "sca.codegen.jinja.python.component.pull"} ], "Generate a component or device" )
 }
 
 usage = """%s [options] <SPD file> [filenames...]
@@ -81,7 +80,7 @@ Function = strenum('list', 'generate')
 def recoverLanguage(template):
     if template==None:
         return None
-    return template[len('redhawk.codegen.jinja.'):].split('.')[0]
+    return template[len('sca.codegen.jinja.'):].split('.')[0]
 
 if __name__ == '__main__':
 
@@ -151,6 +150,7 @@ if __name__ == '__main__':
             overrides.properties[name] = value
         elif key == '--version':
             from sca.codegen import versions
+
             print 'SCA-JTNC Code Generator', versions.codegen
             sys.exit(0)
 
