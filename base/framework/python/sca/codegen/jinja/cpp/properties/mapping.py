@@ -75,7 +75,7 @@ class CppPropertyMapper(PropertyMapper):
             if prop.type() == 'utctime':
                 _prepend = 'sca::time::utils::convert("'
                 _append = '")'
-            cppprop['cppvalues'] = [_prepend+cpp.literal(v.valueOf_, 
+            cppprop['cppvalues'] = [_prepend+cpp.literal(v, 
                                                 prop.type(), 
                                                 prop.isComplex())+_append
                                     for v in prop.value()]
