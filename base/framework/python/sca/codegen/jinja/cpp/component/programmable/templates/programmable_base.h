@@ -260,20 +260,54 @@ class ${className} : public ${baseClass}
                 CF::InvalidState, 
                 CORBA::SystemException ) 
         {
-            /*bool isSharedLibrary = (loadKind == CF::LoadableDevice::SHARED_LIBRARY);
+            /*bool isSharedLibrary = (loadKind == CF::LoadableInterface::SHARED_LIBRARY);
             bool existsOnDevFS   = _deviceManager->fileSys()->exists(fileName);
             
             // For ${executeType} shared librariess that already reside on the dev file 
             // system, use the dev filesystem to copy into cache
             if (isSharedLibrary && existsOnDevFS) { 
-                fs = _deviceManager->fileSys();;
-                RH_DEBUG(this->_deviceLog, __FUNCTION__ << 
-                    ": File-system switched to dev");
+                fs = _deviceManager->fileSys();
             }*/
 
             ${baseClass}::load(fs, fileName, loadKind);
         }
         
+        void cleanupComponent(ComponentEntry* component)
+        {
+            // Only if this is the last reference to the servant can we safely unload
+            // its shared libraries, because we need to know that it has been deleted
+            if (component->servant->_refcount_value() == 1) {
+                component->servant->_remove_ref();
+                std::cout<<"Unloading bundle " << component->bundle->name()<<std::endl;
+                component->bundle->unload();
+                delete component;
+                return;
+            }
+
+            // Try again after a small delay
+            boost::system_time when = boost::get_system_time() + boost::posix_time::microseconds(125);
+            executorService.schedule(when, &ProgrammableDevice_prog_base::cleanupComponent, this, component);
+        };
+
+        void componentReleased(ResourceComponent* component)
+        {
+            std::cout<<"Component released: " << component->getIdentifier()<<std::endl;
+            typename ComponentTable::iterator entry;
+            for (entry = activeComponents.begin(); entry != activeComponents.end(); ++entry) {
+                if (entry->second->servant == component) {
+                    break;
+                }
+            }
+
+            if (entry == activeComponents.end()) {
+                std::cout<<"Received release notification from unmanaged component "<< component->getIdentifier()<<std::endl;
+                return;
+            }
+
+            executorService.execute(&ProgrammableDevice_prog_base::cleanupComponent, this, entry->second);
+            activeComponents.erase(entry);
+        };
+
         CF::ExecutableInterface::ExecutionID_Type* execute (
                         const char*             name, 
                         const CF::Properties&   options, 
@@ -288,43 +322,47 @@ class ${className} : public ${baseClass}
                 CORBA::SystemException )
         {
             // Initialize local variables
-            ${executeClass}* ${executeType} = NULL; 
-            std::string ${executeType}Id;
+            DeviceComponent* persona = NULL; 
+            std::string personaId;
 
             // Attempt to instantiate the object contained in the shared library
             std::string string_name(name);
             //string_name = std::getenv("SCAROOT")+std::string("/dev")+string_name;
-            string_name = std::string("/dev")+string_name;
-            // Attempt to instantiate the object contained in the shared library
-            ${executeType} = instantiate${executeType.capitalize()}(string_name.c_str(), options, parameters);
-            if (${executeType} == NULL) {
+            string_name = std::string("/sdr/dev")+string_name;
+            persona = instantiatePersona(string_name.c_str(), options, parameters);
+            if (persona == NULL) {
                 throw (CF::ExecutableInterface::ExecuteFail());
             }
 
             // Grab the name from the instantiated object 
-            ${executeType}Id = sca::corba::returnString(${executeType}->identifier());
+            personaId = sca::corba::returnString(persona->identifier());
             
             // Save off the name-pid and name-object mappings
-            _${executeType}Map[${executeType}Id] = ${executeType};
-            _processMap[++_processIdIncrement] = ${executeType}Id;
+            _personaMap[personaId] = persona;
+            _processMap[++_processIdIncrement] = personaId;
 
+            persona->addReleaseListener(this, &ProgrammableDevice_prog_base::componentReleased);
 
             CF::ExecutableInterface::ExecutionID_Type_var retval = new CF::ExecutableInterface::ExecutionID_Type();
             retval->threadId = (CORBA::ULongLong) 0;
             retval->processId = (CORBA::ULongLong) _processIdIncrement;
             retval->processCollocation = CORBA::string_dup("none");
+            /*CF::ULongSeq_var cores = new CF::ULongSeq;
+            cores->length(0);
+            retval->cores = cores;*/
             retval->cores.length(0);
 
             return retval._retn();
-        }
-        
-        struct DeviceEntry {
+        };
+
+        /*struct DeviceEntry {
             //boost::scoped_ptr<ModuleBundle> bundle;
             DeviceComponent* servant;
         };
         typedef std::map<int,DeviceEntry*> ComponentTable;
-        ComponentTable activeComponents;
+        ComponentTable activeComponents;*/
         int counter;
+        sca::ExecutorService executorService;
 
         void terminate (CF::ExecutableInterface::ExecutionID_Type exec_arg)
             throw (
@@ -341,7 +379,7 @@ class ${className} : public ${baseClass}
             processIter = _processMap.find(exec_arg.processId);
             if (processIter != _processMap.end()) {
 
-                /// Search for the ${executeType} that related to the found ${executeType}Id
+                // Search for the ${executeType} that related to the found ${executeType}Id
                 ${executeType}Iter = _${executeType}Map.find(processIter->second);
                 if (${executeType}Iter != _${executeType}Map.end()) {
                     try {
@@ -467,7 +505,7 @@ class ${className} : public ${baseClass}
                             (*cfPropsPtr)[iv].value >>= loadRequestsToRemove[iv];
                         }
                     } else {
-                        std::cout<<"Unable to convert HW_LOAD_REQUEST property"<<std::endl;;
+                        std::cout<<"Unable to convert HW_LOAD_REQUEST property"<<std::endl;
                         continue;
                     }
                     
@@ -508,8 +546,9 @@ class ${className} : public ${baseClass}
 
             // Clean up all children that were executed
             for (${executeType}Iter = _${executeType}Map.begin(); ${executeType}Iter != _${executeType}Map.end(); ${executeType}Iter++) {
-                delete ${executeType}Iter->second;
-                ${executeType}Iter->second = NULL;
+                ${executeType}Iter->second->releaseObject();
+                //delete ${executeType}Iter->second;
+                //${executeType}Iter->second = NULL;
             }
 
             ${baseClass}::releaseObject();

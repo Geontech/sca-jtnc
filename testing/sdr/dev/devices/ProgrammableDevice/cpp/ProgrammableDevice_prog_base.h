@@ -189,7 +189,7 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
             _personaMap.clear();
             _processMap.clear();
             _processIdIncrement = 0;
-            counter=0;
+            counter = 0;
 
             _defaultHwLoadStatuses.clear();
             _defaultHwLoadStatuses.resize(1);
@@ -209,30 +209,17 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
                 CF::InvalidState, 
                 CORBA::SystemException ) 
         {
-            //bool isSharedLibrary = (loadKind == CF::LoadableInterface::SHARED_LIBRARY);
-            //bool existsOnDevFS   = _deviceManager->fileSys()->exists(fileName);
+            /*bool isSharedLibrary = (loadKind == CF::LoadableInterface::SHARED_LIBRARY);
+            bool existsOnDevFS   = _deviceManager->fileSys()->exists(fileName);
             
             // For persona shared librariess that already reside on the dev file 
             // system, use the dev filesystem to copy into cache
-            /*if (isSharedLibrary && existsOnDevFS) { 
+            if (isSharedLibrary && existsOnDevFS) { 
                 fs = _deviceManager->fileSys();
             }*/
 
             ProgrammableDevice_base::load(fs, fileName, loadKind);
         }
-        
-        /*CF::ExecutableInterface::ExecutionID_Type* execute (
-                        const char*             name, 
-                        const CF::Properties&   options, 
-                        const CF::Properties&   parameters )
-            throw (
-                CF::ExecutableInterface::ExecuteFail, 
-                CF::InvalidFileName, 
-                CF::ExecutableInterface::InvalidOptions, 
-                CF::ExecutableInterface::InvalidParameters,
-                CF::ExecutableInterface::InvalidFunction, 
-                CF::InvalidState, 
-                CORBA::SystemException );*/
 
         void cleanupComponent(ComponentEntry* component)
         {
@@ -325,9 +312,6 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
         ComponentTable activeComponents;*/
         int counter;
         sca::ExecutorService executorService;
-        
-        //void componentReleased(ResourceComponent* component);
-        //void cleanupComponent(ComponentEntry* component);
 
         void terminate (CF::ExecutableInterface::ExecutionID_Type exec_arg)
             throw (
@@ -339,12 +323,6 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
             ProcessMapIter processIter;
             PersonaMapIter personaIter;
             PersonaId personaId;
-            
-            std::cout<<"exec_arg.processId: "<<exec_arg.processId<<std::endl;
-            std::cout<<"exec_arg.threadId: "<<exec_arg.threadId<<std::endl;
-            std::cout<<"exec_arg.processCollocation: "<<exec_arg.processCollocation<<std::endl;
-            std::cout<<"exec_arg.cores: "<<exec_arg.cores.length()<<std::endl;
-            return;
 
             // Search for the personaId that related to the incoming terminate request
             processIter = _processMap.find(exec_arg.processId);
@@ -451,7 +429,6 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
             bool deallocationSuccess = false;
             std::string id;
             std::string valueStr;
-            std::string errorMsg;
             HwLoadStatusVec* statusVecPtr;
             CORBA::AnySeq* anySeqPtr;
             CF::Properties* cfPropsPtr;
@@ -841,9 +818,5 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
             return defaultProperty;
         }
 };
-
-/*template <typename HW_LOAD_REQUEST, typename HW_LOAD_STATUS>
-PREPARE_ALT_LOGGING(ProgrammableDevice_prog_base<HW_LOAD_REQUEST BOOST_PP_COMMA() 
-                                 HW_LOAD_STATUS>, ProgrammableDevice_prog_base);*/
 
 #endif
