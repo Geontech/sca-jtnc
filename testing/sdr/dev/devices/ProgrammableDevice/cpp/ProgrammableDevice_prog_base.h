@@ -221,6 +221,55 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
             ProgrammableDevice_base::load(fs, fileName, loadKind);
         }
         
+        /*CF::ExecutableInterface::ExecutionID_Type* execute (
+                        const char*             name, 
+                        const CF::Properties&   options, 
+                        const CF::Properties&   parameters )
+            throw (
+                CF::ExecutableInterface::ExecuteFail, 
+                CF::InvalidFileName, 
+                CF::ExecutableInterface::InvalidOptions, 
+                CF::ExecutableInterface::InvalidParameters,
+                CF::ExecutableInterface::InvalidFunction, 
+                CF::InvalidState, 
+                CORBA::SystemException );*/
+
+        void cleanupComponent(ComponentEntry* component)
+        {
+            // Only if this is the last reference to the servant can we safely unload
+            // its shared libraries, because we need to know that it has been deleted
+            if (component->servant->_refcount_value() == 1) {
+                component->servant->_remove_ref();
+                std::cout<<"Unloading bundle " << component->bundle->name()<<std::endl;
+                component->bundle->unload();
+                delete component;
+                return;
+            }
+
+            // Try again after a small delay
+            boost::system_time when = boost::get_system_time() + boost::posix_time::microseconds(125);
+            executorService.schedule(when, &ProgrammableDevice_prog_base::cleanupComponent, this, component);
+        };
+
+        void componentReleased(ResourceComponent* component)
+        {
+            std::cout<<"Component released: " << component->getIdentifier()<<std::endl;
+            typename ComponentTable::iterator entry;
+            for (entry = activeComponents.begin(); entry != activeComponents.end(); ++entry) {
+                if (entry->second->servant == component) {
+                    break;
+                }
+            }
+
+            if (entry == activeComponents.end()) {
+                std::cout<<"Received release notification from unmanaged component "<< component->getIdentifier()<<std::endl;
+                return;
+            }
+
+            executorService.execute(&ProgrammableDevice_prog_base::cleanupComponent, this, entry->second);
+            activeComponents.erase(entry);
+        };
+
         CF::ExecutableInterface::ExecutionID_Type* execute (
                         const char*             name, 
                         const CF::Properties&   options, 
@@ -254,6 +303,8 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
             _personaMap[personaId] = persona;
             _processMap[++_processIdIncrement] = personaId;
 
+            persona->addReleaseListener(this, &ProgrammableDevice_prog_base::componentReleased);
+
             CF::ExecutableInterface::ExecutionID_Type_var retval = new CF::ExecutableInterface::ExecutionID_Type();
             retval->threadId = (CORBA::ULongLong) 0;
             retval->processId = (CORBA::ULongLong) _processIdIncrement;
@@ -264,16 +315,20 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
             retval->cores.length(0);
 
             return retval._retn();
-        }
+        };
 
-        struct DeviceEntry {
+        /*struct DeviceEntry {
             //boost::scoped_ptr<ModuleBundle> bundle;
             DeviceComponent* servant;
         };
         typedef std::map<int,DeviceEntry*> ComponentTable;
-        ComponentTable activeComponents;
+        ComponentTable activeComponents;*/
         int counter;
+        sca::ExecutorService executorService;
         
+        //void componentReleased(ResourceComponent* component);
+        //void cleanupComponent(ComponentEntry* component);
+
         void terminate (CF::ExecutableInterface::ExecutionID_Type exec_arg)
             throw (
                 CF::InvalidState, 
@@ -462,8 +517,9 @@ class ProgrammableDevice_prog_base : public ProgrammableDevice_base
 
             // Clean up all children that were executed
             for (personaIter = _personaMap.begin(); personaIter != _personaMap.end(); personaIter++) {
-                delete personaIter->second;
-                personaIter->second = NULL;
+                personaIter->second->releaseObject();
+                //delete personaIter->second;
+                //personaIter->second = NULL;
             }
 
             ProgrammableDevice_base::releaseObject();

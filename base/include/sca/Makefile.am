@@ -46,6 +46,7 @@ pkginclude_HEADERS = AggregateDeviceComponent.h \
 			Transport.h \
 			bitops.h \
 			concurrent.h \
+			ExecutorService.h \
 			equals.h \
 			Port_impl.h \
 			PropertySet_impl.h \

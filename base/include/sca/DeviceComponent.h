@@ -43,6 +43,7 @@
 #include "sca/ResourceComponent.h"
 #include "sca/Port_impl.h"
 #include "sca/ModuleLoader.h"
+#include "sca/ExecutorService.h"
 
 #ifndef ENABLE_LOGGING
 #define ENABLE_LOGGING /* */
@@ -57,7 +58,7 @@ struct ComponentEntry {
 
 class DeviceComponent;
 
-class DeviceComponent: public virtual POA_CF::DeviceComponent, public PropertySet_impl
+class DeviceComponent: public virtual POA_CF::DeviceComponent, public ResourceComponent
 {
 public:
 
@@ -92,6 +93,7 @@ public:
     void deactivatePort (PortBase* servant);
     void setUsageState (CF::CapacityManagement::UsageType newUsageState);
     void setAdminState (CF::AdministratableInterface::AdminType new_adminState);
+    const std::string& getIdentifier() const;
 
     bool isLocked();
     bool isDisabled ();
@@ -196,9 +198,13 @@ public:
                 CF::ExecutableInterface::InvalidFunction, 
                 CF::InvalidState, 
                 CORBA::SystemException );
+    void componentReleased(ResourceComponent* component);
+    void cleanupComponent(ComponentEntry* entry);
+
 protected:
     ProcessMap      _processMap;         // Mapping of name to processId
     unsigned int    _processIdIncrement; // Used to generate unique ProcessIds
+    sca::ExecutorService executorService;
 };
 
 

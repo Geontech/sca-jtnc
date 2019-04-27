@@ -264,7 +264,8 @@ class LocalLauncher(SandboxLauncher):
                 if status > 0:
                     print 'Component %s (pid=%d) exited with status %d' % (name, pid, status)
                 elif status < 0:
-                    print 'Component %s (pid=%d) terminated with signal %d' % (name, pid, -status)
+                    #print 'Component %s (pid=%d) terminated with signal %d' % (name, pid, -status)
+                    pass
             if not self._host:
                 process.setTerminationCallback(terminate_callback)
 

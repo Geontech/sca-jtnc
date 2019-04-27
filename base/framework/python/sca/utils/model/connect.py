@@ -210,7 +210,8 @@ class ConnectionManager(object):
             usesPort = uses.getReference()
             usesPort.disconnectPort(identifier)
         except:
-            log.warn("Ignoring exception breaking connection '%s'", identifier)
+            pass
+            #log.warn("Ignoring exception breaking connection '%s'", identifier)
         omniORB.setClientCallTimeout(0)
         uses.disconnected(identifier)
         provides.disconnected(identifier)

@@ -22,6 +22,7 @@
 #ifndef __DeviceComponent_DEFINED
 #define __DeviceComponent_DEFINED
 
+#include "Component.idl"
 #include "CFDeviceAttributes.idl"
 #include "CFExecutableInterface.idl"
 #include "CFLoadableInterface.idl"
@@ -36,7 +37,7 @@
 
 module CF {
 
-   interface DeviceComponent: CF::DeviceAttributes, CF::AdministratableInterface, CF::CapacityManagement, CF::TestableInterface, CF::PropertySet, CF::PortAccessor, CF::LifeCycle, CF::ControllableInterface, CF::AggregateDeviceAttributes {
+   interface DeviceComponent: CF::DeviceAttributes, CF::AdministratableInterface, CF::CapacityManagement, CF::ResourceComponent, CF::AggregateDeviceAttributes {
    };
 
    interface ExecutableDeviceComponent: CF::ExecutableInterface, CF::LoadableInterface, CF::DeviceComponent {

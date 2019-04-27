@@ -27,7 +27,7 @@
 
 #include "sca/DeviceComponent.h"
 
-DeviceComponent::DeviceComponent (char* componentRegistry_ior, char* _id, char* _label, char* compositeDev_ior) : component_running_mutex(),
+DeviceComponent::DeviceComponent (char* componentRegistry_ior, char* _id, char* _label, char* compositeDev_ior) : ResourceComponent(_id, _label), component_running_mutex(),
     component_running(&component_running_mutex) {
     if (compositeDev_ior) {
         compDev_ior = compositeDev_ior;
@@ -35,7 +35,7 @@ DeviceComponent::DeviceComponent (char* componentRegistry_ior, char* _id, char* 
     initializeCommonAttributes(_id);
 }
 
-DeviceComponent::DeviceComponent (char* componentRegistry_ior, char* _id, char* _label, char* sftwrPrfl, char* compositeDev_ior) : component_running_mutex(),
+DeviceComponent::DeviceComponent (char* componentRegistry_ior, char* _id, char* _label, char* sftwrPrfl, char* compositeDev_ior) : ResourceComponent(_id, _label), component_running_mutex(),
     component_running(&component_running_mutex) {
     if (compositeDev_ior) {
         compDev_ior = compositeDev_ior;
@@ -43,7 +43,7 @@ DeviceComponent::DeviceComponent (char* componentRegistry_ior, char* _id, char* 
     initializeCommonAttributes(_id);
 }
 
-DeviceComponent::DeviceComponent (char* componentRegistry_ior, char* _id, char* _label, char* sftwrPrfl, CF::Properties capacities, char* compositeDev_ior) : component_running_mutex(),
+DeviceComponent::DeviceComponent (char* componentRegistry_ior, char* _id, char* _label, char* sftwrPrfl, CF::Properties capacities, char* compositeDev_ior) : ResourceComponent(_id, _label), component_running_mutex(),
     component_running(&component_running_mutex) {
     if (compositeDev_ior) {
         compDev_ior = compositeDev_ior;
@@ -51,7 +51,7 @@ DeviceComponent::DeviceComponent (char* componentRegistry_ior, char* _id, char* 
     initializeCommonAttributes(_id);
 }
 
-DeviceComponent::DeviceComponent (char* componentRegistry_ior, char* _id, char* _label, char* sftwrPrfl, CF::Properties capacities) : component_running_mutex(),
+DeviceComponent::DeviceComponent (char* componentRegistry_ior, char* _id, char* _label, char* sftwrPrfl, CF::Properties capacities) : ResourceComponent(_id, _label), component_running_mutex(),
     component_running(&component_running_mutex) {
     initializeCommonAttributes(_id);
 }
@@ -103,10 +103,14 @@ void DeviceComponent::initialize () throw (CF::LifeCycle::InitializeError, CORBA
 }
 
 void DeviceComponent::releaseObject() throw (CF::LifeCycle::ReleaseError, CORBA::SystemException) {
-    PortableServer::POA_ptr root_poa = sca::corba::RootPOA();
+    ResourceComponent::releaseObject();
+    /*PortableServer::POA_ptr root_poa = sca::corba::RootPOA();
     PortableServer::ObjectId_var oid = root_poa->servant_to_id(this);
     root_poa->deactivate_object(oid);
     component_running.signal();
+
+    _resourceReleased(this);*/
+    
 }
 
 void DeviceComponent::connectUsesPorts(const CF::PortAccessor::Connections& portConnections) throw (CF::PortAccessor::InvalidPort, CORBA::SystemException) {
@@ -410,6 +414,11 @@ void DeviceComponent::start_device(DeviceComponent::ctor_type ctor, struct sigac
     sca::corba::OrbShutdown(true);
 }
 
+const std::string& DeviceComponent::getIdentifier() const
+{
+    return _identifier;
+}
+
 void DeviceComponent::start_lib_device(DeviceComponent::ctor_type ctor, struct sigaction sa, int argc, char* argv[])
 {
     char* devMgr_ior = 0;
@@ -466,28 +475,33 @@ ExecutableDeviceComponent::ExecutableDeviceComponent(char* componentRegistry_ior
     DeviceComponent(componentRegistry_ior, _id, _label, compositeDev_ior)
 {
     _processIdIncrement = 0;
+    executorService.start();
 };
 
 ExecutableDeviceComponent::ExecutableDeviceComponent(char* componentRegistry_ior, char* _id, char* _label, char* sftwrPrfl, char* compositeDev_ior) :
     DeviceComponent(componentRegistry_ior, _id, _label, sftwrPrfl, compositeDev_ior)
 {
     _processIdIncrement = 0;
+    executorService.start();
 };
 
 ExecutableDeviceComponent::ExecutableDeviceComponent(char* componentRegistry_ior, char* _id, char* _label, char* sftwrPrfl, CF::Properties capacities) :
     DeviceComponent(componentRegistry_ior, _id, _label, sftwrPrfl, capacities)
 {
     _processIdIncrement = 0;
+    executorService.start();
 };
 
 ExecutableDeviceComponent::ExecutableDeviceComponent(char* componentRegistry_ior, char* _id, char* _label, char* sftwrPrfl, CF::Properties capacities, char* compositeDev_ior) :
     DeviceComponent(componentRegistry_ior, _id, _label, sftwrPrfl, capacities, compositeDev_ior)
 {
     _processIdIncrement = 0;
+    executorService.start();
 };
 
 ExecutableDeviceComponent::~ExecutableDeviceComponent()
 {
+    executorService.stop();
 };
 
 void ExecutableDeviceComponent::unload (const char* fileName) throw (CF::InvalidFileName, CF::InvalidState, CORBA::SystemException)
@@ -630,6 +644,8 @@ CF::ExecutableInterface::ExecutionID_Type* ExecutableDeviceComponent::execute (
     int thread_id = ++_processIdIncrement;
     activeComponents[thread_id] = component;
 
+    servant->addReleaseListener(this, &ExecutableDeviceComponent::componentReleased);
+
     CF::ExecutableInterface::ExecutionID_Type_var retval = new CF::ExecutableInterface::ExecutionID_Type();
     retval->threadId = (CORBA::ULongLong) 0;
     retval->processId = (CORBA::ULongLong) _processIdIncrement;
@@ -639,5 +655,37 @@ CF::ExecutableInterface::ExecutionID_Type* ExecutableDeviceComponent::execute (
     return retval._retn();
 }
 
+void ExecutableDeviceComponent::componentReleased(ResourceComponent* component)
+{
+    ComponentTable::iterator entry;
+    for (entry = activeComponents.begin(); entry != activeComponents.end(); ++entry) {
+        if (entry->second->servant == component) {
+            break;
+        }
+    }
 
+    if (entry == activeComponents.end()) {
+        std::cout<<"Received release notification from unmanaged component "<< component->getIdentifier()<<std::endl;
+        return;
+    }
+
+    executorService.execute(&ExecutableDeviceComponent::cleanupComponent, this, entry->second);
+    activeComponents.erase(entry);
+}
+
+void ExecutableDeviceComponent::cleanupComponent(ComponentEntry* component)
+{
+    // Only if this is the last reference to the servant can we safely unload
+    // its shared libraries, because we need to know that it has been deleted
+    if (component->servant->_refcount_value() == 1) {
+        component->servant->_remove_ref();
+        component->bundle->unload();
+        delete component;
+        return;
+    }
+
+    // Try again after a small delay
+    boost::system_time when = boost::get_system_time() + boost::posix_time::microseconds(125);
+    executorService.schedule(when, &ExecutableDeviceComponent::cleanupComponent, this, component);
+}
 

@@ -1775,7 +1775,7 @@ class DataSink(_SinkBase):
       To use a different sink for XML data, assign the new class to sinkXmlClass
     """
     def __init__(self, sinkClass=bulkio_data_helpers.ArraySink, sinkXmlClass=bulkio_data_helpers.XmlArraySink):
-        warnings.warn("DataSink is deprecated, use StreamSink instead", DeprecationWarning)
+        #warnings.warn("DataSink is deprecated, use StreamSink instead", DeprecationWarning)
         fmts=['char','short','long','float','double','longlong','octet','ushort', 'ulong', 'ulonglong', 'file','xml' ]
         _SinkBase.__init__(self, formats=fmts)
         self.sinkClass = sinkClass
