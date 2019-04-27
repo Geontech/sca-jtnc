@@ -1120,7 +1120,7 @@ class simple(GeneratedsSuper):
         elif nodeName_ == 'value':
             obj_ = value.factory(parent_object_=self)
             obj_.build(child_)
-            self.value = obj_.valueOf_
+            self.value = obj_
             obj_.original_tagname_ = 'value'
         elif nodeName_ == 'units':
             obj_ = units.factory(parent_object_=self)

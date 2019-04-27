@@ -207,7 +207,7 @@ class GenericPortGenerator(CppPortGenerator):
         return (cpp.stringLiteral(name), 'this')
 
     def dependencies(self):
-        return ['<boost/thread/locks.hpp>', '<sca/Port_impl.h>', '<sca/debug.h>', cpp.idlHeader(self.idl)]
+        return ['<boost/thread/locks.hpp>', '<sca/Port_impl.h>', cpp.idlHeader(self.idl)]
 
     def loader(self):
         return jinja2.PackageLoader(__package__)
