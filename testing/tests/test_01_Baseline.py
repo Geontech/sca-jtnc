@@ -95,43 +95,57 @@ class SBTestTest(scatest.CorbaTestCase):
         pers_dev_1 = sb.launch('PersonaExecutableDevice', host=prog_dev)
         self.assertEquals(prog_dev._get_identifier(),pers_dev_1._get_compositeDevice()._get_identifier())
         self.assertEquals(len(prog_dev.ref._get_devices()), 1)
-        #pers_dev_2 = sb.launch('PersonaExecutableDevice', host=prog_dev)
-        #self.assertEquals(prog_dev._get_identifier(),pers_dev_2._get_compositeDevice()._get_identifier())
-        #self.assertEquals(len(prog_dev.ref._get_devices()), 2)
+        pers_dev_2 = sb.launch('PersonaExecutableDevice', host=prog_dev)
+        self.assertEquals(prog_dev._get_identifier(),pers_dev_2._get_compositeDevice()._get_identifier())
+        self.assertEquals(len(prog_dev.ref._get_devices()), 2)
         identifiers = []
         for _comp in prog_dev.ref._get_devices():
             identifiers.append(_comp._get_identifier())
-        #self.assertNotEqual(identifiers[0], identifiers[1])
+        self.assertNotEqual(identifiers[0], identifiers[1])
         
-        print 'prog_dev', prog_dev.ref.query([])
-        print 'pers_dev_1', pers_dev_1.ref.query([])
-        #print 'pers_dev_2', pers_dev_2.ref.query([])
+        self.assertEquals(len(prog_dev.ref.query([])), 4)
+        self.assertEquals(len(pers_dev_1.ref.query([])), 3)
+        self.assertEquals(len(pers_dev_2.ref.query([])), 3)
         comp_1 = sb.launch('alloc_shm', host=pers_dev_1)
-        print 'comp_1', comp_1.ref.query([])
+        self.assertEquals(len(comp_1.ref.query([])), 0)
 
     def test_btd(self):
         comp = sb.launch('BasicTestDevice_cpp')
-        print 'BasicTestDevice_cpp', comp.query([])
-        print 'BasicTestDevice_cpp', comp._get_identifier()
+        props = comp.query([])
+        self.assertEquals(len(props), 4)
+        prop_1 = None
+        prop_2 = None
+        prop_3 = None
+        prop_4 = None
+        for prop in props:
+            if prop.id == 'DCE:5bf37e47-afa5-4865-9653-9d427ffa55d2':
+                prop_1 = prop #33
+            elif prop.id == 'DCE:9607a8db-2ce1-4e71-9dee-9bb18377127c':
+                prop_2 = prop
+            elif prop.id == 'DCE:7aeaace8-350e-48da-8d77-f97c2e722e06':
+                prop_3 = prop
+            else:
+                prop_4 = prop
+        self.assertEquals(prop_1.value._v, 33)
+        self.assertEquals(prop_2.value._v, 45654)
+        self.assertEquals(prop_3.value._v, 0)
+        self.assertEquals(prop_4.value._v, 0)
+        self.assertNotEqual(comp._get_identifier(), None)
 
     def test_runtime(self):
-        #print dir(sb)
         comp = sb.launch('cpp_dev')
-        #print 'cpp_dev', comp.query([])
         teststring = CF.DataType(id='teststring', value=_any.to_any('foo'))
         comp.configure([teststring])
         teststring = CF.DataType(id='teststring', value=_any.to_any(None))
-        #print 'cpp_dev', comp.query([])
         retval = comp.query([teststring])
         self.assertEquals(retval[0].value._v, 'foo')
         comp.teststring = 'hello'
         retval = comp.query([teststring])
         self.assertEquals(retval[0].value._v, 'hello')
-        #snk=sb.DataSink()
         snk=sb.DataSink()
         comp.connect(snk)
         sb.start()
+        self.assertTrue(comp._get_started())
         time.sleep(2)
-        print len(snk.getData())
-        #print 'cpp_dev', comp._get_identifier()
+        self.assertTrue(len(snk.getData())>10000)
 

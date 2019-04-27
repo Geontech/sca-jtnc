@@ -37,7 +37,7 @@ with this program.  If not, see http://www.gnu.org/licenses/.
 
   <!-- execparams -->
   <simple id="DCE:9607a8db-2ce1-4e71-9dee-9bb18377127c" mode="readwrite" name="propOne" type="long">
-    <value>666</value>
+    <value>45654</value>
     <kind kindtype="configure"/>
     <kind kindtype="execparam"/>
     <action type="external"/>
