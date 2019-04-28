@@ -328,7 +328,7 @@ class ${className} : public ${baseClass}
             // Attempt to instantiate the object contained in the shared library
             std::string string_name(name);
             //string_name = std::getenv("SCAROOT")+std::string("/dev")+string_name;
-            string_name = std::string("/sdr/dev")+string_name;
+            string_name = std::string("/dev")+string_name;
             persona = instantiatePersona(string_name.c_str(), options, parameters);
             if (persona == NULL) {
                 throw (CF::ExecutableInterface::ExecuteFail());
