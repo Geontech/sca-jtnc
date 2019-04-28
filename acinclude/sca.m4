@@ -42,7 +42,7 @@ AC_DEFUN([OSSIE_SCAHOME],
 ])
 
 dnl Check that OSSIE is installed so we can compile against it
-AC_DEFUN([OSSIE_CHECK_SCA],
+AC_DEFUN([SCA_CHECK_SCA],
 [
 AC_REQUIRE([OSSIE_SCAHOME])
 AC_MSG_CHECKING([to see sca is installed])
@@ -113,7 +113,7 @@ AC_DEFUN([OSSIE_SCAROOT],
 ])
 
 dnl use SCAROOT as the default prefix unless --prefix is provided
-AC_DEFUN([OSSIE_SCAROOT_AS_PREFIX],
+AC_DEFUN([SCA_SCAROOT_AS_PREFIX],
 [
   AS_IF([test "x${prefix}" = "xNONE"],
   [
@@ -137,7 +137,7 @@ AC_MSG_RESULT($WITH_TRACE)
 AC_SUBST(WITH_TRACE)
 ])
 
-AC_DEFUN([OSSIE_ENABLE_LOG4CXX],
+AC_DEFUN([SCA_ENABLE_LOG4CXX],
 [AC_ARG_ENABLE(log4cxx, AS_HELP_STRING([--disable-log4cxx], [Disable log4cxx support]))
 if test "x$enable_log4cxx" != "xno"; then
   WITH_LOG4CXX=yes
