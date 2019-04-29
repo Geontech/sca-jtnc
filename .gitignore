@@ -20,3 +20,4 @@ depcomp
 .vscode
 autom4te.cache
 aclocal.m4
+sca.pc
