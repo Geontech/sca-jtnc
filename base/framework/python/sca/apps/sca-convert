@@ -112,7 +112,7 @@ if __name__ == '__main__':
 
     from optparse import OptionParser
     parser = OptionParser()
-    parser.usage = 'usage: %prog [options] wavedev_path output_path'
+    parser.usage = 'usage: %prog [options] wavedev_path [output_path]'
     parser.add_option('-v','--verbose',
         action='store_true',
         dest='verbose',
@@ -129,14 +129,13 @@ if __name__ == '__main__':
         _log.setLevel(logging.DEBUG)
         _log.debug('Debug output enabled')
     
-    if len(args) != 2:
-        _log.error("You must specify only a path to the project and output path")
+    if len(args) < 1:
+        _log.error("You must specify a path to the project and, optionally, an output path")
         sys.exit(EXIT_BAD_PATHS)
     
     wavedev_path = os.path.abspath(args[0])
-    output_path = os.path.abspath(args[1])
 
-    # Check paths
+    # Resolve first arg to wavedev and input path
     if not wavedev_path.endswith('.wavedev'):
         _log.debug('Path does not contain the wavedev file.  Searching now starting at the path')
         wavedev_proj_path = wavedev_path
@@ -156,22 +155,32 @@ if __name__ == '__main__':
     elif not os.path.isfile(wavedev_path):
         _log.error('Provided project file name does not exist')
         sys.exit(EXIT_NO_WAVEDEV_FOUND)
+    (input_path, _) = os.path.split(wavedev_path)
+    _log.debug("Input path: %s" % input_path)
+
+    # Resolve output path
+    if len(args) == 1:
+        output_path = input_path
+        options.replace = False
+    elif len(args) >= 2:
+        output_path = os.path.abspath(args[1])
+    _log.debug("Output path: %s" % output_path)
 
     if os.path.isdir(output_path):
-        if output_path is os.path.dirname(wavedev_path):
-            _log.error('Unable to convert a project "in place".  Please choose a different output directory.')
-            sys.exit(EXIT_NO_IN_PLACE)
         if options.replace:
             _log.debug('Replacing existing output directory: %s' % output_path)
             shutil.rmtree(output_path)
         else:
-            _log.error('Output path exists.  Please try a different path or choose replace ("-r" or "--replace")')
-            sys.exit(EXIT_INVALID_OUTPUT_PATH)
+            if output_path == input_path:
+                _log.debug('Patching existing project in-place')
+            else:
+                _log.error('Output path exists.  Please try a different path or choose replace ("-r" or "--replace")')
+                sys.exit(EXIT_INVALID_OUTPUT_PATH)
 
-    # Copy source tree to output
-    _log.debug('Creating output path')
-    (input_path, _) = os.path.split(wavedev_path)
-    shutil.copytree(input_path, output_path)
+    if not os.path.isdir(output_path):
+        # Copy source tree to output
+        _log.debug('Creating output path')
+        shutil.copytree(input_path, output_path)
 
     # Run the converter
     _log.debug('Running converter')
