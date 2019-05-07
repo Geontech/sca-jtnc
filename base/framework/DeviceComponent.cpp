@@ -152,7 +152,7 @@ void DeviceComponent::runTest (CORBA::ULong TestID, CF::Properties& testValues) 
 }
 
 CF::CapacityManagement::UsageType DeviceComponent::usageState ()throw (CORBA::SystemException) {
-    return CF::CapacityManagement::IDLE;
+    return _usageState;
 }
 
 CORBA::Boolean DeviceComponent::allocateCapacity (const CF::Properties& capacities) throw (CF::InvalidState, CF::CapacityManagement::InvalidCapacity, CORBA::SystemException) {
@@ -167,10 +167,11 @@ CF::DeviceAttributes::OperationalType DeviceComponent::operationalState () throw
 }
 
 CF::AdministratableInterface::AdminType DeviceComponent::adminState () throw (CORBA::SystemException) {
-    return CF::AdministratableInterface::LOCKED;
+    return _adminState;
 }
 
 void DeviceComponent::adminState (CF::AdministratableInterface::AdminType _adminType) {
+    _adminState = _adminType;
 }
 
 bool DeviceComponent::isLocked ()

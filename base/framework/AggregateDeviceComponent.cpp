@@ -92,6 +92,7 @@ void AggregateExecutableDeviceComponent::removeDevice(const char* identifier)  t
                 _devices[j-1] = _devices[j];
             }
             _devices->length(devSeqLength - 1);
+            break;
         }
     }
 
