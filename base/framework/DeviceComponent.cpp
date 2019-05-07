@@ -59,6 +59,8 @@ void DeviceComponent::initializeCommonAttributes(const std::string _id) {
     _identifier = _id;
     _started = false;
     _aggregateDevice = CF::AggregateDevice::_nil();
+    _usageState = CF::CapacityManagement::IDLE;
+    _adminState = CF::AdministratableInterface::UNLOCKED;
     if (not compDev_ior.empty()) {
         CORBA::Object_var _aggDev_obj = sca::corba::Orb()->string_to_object(compDev_ior.c_str());
         if (CORBA::is_nil(_aggDev_obj)) {
