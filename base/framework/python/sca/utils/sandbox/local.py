@@ -345,8 +345,12 @@ class LocalLauncher(SandboxLauncher):
             # Set initial configuration properties (pre-2.0 components)
             initvals = comp._getInitialConfigureProperties()
             initvals.update(self._configProps)
+            updated_initvals = {}
+            for _key in initvals:
+                if initvals[_key] != []:
+                    updated_initvals[_key] = initvals[_key]
             try:
-                comp.configure(initvals)
+                comp.configure(updated_initvals)
             except:
                 log.exception('Failure in component configuration')
 
