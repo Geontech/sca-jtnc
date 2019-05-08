@@ -49,7 +49,7 @@ class FrontendComponentGenerator(PullComponentGenerator):
         templates = [
             CppTemplate('base/main.cpp'),
             AutomakeTemplate('base/Makefile.am'),
-            AutomakeTemplate('base/Makefile.am.ide', userfile=True),
+            AutomakeTemplate('base/Makefile.am.ide'),
             AutoconfTemplate('base/configure.ac'),
             ShellTemplate('base/build.sh'),
             ShellTemplate('common/reconf'),

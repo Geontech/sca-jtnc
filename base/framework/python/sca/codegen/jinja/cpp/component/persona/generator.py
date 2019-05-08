@@ -29,9 +29,9 @@ class PersonaComponentGenerator(PullComponentGenerator):
             CppTemplate('resource.h', component['userclass']['header'], userfile=True),
             CppTemplate('pull/resource_base.cpp', component['baseclass']['file']),
             CppTemplate('pull/resource_base.h', component['baseclass']['header']),
-            CppTemplate('main.cpp', userfile=True),
+            CppTemplate('main.cpp'),
             AutomakeTemplate('Makefile.am'),
-            AutomakeTemplate('base/Makefile.am.ide', userfile=True),
+            AutomakeTemplate('base/Makefile.am.ide'),
             AutoconfTemplate('configure.ac'),
             ShellTemplate('base/build.sh'),
             ShellTemplate('common/reconf')
@@ -48,15 +48,13 @@ class PersonaComponentGenerator(PullComponentGenerator):
         # Append programmable files if it's a persona device
         if is_device:
             templates.append(CppTemplate('persona_base.cpp', 
-                                         component['reprogclass']['file'], 
-                                         userfile=True))
+                                         component['reprogclass']['file']))
             templates.append(CppTemplate('persona_base.h', 
-                                         component['reprogclass']['header'], 
-                                         userfile=True))
+                                         component['reprogclass']['header']))
 
         # Append entry_point file if it's an executable device
         if is_executable:
-            templates.append(CppTemplate('entry_point.h', userfile=True))
+            templates.append(CppTemplate('entry_point.h'))
 
         # Add port implementations if required
         templates.extend(CppTemplate('pull/'+fn) for fn in self.getPortTemplates(component))
