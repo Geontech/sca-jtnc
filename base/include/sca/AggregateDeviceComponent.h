@@ -68,6 +68,10 @@ public:
     void terminate (const CF::ExecutableInterface::ExecutionID_Type &executionId)
         throw (CF::InvalidState, CF::ExecutableInterface::InvalidProcess, CORBA::SystemException)
     {};
+
+    bool hasRunningResources() {
+        return false;
+    };
     
     CF::ExecutableInterface::ExecutionID_Type* execute (
                         const char*             name, 

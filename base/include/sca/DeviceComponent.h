@@ -183,6 +183,10 @@ public:
                 CF::LoadableInterface::InvalidLoadKind,
                 CF::InvalidState, 
                 CORBA::SystemException);
+
+    bool hasRunningResources() {
+        return false;
+    };
     
     void terminate (const CF::ExecutableInterface::ExecutionID_Type &executionId)
         throw (CF::InvalidState, CF::ExecutableInterface::InvalidProcess, CORBA::SystemException);
