@@ -16,7 +16,7 @@ After successfully building and installing the component or device, it will be i
 
 To run the components or devices, the Python sandbox is needed. Programmable devices run as separate process; persona devices run as threads in the programmable device; components run as threads in persona executable devices
 
-python
+$ python
 
 \>\>\> from sca.utils import sb
 
